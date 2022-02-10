@@ -10,6 +10,7 @@
 바나나마켓의 공동 장바구니로 필요한 물품, 필요한 양만큼 구매해요
 
 
+
 # MAIN FEATURES
 - 위치 기반 서비스를 통한 장보기 메이트 구하기 
 - 게시글 목록에서 원하는 식재료, 마트, 지역 별로 확인하고 참여하기 
@@ -19,9 +20,15 @@
 - 사용자간 거래 평가 및 레벨 확인
 - 또 만나고 싶은 장보기 메이트 모아보기
 
+
+
 # STACK
+
+
 
 # REFERENCES
 👉🏻 Back-End API Infomation: [API Docs]()
+
 👉🏻 DB Schema: [DB Schema]()
+
 👉🏻 Prototye: [Prototype]()

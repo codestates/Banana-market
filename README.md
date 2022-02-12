@@ -45,7 +45,7 @@ back-end <br />
 ![nodemon](https://img.shields.io/badge/Nodemon-76D04B?style=flat-square&logo=Nodemon&logoColor=black) 
 ![mysql](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=black) 
 ![jwt](https://img.shields.io/badge/JWT-FFB3C7?style=flat-square&logo=JSONWebTokens&logoColor=black) 
-![Bcrypt](https://img.shields.io/badge/Bcrypt-DEB887?style=flat-square&logo=Bcrypt&logoColor=black) 
+![Bcrypt](https://img.shields.io/badge/Bcrypt-DEB887?style=flat-square&logo=Bcrypt&logoColor=black) Cancel changes
 ![Multer](https://img.shields.io/badge/Multer-00FF00?style=flat-square&logo=Multer&logoColor=black)
 <br />
 <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
@@ -60,7 +60,7 @@ dev-ops <br />
 ![CouldFront](https://img.shields.io/badge/CouldFront-48D1CC?style=flat-square&logo=AmazonCouldFront&logoColor=black) 
 ![Route53](https://img.shields.io/badge/Route53-9400D3?style=flat-square&logo=AmazonRoute53&logoColor=black)
 <br />
-ACM, pipeline, PM2
+ACM, pipeline, PM2, Node mailer
 <br />
 
 community   <br />

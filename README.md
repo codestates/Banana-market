@@ -23,7 +23,7 @@
 
 
 <br /><br />
-# STACK
+# STACKS
 front-end <br />
 ![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=black) 
 ![css](https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=CSS3&logoColor=black) 
@@ -45,7 +45,7 @@ back-end <br />
 ![nodemon](https://img.shields.io/badge/Nodemon-76D04B?style=flat-square&logo=Nodemon&logoColor=black) 
 ![mysql](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=black) 
 ![jwt](https://img.shields.io/badge/JWT-FFB3C7?style=flat-square&logo=JSONWebTokens&logoColor=black) 
-![Bcrypt](https://img.shields.io/badge/Bcrypt-DEB887?style=flat-square&logo=Bcrypt&logoColor=black) Cancel changes
+![Bcrypt](https://img.shields.io/badge/Bcrypt-DEB887?style=flat-square&logo=Bcrypt&logoColor=black)
 ![Multer](https://img.shields.io/badge/Multer-00FF00?style=flat-square&logo=Multer&logoColor=black)
 <br />
 <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
@@ -73,7 +73,7 @@ community   <br />
 Gitbook, Figma, dbdiagram, notion
 
 <br /><br />
-# 개발자
+# DEVELOPERS
   | 박신영 | Backend |
   | --- | --- |
   | 양다은 | Backend |

@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       })
       models.User.belongsTo(models.Region, {
         foreignKey: 'region_id',
-        // onUpdate: 'CASCADE',
+        // onUpdate: 'CASCADE'
       })
 Report.belongsTo(User)
     }

@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'region_id',
         // onUpdate: 'CASCADE'
       })
-Report.belongsTo(User)
+// Report.belongsTo(User)
     }
   }
   User.init({
@@ -57,10 +57,10 @@ Report.belongsTo(User)
     },
     region_id: { 
       type: DataTypes.INTEGER,
-      references: {
-        model: Region,
-        key: 'id'
-      },
+      // references: {
+      //   model: Region,
+      //   key: 'id'
+      // },
       allowNull: false,
     },
     block: { 

@@ -33,6 +33,6 @@ app.get("/", (req, res) => {
   res.send(`서버가 ${port}번에서 작동 중입니다.`);
 });
 
-app.listen(post, () => {
+app.listen(port, () => {
   console.log(`서버가 ${port}번에서 작동 중입니다.`);
 });

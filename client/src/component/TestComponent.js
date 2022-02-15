@@ -9,39 +9,26 @@ const BREAK_POINT_PC = 1200;
 const Wrapper = styled.div`
   //( 기본적용 )모바일 : 768px 이하 ::  @media only제외한 모든 사이즈 적용
   width: 100%;
-  height: 100%;
+  height: 100vh;
   padding: 0 30px;
-  border: 2px solid black;
+  background-color: yellow;
   margin : auto;
-  > div {
-    width: 100%;
-    height: 80vh;
-  }
-  .page1 {
-    padding-top: 50px; // 검색영역 보이는 페이지만 넣는 것
-    background-color: red;
-  }
-  .page2 {
-    background-color: orange;
-  }
-  .page3 {
-    background-color: yellow;
-  }
-  .page4 {
-    background-color: green;
-    padding-top: 100px;
-  }
-  .btn-home {
-    height: 40px;
-    background-color: limegreen;
-    margin : auto;
-    text-align: center;
-    line-height: 40px;
+  .test {
+    width: 50%;
+    height: 50%;
+    border: solid 1px black;
+    float: left;
   }
   // 태블릿 : 1200px ~ 768px :: 768px 이상 적용되는 css
   @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
-    .page1 {
-      padding-top: 0px; // 검색영역 보이는 페이지만 넣는 것
+    /* width: 100%;
+    padding: 0 30px; */
+    background-color: orange;
+    .test {
+      width: 25%;
+      height: 50vh;
+      border: solid 1px black;
+      float: left;
     }
   }
   // PC : 1200px 이상 :: 1200px 이상 적용되는 css
@@ -49,18 +36,22 @@ const Wrapper = styled.div`
     width: 1200px;
     padding: 0;
     background-color: red;
+    /* .test {
+      width: 25%;
+      height: 100%;
+      border: solid 1px black;
+      float: left;
+    } */
   }
 `;
 const Render = () => {
   return (
     <div className='section'>
       <Wrapper>
-        <div className='page1'>페이지1</div>
-        <div className='page2'>페이지2</div>
-        <div className='page3'>페이지3</div>
-        <div className='page4'>페이지2
-        <Link to='/list'><div className='btn-home'>바나나마켓 바로가기</div></Link>
-        </div>
+        <div className='test'></div>
+        <div className='test'></div>
+        <div className='test'></div>
+        <div className='test'></div>
       </Wrapper>
     </div>
   );

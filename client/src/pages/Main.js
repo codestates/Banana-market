@@ -1,12 +1,10 @@
 import React from 'react';
-import Header from '../component/Header';
+import Render from '../component/Render';
 
 const Main = () => {
   return (
     <div>
-      <Header>
-        
-      </Header>
+      <Render></Render>
     </div>
   );
 };

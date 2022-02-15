@@ -1,1 +1,3 @@
-module.exports = async (req, res) => {};
+module.exports = async (req, res) => {
+  //회원가입 요청
+};

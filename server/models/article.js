@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       models.Article.belongsToMany(models.User, {
         through: "UserArticles",
         foreignKey: "article_id",
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        sourceKey: "id",
+        // onUpdate: 'CASCADE',
+        // onDelete: 'CASCADE',
+        // sourceKey: 'id'
       });
       models.Article.belongsTo(models.Category, {
         foreignKey: "category_id",
@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "article_id",
         // onDelete: 'CASCADE',
         // onUpdate: 'CASCADE'
+        constraint: true,
       });
     }
   }

@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       models.Category.hasMany(models.Article, {
         foreignKey: "category_id",
         onUpdate: "CASCADE",
+        constraint: true,
       });
       // models.Category.hasMany(models.Article, {foreignKey: 'CategoryId'})
     }

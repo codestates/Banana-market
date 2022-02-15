@@ -10,32 +10,39 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       profile_image: {
         type: Sequelize.BLOB,
       },
       region_id: {
         type: Sequelize.INTEGER,
+        // references: { model: 'Regions', key: 'id' },
       },
       block: {
         type: Sequelize.BOOLEAN,
       },
       type: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
     // .then(function() {

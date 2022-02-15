@@ -10,20 +10,25 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
+        // references: { model: 'Users', key: 'id' },
       },
       post_id: {
         type: Sequelize.INTEGER,
+        // references: { model: 'Posts', key: 'id' },
       },
       contents: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

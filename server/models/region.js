@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Region.hasMany(models.User, {
         foreignKey: "region_id",
+        constraint: true,
       });
       models.Region.hasMany(models.Article, {
         foreignKey: "region_id",

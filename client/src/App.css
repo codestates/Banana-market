@@ -2,6 +2,8 @@
   box-sizing: border-box;
   padding: 0px;
   margin: 0px; 
+  list-style: none;
+  text-decoration: none;
 }
 
 /* body {
@@ -20,6 +22,7 @@
   /* border: solid 2px green; */
   width: 100%;
   min-height: 100vh;
+  background-color: rgb(186, 147, 222);
 }
 .footer {
   /* border: solid 2px green; */

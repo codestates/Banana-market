@@ -13,6 +13,17 @@ import login from "../icon/login.png";
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
 
+const MenuModalWrapper = styled.div`
+  /* position: absolute;
+  width: 100%;
+  z-index: 9999; */
+`;
+
+const LoginModalWrapper = styled.div`
+  /* position: absolute;
+  width: 100%;
+  z-index: 9999; */
+`;
 const SearchModalWrapper = styled.div`
   /* padding-top: 10px; */
   position: absolute;
@@ -163,12 +174,20 @@ const Wrapper = styled.div`
 
 const Header = () => {
   let [searchBox, setSearchBox] = useState(false);
+  let [loginModal, setLoginModal] = useState(false);
+  let [menuModal, setMenuModal] = useState(false);
 
   return (
     <>
       {searchBox ? <SearchModalWrapper>
         <SearchModal className='search_modal'setSearchBox={setSearchBox} ></SearchModal>
       </SearchModalWrapper> : <div></div>}
+      {loginModal ? <LoginModalWrapper>
+        <LoginModal className='login_modal'setLoginModal={setLoginModal} ></LoginModal>
+      </LoginModalWrapper> : <div></div>} 
+      {/* {loginModal ? <MenuModalWrapper>
+        <MenuModal className='menu_modal'setMenuModal={setMenuModal} ></MenuModal>
+      </MenuModalWrapper> : <div></div>}  */}
       <div className='header'>
         <Wrapper>
           <Link to='/list'>
@@ -184,7 +203,7 @@ const Header = () => {
           </div>
           <div className='menu_wrapper'>
             <div className='icon login_icon'>
-              <img src={login} className="icon_img" />
+              <img src={login} className="icon_img" onClick={() => {setLoginModal(true);}}/>
             </div>
             <Link to='/chat'>
               <div className='icon chat_icon'>

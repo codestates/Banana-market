@@ -1,11 +1,19 @@
-import React from 'react';
+// import React, { useState } from "react";
+// import styled from "styled-components";
+// import { useHistory } from "react-router";
 
-const MenuModal = () => {
-  return (
-    <div>
-      
-    </div>
-  );
-};
+// const Wrapper = style.div`
 
-export default MenuModal;
+// `;
+
+// const MenuModal = () => {
+//   return (
+//     <div>
+//       <Wrapper>
+
+//       </Wrapper>
+//     </div>
+//   );
+// };
+
+// export default MenuModal;

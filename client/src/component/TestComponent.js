@@ -44,7 +44,7 @@ const Wrapper = styled.div`
     } */
   }
 `;
-const Render = () => {
+const TestComponent = () => {
   return (
     <div className='section'>
       <Wrapper>
@@ -57,4 +57,4 @@ const Render = () => {
   );
 };
 
-export default Render;
+export default TestComponent;

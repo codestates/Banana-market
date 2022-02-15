@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const controller = require("../controllers");
+const controller = require("./../controller");
 const userRouter = require("./user");
 const postRouter = require("./post");
 const roomRouter = require("./room");

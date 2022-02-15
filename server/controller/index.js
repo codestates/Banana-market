@@ -20,8 +20,8 @@ module.exports = {
   getPostDetail: require("./post/postDetail"),
   updatePost: require("./post/updatePost"),
   deletePost: require("./post/deletePost"),
-  postStatus: require("./Post/postStatus"),
-  postList: require("./Post/getPostList"),
+  postStatus: require("./post/postStatus"),
+  postList: require("./post/getPostList"),
   // room
   getMessage: require("./room/message"),
   getRoomList: require("./room/room"),

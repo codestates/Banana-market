@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
+import PostDetail from "../component/PostDetail";
 
 const PostingView = () => {
   return (
-    <div>
-      
+    <div className="section">
+      <PostDetail></PostDetail>
     </div>
   );
 };

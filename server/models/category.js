@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Category.hasMany(models.Article, {
         foreignKey: 'category_id',
-        onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        constraint: true
       })
       // models.Category.hasMany(models.Article, {foreignKey: 'CategoryId'})
     }

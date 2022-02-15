@@ -10,20 +10,18 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Users', key: 'id' },
+        references: { model: 'Users', key: 'id' },
       },
       count: {
         type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       }
     });
   },

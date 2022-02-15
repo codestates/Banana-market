@@ -9,8 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       image: {
         type: Sequelize.BLOB
@@ -20,49 +19,40 @@ module.exports = {
       },
       category_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Categories', key: 'id' },
+        references: { model: 'Categories', key: 'id' },
       },
       market: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
+        references: { model: 'Regions', key: 'id' },
       },
       date: {
-        type: Sequelize.DATE,
-        allowNull: false
+        type: Sequelize.DATE
       },
       time: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       total_mate: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       current_mate: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       trade_type: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       status: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       }
     });
   },

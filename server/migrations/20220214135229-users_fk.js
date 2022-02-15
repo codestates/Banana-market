@@ -9,42 +9,36 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       password: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       profile_image: {
         type: Sequelize.BLOB
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
+        references: { model: 'Regions', key: 'id' },
       },
       block: {
         type: Sequelize.BOOLEAN
       },
       type: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       }
-    });
+    })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');

@@ -21,12 +21,14 @@ module.exports = (sequelize, DataTypes) => {
       models.User.hasMany(models.Report, {
         foreignKey: 'user_id',
         // onUpdate: 'CASCADE'
+        constraint: true
       })
       models.User.hasMany(models.Chat, {
         foreignKey: 'user_id',
         // onDelete: 'SET NULL',
         // onUpdate: 'CASCADE',
         // foreignKeyConstraint: true,
+        constraint: true
       })
       models.User.belongsTo(models.Region, {
         foreignKey: 'region_id',

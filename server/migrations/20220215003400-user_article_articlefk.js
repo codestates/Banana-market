@@ -25,7 +25,7 @@ module.exports = {
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
+        references: { model: 'Regions', key: 'id' },
       },
       block: {
         type: Sequelize.BOOLEAN
@@ -36,15 +36,21 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        type: Sequelize.DATE
       }
-    });
+    }).then(function(){
+      queryInterface.addColumn('UserArticles', 'article_id', {
+          type: Sequelize.INTEGER,
+          references: {
+            model: 'Articles',
+            key: 'id'
+          }
+      })
+    })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');

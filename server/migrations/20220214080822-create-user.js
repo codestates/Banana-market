@@ -29,6 +29,7 @@ module.exports = {
       },
       block: {
         type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       type: {
         type: Sequelize.STRING,

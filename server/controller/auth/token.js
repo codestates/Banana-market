@@ -13,12 +13,13 @@ module.exports = async (req, res) => {
     return res.status(400).send({ message: "refresh token not provided" });
   }
 
-  const refreshTokenData = checkRefreshToken(refreshToken);
+  const refreshTokenData = checkRefreshToken(req);
   if (!refreshTokenData) {
     return res.status(401).send({ message: "Not authorized" });
   }
 
-  const userId = refreshToken.id;
+  const userId = refreshTokenData.id;
+  // console.log(userId);
   User.findOne({
     where: {
       id: userId,

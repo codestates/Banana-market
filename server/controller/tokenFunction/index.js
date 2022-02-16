@@ -1,14 +1,14 @@
 require("dotenv").config();
-const { sign, verify } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   // access token 생성
   generateAccessToken: (data) => {
-    return sign(data, process.env.ACCESS_SECRET, { expiresIn: "15s" });
+    return jwt.sign(data, process.env.ACCESS_SECRET, { expiresIn: "1d" });
   },
   // refresh token 생성
   generateRefreshToken: (data) => {
-    return sign(data, process.env.REFRESH_SECRET, { expiresIn: "30d" });
+    return jwt.sign(data, process.env.REFRESH_SECRET, { expiresIn: "30d" });
   },
   // 쿠키로 access token 전달
   sendAccessToken: (res, accessToken) => {
@@ -31,18 +31,26 @@ module.exports = {
     });
   },
   // access token 유효성 확인
-  checkAccessToken: (accessToken) => {
+  checkAccessToken: (req) => {
+    const { accessToken } = req.cookies;
+    if (!accessToken) {
+      return null;
+    }
     try {
-      return verify(accessToken, process.env.ACCESS_SECRET);
-    } catch {
+      return jwt.verify(accessToken, process.env.ACCESS_SECRET);
+    } catch (err) {
       return null;
     }
   },
   // refresh token 유효성 확인
-  checkRefreshToken: (refreshToken) => {
+  checkRefreshToken: (req) => {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      return null;
+    }
     try {
-      return verify(refreshToken, process.env.REFRESH_SECRET);
-    } catch {
+      return jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    } catch (err) {
       return null;
     }
   },

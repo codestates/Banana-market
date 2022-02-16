@@ -27,6 +27,7 @@ module.exports = async (req, res) => {
     });
   }
 
+  // 사용할 수 있는 이메일이면 인증 이메일을 보내도록 한다.
   // 메일 발송 객체 생성
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -73,5 +74,5 @@ module.exports = async (req, res) => {
 
   return res
     .status(200)
-    .send({ data: { authorizaionNum: randomNumFloor }, message: "ok" });
+    .send({ data: { authorizationNum: randomNumFloor }, message: "ok" });
 };

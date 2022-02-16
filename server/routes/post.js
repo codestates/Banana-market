@@ -8,6 +8,6 @@ router.patch("/:postid", controller.updatePost);
 router.delete("/:postid", controller.deletePost);
 
 router.patch("/close/:postid", controller.postStatus);
-router.get("/?category&search&page", controller.postList);
+router.get("/lists/?category&search&page", controller.postList);
 
 module.exports = router;

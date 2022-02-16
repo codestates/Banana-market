@@ -5,8 +5,8 @@ module.exports = {
   signup: require("./auth/signup"),
   token: require("./auth/token"),
   //validation
-  getEmailValidation: require("./auth/nameValidation"),
-  getNameValidation: require("./auth/emailValidation"),
+  getEmailValidation: require("./auth/emailValidation"),
+  getNameValidation: require("./auth/nameValidation"),
   //user
   getUserInfo: require("./user/userInfo"),
   updateInfo: require("./user/updateInfo"),

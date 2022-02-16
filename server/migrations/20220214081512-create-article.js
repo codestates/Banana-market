@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Articles', {
+    await queryInterface.createTable("Articles", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       image: {
-        type: Sequelize.BLOB
+        type: Sequelize.BLOB,
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       category_id: {
         type: Sequelize.INTEGER,
@@ -24,7 +24,7 @@ module.exports = {
       },
       market: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       region_id: {
         type: Sequelize.INTEGER,
@@ -32,41 +32,41 @@ module.exports = {
       },
       date: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       time: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_mate: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       current_mate: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       trade_type: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn("NOW"),
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Articles');
-  }
+    await queryInterface.dropTable("Articles");
+  },
 };

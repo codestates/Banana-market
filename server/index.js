@@ -5,20 +5,22 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const port = 3001;
 const models = require("./models/index.js");
+require("dotenv").config();
 
-models.sequelize
-  .sync()
-  .then(() => {
-    console.log("DB 연결 성공");
-  })
-  .catch((err) => {
-    console.log("연결 실패");
-    console.log(err);
-  });
+// ? 데이터베이스 연결 확인
+// models.sequelize
+//   .sync()
+//   .then(() => {
+//     console.log("DB 연결 성공");
+//   })
+//   .catch((err) => {
+//     console.log("연결 실패");
+//     console.log(err);
+//   });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.SECRET));
 
 app.use(
   cors({
@@ -30,9 +32,9 @@ app.use(
 
 app.use("/", indexRouter);
 app.get("/", (req, res) => {
-  res.send(`서버가 ${port}번에서 작동 중입니다.`);
+  res.send(`🍌 ~~ Banana Market ~~ 🍌`);
 });
 
-app.listen(post, () => {
-  console.log(`서버가 ${port}번에서 작동 중입니다.`);
+app.listen(port, () => {
+  console.log(`🍌 ~~ Banana Market 서버가 작동 중입니다 ~~ 🍌`);
 });

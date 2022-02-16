@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "region_id",
         // onUpdate: 'CASCADE'
       });
-      Report.belongsTo(User);
     }
   }
   User.init(

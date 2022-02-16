@@ -14,7 +14,6 @@ module.exports = {
   sendAccessToken: (res, accessToken) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      signed: true,
       //   domain: process.env.SERVER_DOMAIN,
       //   path: "/",
       //   secure: true,
@@ -25,7 +24,6 @@ module.exports = {
   sendRefreshToken: (res, refreshToken) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      signed: true,
       //   domain: process.env.SERVER_DOMAIN,
       //   path: "/",
       //   secure: true,

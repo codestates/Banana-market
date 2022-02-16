@@ -8,7 +8,7 @@ const { User } = require("../../models");
 module.exports = async (req, res) => {
   // refresh token으로 access token 재발급
 
-  const refreshToken = req.signedCookies.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return res.status(400).send({ message: "refresh token not provided" });
   }

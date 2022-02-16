@@ -56,16 +56,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       region_id: {
         type: DataTypes.INTEGER,
-        // references: {
-        //   model: Region,
-        //   key: 'id'
-        // },
         allowNull: false,
       },
       block: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        // defaultValue: "N",
         defaultValue: false,
       },
       type: {

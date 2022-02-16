@@ -7,16 +7,16 @@ const port = 3001;
 const models = require("./models/index.js");
 require("dotenv").config();
 
-// ? 데이터베이스 연결 확인
-// models.sequelize
-//   .sync()
-//   .then(() => {
-//     console.log("DB 연결 성공");
-//   })
-//   .catch((err) => {
-//     console.log("연결 실패");
-//     console.log(err);
-//   });
+// 데이터베이스 연결 확인
+models.sequelize
+  .sync()
+  .then(() => {
+    console.log("DB 연결 성공");
+  })
+  .catch((err) => {
+    console.log("연결 실패");
+    console.log(err);
+  });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

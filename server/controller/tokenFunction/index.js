@@ -14,7 +14,7 @@ module.exports = {
   sendAccessToken: (res, accessToken) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      signed: true,
+      // signed: true,
       //   domain: process.env.SERVER_DOMAIN,
       //   path: "/",
       //   secure: true,
@@ -25,7 +25,7 @@ module.exports = {
   sendRefreshToken: (res, refreshToken) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      signed: true,
+      // signed: true,
       //   domain: process.env.SERVER_DOMAIN,
       //   path: "/",
       //   secure: true,
@@ -33,18 +33,26 @@ module.exports = {
     });
   },
   // access token 유효성 확인
-  checkAccessToken: (accessToken) => {
+  checkAccessToken: (req) => {
+    const { accessToken } = req.cookies;
+    if (!accessToken) {
+      return null;
+    }
     try {
-      return verify(accessToken, process.env.ACCESS_SECRET);
-    } catch {
+      return jwt.verify(accessToken, process.env.ACCESS_SECRET);
+    } catch (err) {
       return null;
     }
   },
   // refresh token 유효성 확인
-  checkRefreshToken: (refreshToken) => {
+  checkRefreshToken: (req) => {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      return null;
+    }
     try {
-      return verify(refreshToken, process.env.REFRESH_SECRET);
-    } catch {
+      return jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    } catch (err) {
       return null;
     }
   },

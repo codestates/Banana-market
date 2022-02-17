@@ -7,7 +7,7 @@ const port = 80;
 const models = require("./models/index.js");
 require("dotenv").config();
 
-// 데이터베이스 연결 확인
+// ? 데이터베이스 연결 확인
 models.sequelize
   .sync()
   .then(() => {
@@ -20,7 +20,7 @@ models.sequelize
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.SECRET));
+// app.use(cookieParser(process.env.SECRET));
 
 app.use(
   cors({

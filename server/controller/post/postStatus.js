@@ -2,7 +2,7 @@ const { Article } = require('../../models')
 
 module.exports = async (req, res) => {
 
-  const { articleId } = req.params
+  const articleId = req.params.articleid
 
   // console.log(postId)
 
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 
   // 요청한 id와 일치하는 게시글이 없으면
   if (!article) {
-    res.status(404).json({message:`Article with id '${articleId}' not found`})
+    res.status(404).send({message:`Article with id '${articleId}' not found`})
   }
 
   // 상태가 1이면 (true이면) false로 상태 변경

@@ -53,6 +53,7 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

@@ -33,9 +33,6 @@ module.exports = async (req, res) => {
     Region.findOne({
       where: { city: region },
     }).then((regionData) => {
-      console.log(regionData);
-      // const region_id = regionData.dataValues.id;
-
       User.update(
         { region_id: regionData.dataValues.id },
         { where: { id } }
@@ -63,7 +60,6 @@ module.exports = async (req, res) => {
     where: { id },
   })
     .then((userInfo) => {
-      console.log(userInfo);
       delete userInfo.dataValues.password;
       res.clearCookie("accessToken");
       res.clearCookie("refreshToken");

@@ -4,7 +4,6 @@ const { checkAccessToken } = require("../tokenFunction");
 module.exports = async (req, res) => {
   // 회원 정보 요청
   const accessTokenData = checkAccessToken(req);
-  // console.log(accessTokenData);
   if (!accessTokenData) {
     return res.status(401).send({ message: "Not authorized" });
   }
@@ -25,11 +24,27 @@ module.exports = async (req, res) => {
     },
   });
 
-  delete userData.dataValues.password;
-  delete userData.dataValues.region_id;
-  delete userData.dataValues.id;
-  userData.dataValues["userId"] = id;
-  userData.dataValues["region"] = region.dataValues.city;
+  const {
+    name,
+    email,
+    profile_image_location,
+    block,
+    type,
+    createdAt,
+    updatedAt,
+  } = userData;
 
-  res.status(200).send({ data: userData.dataValues, message: "ok" });
+  const userInfo = {
+    userId: id,
+    name,
+    email,
+    profileImage: profile_image_location,
+    block,
+    type,
+    createdAt,
+    updatedAt,
+    region: region.dataValues.city,
+  };
+
+  res.status(200).send({ data: userInfo, message: "ok" });
 };

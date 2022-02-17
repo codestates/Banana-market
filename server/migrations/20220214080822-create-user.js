@@ -20,8 +20,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      profile_image: {
-        type: Sequelize.BLOB,
+      profile_image_key: {
+        type: Sequelize.STRING,
+      },
+      profile_image_location: {
+        type: Sequelize.STRING,
       },
       region_id: {
         type: Sequelize.INTEGER,
@@ -29,7 +32,7 @@ module.exports = {
       },
       block: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       type: {
         type: Sequelize.STRING,

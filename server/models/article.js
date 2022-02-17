@@ -43,23 +43,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BLOB,
       },
       content: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.STRING
       },
       category_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.INTEGER
       },
       market: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       region_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: DataTypes.INTEGER
       },
       date: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
       time: {
@@ -81,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: true
       },
     },
     {

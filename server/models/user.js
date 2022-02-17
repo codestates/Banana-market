@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       region_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        // allowNull: false,
       },
       block: {
         type: DataTypes.BOOLEAN,
@@ -65,8 +65,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: {
         type: DataTypes.STRING,
-        defaultValue: "USER",
         allowNull: false,
+        defaultValue: "USER",
       },
     },
     {

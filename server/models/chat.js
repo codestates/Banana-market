@@ -21,11 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
-      post_id: {
+      article_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       contents: {
         type: DataTypes.STRING,

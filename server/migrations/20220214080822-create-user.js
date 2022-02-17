@@ -11,10 +11,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
@@ -26,14 +28,17 @@ module.exports = {
       region_id: {
         type: Sequelize.INTEGER,
         // references: { model: 'Regions', key: 'id' },
+        // allowNull: false,
       },
       block: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
         defaultValue: false
       },
       type: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: "USER",
       },
       createdAt: {
         allowNull: false,
@@ -46,9 +51,6 @@ module.exports = {
         defaultValue: Sequelize.fn("NOW"),
       },
     });
-    // .then(function() {
-    //   queryInterface.createTable('users')
-    // })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("Users");

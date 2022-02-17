@@ -31,7 +31,10 @@ module.exports = {
         // references: { model: 'Regions', key: 'id' },
       },
       date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
+        get: function() {
+          return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
+        },
         allowNull: false,
       },
       time: {
@@ -53,7 +56,7 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: true
       },
       createdAt: {
         allowNull: false,

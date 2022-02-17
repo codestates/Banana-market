@@ -14,7 +14,7 @@ router.post("/signup", controller.signup);
 router.get("/token", controller.token);
 
 router.use("/users", userRouter);
-router.use("/posts", postRouter);
+router.use("/articles", postRouter);
 router.use("/rooms", roomRouter);
 router.use("/validation", validationRouter);
 router.use("/admin", adminRouter);

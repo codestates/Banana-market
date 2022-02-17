@@ -28,12 +28,15 @@ module.exports = async (req, res) => {
 
     bcrypt.compare(password, encodedPassword, (err, result) => {
       if (result) {
+        delete userData.dataValues.password;
         const accessToken = generateAccessToken(userData.dataValues);
         const refreshToken = generateRefreshToken(userData.dataValues);
         sendAccessToken(res, accessToken);
         sendRefreshToken(res, refreshToken);
-        // return res.status(200).send({ message: "ok" });
-        res.redirect(302, "/posts/list");
+        return res
+          .status(200)
+          .send({ data: userData.dataValues, message: "ok" });
+        // res.redirect(302, "/posts/list");
       } else {
         return res.status(404).send({ message: "Wrong email or password" });
       }

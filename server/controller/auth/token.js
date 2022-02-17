@@ -8,17 +8,18 @@ const { User } = require("../../models");
 module.exports = async (req, res) => {
   // refresh token으로 access token 재발급
 
-  const refreshToken = req.signedCookies.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return res.status(400).send({ message: "refresh token not provided" });
   }
 
-  const refreshTokenData = checkRefreshToken(refreshToken);
+  const refreshTokenData = checkRefreshToken(req);
   if (!refreshTokenData) {
     return res.status(401).send({ message: "Not authorized" });
   }
 
-  const userId = refreshToken.id;
+  const userId = refreshTokenData.id;
+  // console.log(userId);
   User.findOne({
     where: {
       id: userId,

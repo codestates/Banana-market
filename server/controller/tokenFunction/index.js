@@ -1,14 +1,14 @@
 require("dotenv").config();
-const { sign, verify } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   // access token 생성
   generateAccessToken: (data) => {
-    return sign(data, process.env.ACCESS_SECRET, { expiresIn: "15s" });
+    return jwt.sign(data, process.env.ACCESS_SECRET, { expiresIn: "1d" });
   },
   // refresh token 생성
   generateRefreshToken: (data) => {
-    return sign(data, process.env.REFRESH_SECRET, { expiresIn: "30d" });
+    return jwt.sign(data, process.env.REFRESH_SECRET, { expiresIn: "30d" });
   },
   // 쿠키로 access token 전달
   sendAccessToken: (res, accessToken) => {

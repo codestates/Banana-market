@@ -3,7 +3,7 @@ import Render from '../component/Render';
 
 const Main = () => {
   return (
-    <div>
+    <div className='section'>
       <Render></Render>
     </div>
   );

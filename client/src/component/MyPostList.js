@@ -2,26 +2,43 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
-const SelectBtn = styled.div`
+
+const Wrapper = styled.div`
+  >div.title{
+    max-width: 1200px;
+    font-size : 24px;
+    margin: 60px auto 15px auto;
+    background-color: red;
+    @media screen and (max-width: 1200px) {
+    margin: 50px 15px 15px 15px;
+    }
+
+    @media screen and (max-width: 767px) {
+    margin: 75px 10px 10px 10px;
+    height: 30px;
+    }
+  }
+`;
+const CheckBtn = styled.div`
   max-width: 1200px;
   height: 35px;
-  margin: 60px auto 55px auto;
+  margin: 0px auto 55px auto;
   /* background-color: sienna; */
   @media screen and (max-width: 1200px) {
-    margin: 50px 15px 15px 15px;
+    margin: 0px 15px 15px 15px;
   }
 
   @media screen and (max-width: 767px) {
-    margin: 75px 10px 10px 10px;
+    margin: 0px 10px 10px 10px;
     height: 30px;
   }
 
-  .location {
+  .Check_wrapper {
     min-width: 140px;
     height: 35px;
     margin-left: 5px;
     border-radius: 10px;
-    float: left;
+    float: right;
 
     @media screen and (max-width: 1200px) {
       margin-left: 0;
@@ -30,56 +47,24 @@ const SelectBtn = styled.div`
       min-width: 120px;
       height: 30px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 30px auto;
-      grid-gap: 15px;
-
-      @media screen and (max-width: 768px) {
-        grid-template-columns: 28px auto;
+    >label{
+      display: inline-block;
+      font-size: 20px;
+      background-color: red;
+      >input[type='checkbox']{
+        appearance: none;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid black;
       }
-
-      .location_img {
-        min-height: 35px;
-        background-color: #ddd;
-        @media screen and (max-width: 767px) {
-          min-height: 30px;
-        }
-      }
-      .location_info {
-        line-height: 35px;
-        @media screen and (max-width: 767px) {
-          line-height: 30px;
-          font-size: 15px;
-        }
-      }
-    }
-  }
-
-  .selectBox {
-    float: right;
-    .category {
-      width: 120px;
-      height: 35px;
-      border-radius: 5px;
-      margin-right: 20px;
-
-      @media screen and (max-width: 767px) {
-        width: 100px;
-        height: 30px;
-      }
-    }
-    .sort {
-      width: 100px;
-      height: 35px;
-      border-radius: 5px;
-      margin-right: 5px;
-      @media screen and (max-width: 1200px) {
-        margin-right: 0;
-      }
-      @media screen and (max-width: 767px) {
-        width: 80px;
-        height: 30px;
+      >input[type='checkbox']:checked {
+        appearance: none;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid black;
+        background-color: blue;
       }
     }
   }
@@ -235,34 +220,29 @@ const List = () => {
   const history = useHistory();
   const fakelist = [1, 2, 3, 4, 1, 2, 3, 4, 6, 7];
   const [list, setList] = useState(fakelist);
+
+  // useState로 Input 값 받기
+  let[isChecked, setIsChecked] = useState(false);
+
+  // Input 값 받는 함수
+  const handleChangeCheckBox = (e) => {
+    setIsChecked(!isChecked);
+    //isChecked가 true이면 : axios 내가 쓴 글만 요청
+    //isChecked가 false이면 : axios 내가 참여한 모든 공구 요청
+  }
+
+
   return (
-    <>
-      <SelectBtn>
-        <div className="location">
-          <ul className="grid">
-            <li className="location_img"></li>
-            <li className="location_info">일산동구</li>
-          </ul>
+    <Wrapper>
+      <div className='title'>내가 참여한 공구</div>
+      <CheckBtn>
+        <div className="Check_wrapper">
+          <label htmlFor="ownPost" onClick={handleChangeCheckBox}>
+            <input type="checkbox" id="ownPost"/> 
+            &nbsp;&nbsp;내가 쓴 글만 보기
+          </label>
         </div>
-        <div className="selectBox">
-          <select className="category">
-            <option value="전체">전체</option>
-            <option value="정육/계란">정육/계란</option>
-            <option value="과일">과일</option>
-            <option value="우유/유제품">우유/유제품</option>
-            <option value="채소">채소</option>
-            <option value="수산/건어물">수산/건어물</option>
-            <option value="베이커리">베이커리</option>
-            <option value="간식/떡/빙과">간식/떡/빙과</option>
-            <option value="김치/반찬">김치/반찬</option>
-            <option value="기타">기타</option>
-          </select>
-          <select className="sort">
-            <option value="최신순">최신순</option>
-            <option value="기한순/계란">기한순</option>
-          </select>
-        </div>
-      </SelectBtn>
+      </CheckBtn>
       <ListDiv>
         <ul>
           {list.map((el, idx) => (
@@ -287,7 +267,7 @@ const List = () => {
           ))}
         </ul>
       </ListDiv>
-    </>
+    </Wrapper>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import github_icon from "../icon/github_icon.png";
 import axios from "axios";
 
@@ -81,7 +82,7 @@ const Login_div = styled.div`
         height: 1px;
         background-color: rgb(0, 0, 0, 0.2);
       }
-      > .join {
+      .join {
         width: 257px;
         height: 40px;
         border-radius: 3px;
@@ -121,13 +122,32 @@ const Login_div = styled.div`
       }
     }
   }
+  @media only screen and (max-width: 768px){
+    > .loginmodal {
+      width: 100%;
+      height: 100vh;
+      background-color: white;
+      position: relative;
+      top: 0;
+      box-sizing: border-box;
+      margin: 0 auto;
+      border-radius: 0px;
+      /* background: #fff; */
+      border: 1px solid #8b8585;
+    }
+  }
 `;
 
 const LoginModal = ({ setLoginModal }) => {
-  // const history = useHistory();
-  // const [idValue, setIdValue] = useState("");
-  // const [passwordValue, setPasswordValue] = useState("");
+  // useState로 Input 값 받기
+  const [idValue, setIdValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
 
+  const handleClickLoginBtn = (e) => {
+    // axios로 idValue, passwordValue전송.
+  }
+
+  // const history = useHistory();
   // const [loginInfo, setLoginInfo] = useState({
   //   email: "",
   //   password: "",
@@ -185,33 +205,38 @@ const LoginModal = ({ setLoginModal }) => {
             type="text"
             className="loginId"
             placeholder="이메일을 입력해주세요."
+            onChange = {(e) => {setIdValue(e.target.value)}}
           />
           <input
             className="password"
             type="password"
             placeholder="비밀번호를 입력해주세요."
+            onChange = {(e) => {setPasswordValue(e.target.value)}}
           />
           <div
             className="sign_div"
+            onClick = {handleClickLoginBtn}
           >
             LOGIN
           </div>
           <div className="line"></div>
-          <div
-            className="join"
-            onClick={() => {setLoginModal(false);}}
-          >
-            <p
-              style={{
-                fontSize: "15px",
-                fontWeight: "bold",
-                color: "#FCFCFC",
-                textAlign: "center",
-              }}
+          <Link to ='/signup'>
+            <div
+              className="join"
+              onClick={() => {setLoginModal(false);}}
             >
-              JOIN
-            </p>
-          </div>
+              <p
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  color: "#FCFCFC",
+                  textAlign: "center",
+                }}
+              >
+                JOIN
+              </p>
+            </div>
+          </Link>
           <div className="socialjoin">
             <p
               style={{

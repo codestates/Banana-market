@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   //( 기본적용 )모바일 : 768px 이하 ::  @media only제외한 모든 사이즈 적용
   width: 100%;
   height: 100%;
-  padding: 0 30px;
+  padding: 0 22px;
   border: 2px solid black;
   margin : auto;
   > div {
@@ -53,7 +53,6 @@ const Wrapper = styled.div`
 `;
 const Render = () => {
   return (
-    <div className='section'>
       <Wrapper>
         <div className='page1'>페이지1</div>
         <div className='page2'>페이지2</div>
@@ -62,7 +61,6 @@ const Render = () => {
         <Link to='/list'><div className='btn-home'>바나나마켓 바로가기</div></Link>
         </div>
       </Wrapper>
-    </div>
   );
 };
 

@@ -14,9 +14,9 @@ const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
 
 const MenuModalWrapper = styled.div`
-  /* position: absolute;
+  position: absolute;
   width: 100%;
-  z-index: 9999; */
+  z-index: 9999;
 `;
 
 const LoginModalWrapper = styled.div`
@@ -26,7 +26,7 @@ const LoginModalWrapper = styled.div`
 `;
 const SearchModalWrapper = styled.div`
   /* padding-top: 10px; */
-  position: absolute;
+  position: fixed;
   width: 100%;
   z-index: 9999;
   @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
@@ -173,6 +173,7 @@ const Wrapper = styled.div`
 `;
 
 const Header = () => {
+  // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
   let [menuModal, setMenuModal] = useState(false);
@@ -185,9 +186,10 @@ const Header = () => {
       {loginModal ? <LoginModalWrapper>
         <LoginModal className='login_modal'setLoginModal={setLoginModal} ></LoginModal>
       </LoginModalWrapper> : <div></div>} 
-      {/* {loginModal ? <MenuModalWrapper>
-        <MenuModal className='menu_modal'setMenuModal={setMenuModal} ></MenuModal>
-      </MenuModalWrapper> : <div></div>}  */}
+      {menuModal ? <MenuModalWrapper>
+        <MenuModal className='menu_modal'setMenuModal={setMenuModal} setLoginModal={setLoginModal} ></MenuModal>
+      </MenuModalWrapper> : <div></div>} 
+      
       <div className='header'>
         <Wrapper>
           <Link to='/list'>
@@ -211,7 +213,7 @@ const Header = () => {
               </div>
             </Link>
             <div className='icon menu_icon'>
-              <img src={login} className="icon_img" />
+              <img src={login} className="icon_img"  onClick={() => {setMenuModal(true);}}/>
             </div>
           </div>
           <div className='search_box2'>

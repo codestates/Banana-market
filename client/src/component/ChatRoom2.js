@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import SetModal from "./SetModal";
 
 const ChatRoomDiv = styled.div`
   min-height: 710px;
   border: 1px solid #c4c4c4;
   @media screen and (max-width: 768px) {
     border: none;
-    /* display: none; */
+    display: none;
   }
   .chat_title {
     width: 100%;
@@ -56,6 +55,7 @@ const ChatRoomDiv = styled.div`
   }
   .chat_room {
     height: 590px;
+    /* background-color: blanchedalmond; */
     background-color: #fff;
     overflow-y: scroll;
     @media screen and (max-width: 768px) {
@@ -79,19 +79,13 @@ const ChatRoomDiv = styled.div`
     padding: 15px;
     grid-gap: 19px;
     background-color: #f4f4f4;
-    @media screen and (max-width: 768px) {
-      height: 60px;
-      padding: 10px;
-    }
+
     input {
       height: 40px;
       background-color: #f4f4f4;
       font-size: 16px;
       margin-left: 5px;
       border: none;
-      @media screen and (max-width: 768px) {
-        margin-left: 3px;
-      }
     }
     input:focus {
       outline: none;
@@ -101,59 +95,38 @@ const ChatRoomDiv = styled.div`
       background-color: #ddd;
       border-radius: 50px;
       cursor: pointer;
-      @media screen and (max-width: 768px) {
-        /* height: 30px; */
-      }
     }
   }
 `;
 
 const ChatRoom = () => {
   const history = useHistory();
-  const [secessionModal, setSecessionModal] = useState(false);
-
   return (
-    <>
-      {secessionModal === true ? (
-        <SetModal setSecessionModal={setSecessionModal}></SetModal>
-      ) : null}
-      <ChatRoomDiv>
-        <div className="chat_title">
-          <div
-            className="back_btn"
-            onClick={() => {
-              history.push("/chatList");
-            }}
-          >
-            <path></path>
-          </div>
-          <div className="title">
-            <p>[ 공구 ] 사과 공구 같이하실 분</p>
-          </div>
-          <div
-            className="set_btn"
-            onClick={(e) => {
-              setSecessionModal(true);
-            }}
-          >
-            {/* {secessionModal === true ? (
-              <SecessionModal
-                setSecessionModal={setSecessionModal}
-              ></SecessionModal>
-            ) : null} */}
-          </div>
+    <ChatRoomDiv>
+      {/* <div className="chat_title">
+        <div
+          className="back_btn"
+          onClick={() => {
+            history.push("/chatList");
+          }}
+        >
+          <path></path>
         </div>
-        <div className="chat_room"></div>
-        <div className="chat_content">
-          <input
-            type="text"
-            className="message"
-            placeholder="메세지를 입력해주세요."
-          ></input>
-          <div className="message_btn"></div>
+        <div className="title">
+          <p>[ 공구 ] 사과 공구 같이하실 분</p>
         </div>
-      </ChatRoomDiv>
-    </>
+        <div className="set_btn"></div>
+      </div>
+      <div className="chat_room"></div>
+      <div className="chat_content">
+        <input
+          type="text"
+          className="message"
+          placeholder="메세지를 입력해주세요."
+        ></input>
+        <div className="message_btn"></div>
+      </div> */}
+    </ChatRoomDiv>
   );
 };
 

@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
+import List from "../component/List";
 
 const PostList = () => {
   return (
-    <div>
-      
+    <div className="section">
+      <List></List>
     </div>
   );
 };

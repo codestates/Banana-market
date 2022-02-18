@@ -3,7 +3,7 @@ const app = express();
 const indexRouter = require("./routes");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const port = 80;
+const port = 3001;
 const models = require("./models/index.js");
 require("dotenv").config();
 
@@ -20,7 +20,7 @@ models.sequelize
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser(process.env.SECRET));
+app.use(cookieParser());
 
 app.use(
   cors({

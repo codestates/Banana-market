@@ -12,8 +12,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      image: {
-        type: Sequelize.BLOB,
+      image_key: {
+        type: Sequelize.STRING,
+      },
+      image_location: {
+        type: Sequelize.STRING,
       },
       content: {
         type: Sequelize.STRING,
@@ -53,7 +56,7 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

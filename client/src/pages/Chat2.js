@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import ChatList from "../component/ChatList";
-import ChatRoom from "../component/ChatRoom";
+import ChatList2 from "../component/ChatList2";
+import ChatRoom2 from "../component/ChatRoom2";
 
 const ChatDiv = styled.div`
   max-width: 1200px;
@@ -26,8 +26,8 @@ const Chat = () => {
   return (
     <div className="section">
       <ChatDiv>
-        <ChatList></ChatList>
-        <ChatRoom></ChatRoom>
+        <ChatList2></ChatList2>
+        <ChatRoom2></ChatRoom2>
       </ChatDiv>
     </div>
   );

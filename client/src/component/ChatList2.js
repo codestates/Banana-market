@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import { useHistory } from "react-router-dom";
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
   min-height: 710px;
@@ -8,7 +8,7 @@ const ChatListDiv = styled.div`
   background-color: #fff;
   @media screen and (max-width: 767px) {
     border: none;
-    display: none;
+    /* display: none; */
   }
   > p {
     height: 35px;
@@ -24,6 +24,7 @@ const ChatListDiv = styled.div`
     scrollbar-width: none;
     @media screen and (max-width: 767px) {
       width: 100%;
+      /* height: 730px; */
     }
     > .grid {
       width: 360px;
@@ -90,6 +91,7 @@ const ChatListDiv = styled.div`
 `;
 
 const ChatList = () => {
+  const history = useHistory();
   const fakelist = [1, 2, 3, 4, 1, 1, 2, 2, 3];
   const [list, setList] = useState(fakelist);
   return (
@@ -98,7 +100,11 @@ const ChatList = () => {
       <div className="chatList_div">
         <ul className="grid">
           {list.map((el) => (
-            <li>
+            <li
+              onClick={() => {
+                history.push("/chat");
+              }}
+            >
               <ul className="in_grid">
                 <li className="profile_img"></li>
                 <li className="chat_info">

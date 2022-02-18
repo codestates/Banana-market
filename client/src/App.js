@@ -1,18 +1,19 @@
-import './App.css';
+import "./App.css";
 import React, { useEffect, useState } from "react";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
 import axios from "axios";
-import Footer from './component/Footer';
-import Header from './component/Header';
-import Main from './pages/Main';
-import Test from './pages/Test';
-import Chat from './pages/Chat';
-import MyList from './pages/MyList';
-import MyPage from './pages/MyPage';
-import Posting from './pages/Posting';
-import PostingView from './pages/PostingView';
-import PostList from './pages/PostList';
-import SignUp from './pages/SignUp';
+import Footer from "./component/Footer";
+import Header from "./component/Header";
+import Main from "./pages/Main";
+import Test from "./pages/Test";
+import Chat from "./pages/Chat";
+import MyList from "./pages/MyList";
+import MyPage from "./pages/MyPage";
+import Posting from "./pages/Posting";
+import PostingView from "./pages/PostingView";
+import PostList from "./pages/PostList";
+import SignUp from "./pages/SignUp";
+import Chat2 from "./pages/Chat2";
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
         </Route>
         <Route path="/chat">
           <Chat></Chat>
+        </Route>
+        <Route path="/chatList">
+          <Chat2></Chat2>
         </Route>
         <Route path="/mylist">
           <MyList></MyList>

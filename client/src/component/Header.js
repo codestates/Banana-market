@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import '../App.css'; //이거 써줘야 css적용됨.
+import "../App.css"; //이거 써줘야 css적용됨.
 
-import SearchModal from './SearchModal';
-import LoginModal from './LoginModal';
-import MenuModal from './MenuModal';
+import SearchModal from "./SearchModal";
+import LoginModal from "./LoginModal";
+import MenuModal from "./MenuModal";
 
 import logo from "../icon/logo.png";
 import login from "../icon/login.png";
@@ -29,11 +29,11 @@ const SearchModalWrapper = styled.div`
   position: absolute;
   width: 100%;
   z-index: 9999;
-  @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
+  @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
     padding-top: 0px;
     left: 145px;
   }
-  @media only screen and (min-width: ${BREAK_POINT_PC}px){
+  @media only screen and (min-width: ${BREAK_POINT_PC}px) {
     left: 182px;
   }
 `;
@@ -42,7 +42,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 10px;
-  margin : auto;
+  margin: auto;
   /* border: 2px solid black;
   background-color: violet; */
 
@@ -55,10 +55,10 @@ const Wrapper = styled.div`
       height: 26px;
     }
   }
-  .menu_wrapper{
+  .menu_wrapper {
     height: 100%;
     float: right;
-    .icon{
+    .icon {
       width: 50px;
       height: 100%;
       padding: 14px;
@@ -70,8 +70,8 @@ const Wrapper = styled.div`
       }
     }
   }
-  
-  .search_box2{
+
+  .search_box2 {
     float: left;
     width: 100%;
     height: 50px;
@@ -80,88 +80,87 @@ const Wrapper = styled.div`
     .search {
       width: 100%;
       height: 36px;
-      margin : auto;
+      margin: auto;
       border-radius: 100px;
       background-color: #f8f9fa;
       padding: 8px 15px;
-      .search_icon{
+      .search_icon {
         width: 20px;
         float: left;
       }
-      >span{
+      > span {
         padding-left: 15px;
         float: left;
         line-height: 20px;
-        color: rgba(0,0,0,0.5)
+        color: rgba(0, 0, 0, 0.5);
       }
     }
   }
-  @media only screen and (max-width: 768px){
-    .search_box1{
+  @media only screen and (max-width: 768px) {
+    .search_box1 {
       display: none;
     }
   }
   // 태블릿 : 1200px ~ 768px :: 768px 이상 적용되는 css
-  @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
-
-    .search_box1{
-        width: calc(100vw - 333px);
-        height: 50px;
-        float: left;
-        padding: 10px 40px 0 40px;
-        /* background-color:red; */
-        .search {
+  @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
+    .search_box1 {
+      width: calc(100vw - 333px);
+      height: 50px;
+      float: left;
+      padding: 10px 40px 0 40px;
+      /* background-color:red; */
+      .search {
         width: 100%;
         height: 36px;
         margin: auto;
         border-radius: 100px;
         background-color: #f8f9fa;
         padding: 8px 15px;
-        .search_icon{
-          width:20px;
+        .search_icon {
+          width: 20px;
           float: left;
         }
-        >span{
+        > span {
           padding-left: 15px;
           float: left;
           line-height: 20px;
-          color: rgba(0,0,0,0.5)
+          color: rgba(0, 0, 0, 0.5);
         }
       }
     }
-    .search_box2{
+    .search_box2 {
       display: none;
     }
   }
   // PC : 1200px 이상 :: 1200px 이상 적용되는 css
-  @media only screen and (min-width: ${BREAK_POINT_PC}px){
+  @media only screen and (min-width: ${BREAK_POINT_PC}px) {
     width: 1200px;
     padding: 0;
     /* background-color: purple; */
 
     .logo {
-    padding: 12px 14px 12px 0;
-    .logo_icon {
+      padding: 12px 14px 12px 0;
+      .logo_icon {
         height: 36px;
       }
     }
-    .search_box1{
-        width:833px;
-        height: 60px;
-        padding: 12px 40px 0 40px;
-        .search {
-          width: 100%;
-          height: 40px;
-          margin: auto;
-          border-radius: 100px;
-        }
+    .search_box1 {
+      width: 833px;
+      height: 60px;
+      padding: 12px 40px 0 40px;
+      .search {
+        width: 100%;
+        height: 40px;
+        margin: auto;
+        border-radius: 100px;
       }
-    .menu_wrapper{
+    }
+    .menu_wrapper {
       .icon.menu_icon {
         width: 43px;
         padding: 17px 0 17px 17px;
       }
-      .icon{
+      .icon {
         width: 60px;
         padding: 17px;
         .icon_img {
@@ -179,43 +178,73 @@ const Header = () => {
 
   return (
     <>
-      {searchBox ? <SearchModalWrapper>
-        <SearchModal className='search_modal'setSearchBox={setSearchBox} ></SearchModal>
-      </SearchModalWrapper> : <div></div>}
-      {loginModal ? <LoginModalWrapper>
-        <LoginModal className='login_modal'setLoginModal={setLoginModal} ></LoginModal>
-      </LoginModalWrapper> : <div></div>} 
+      {searchBox ? (
+        <SearchModalWrapper>
+          <SearchModal
+            className="search_modal"
+            setSearchBox={setSearchBox}
+          ></SearchModal>
+        </SearchModalWrapper>
+      ) : (
+        <div></div>
+      )}
+      {loginModal ? (
+        <LoginModalWrapper>
+          <LoginModal
+            className="login_modal"
+            setLoginModal={setLoginModal}
+          ></LoginModal>
+        </LoginModalWrapper>
+      ) : (
+        <div></div>
+      )}
       {/* {loginModal ? <MenuModalWrapper>
         <MenuModal className='menu_modal'setMenuModal={setMenuModal} ></MenuModal>
       </MenuModalWrapper> : <div></div>}  */}
-      <div className='header'>
+      <div className="header">
         <Wrapper>
-          <Link to='/list'>
-            <div className='logo'>
+          <Link to="/">
+            <div className="logo">
               <img src={logo} className="logo_icon" />
             </div>
           </Link>
-          <div className='search_box1'>
-            <div className='search'  onClick={() => {setSearchBox(true);}}>
+          <div className="search_box1">
+            <div
+              className="search"
+              onClick={() => {
+                setSearchBox(true);
+              }}
+            >
               <img src={login} className="search_icon" />
               <span>검색어 입력</span>
             </div>
           </div>
-          <div className='menu_wrapper'>
-            <div className='icon login_icon'>
-              <img src={login} className="icon_img" onClick={() => {setLoginModal(true);}}/>
+          <div className="menu_wrapper">
+            <div className="icon login_icon">
+              <img
+                src={login}
+                className="icon_img"
+                onClick={() => {
+                  setLoginModal(true);
+                }}
+              />
             </div>
-            <Link to='/chat'>
-              <div className='icon chat_icon'>
+            <Link to="/chatList">
+              <div className="icon chat_icon">
                 <img src={login} className="icon_img" />
               </div>
             </Link>
-            <div className='icon menu_icon'>
+            <div className="icon menu_icon">
               <img src={login} className="icon_img" />
             </div>
           </div>
-          <div className='search_box2'>
-            <div className='search'   onClick={() => {setSearchBox(true);}}>
+          <div className="search_box2">
+            <div
+              className="search"
+              onClick={() => {
+                setSearchBox(true);
+              }}
+            >
               <img src={login} className="search_icon" />
               <span>검색어 입력</span>
             </div>

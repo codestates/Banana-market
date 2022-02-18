@@ -191,15 +191,13 @@ const LoginModal = ({ setLoginModal }) => {
             type="password"
             placeholder="비밀번호를 입력해주세요."
           />
-          <div
-            className="sign_div"
-          >
-            LOGIN
-          </div>
+          <div className="sign_div">LOGIN</div>
           <div className="line"></div>
           <div
             className="join"
-            onClick={() => {setLoginModal(false);}}
+            onClick={() => {
+              setLoginModal(false);
+            }}
           >
             <p
               style={{

@@ -1,62 +1,69 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Articles', {
+    await queryInterface.createTable("Articles", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
-      image: {
-        type: Sequelize.BLOB
+      image_key: {
+        type: Sequelize.STRING,
+      },
+      image_location: {
+        type: Sequelize.STRING,
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       category_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'Categories', key: 'id' },
+        references: { model: "Categories", key: "id" },
       },
       market: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       region_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'Regions', key: 'id' },
+        references: { model: "Regions", key: "id" },
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       time: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       total_mate: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       current_mate: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       trade_type: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       status: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Articles');
-  }
+    await queryInterface.dropTable("Articles");
+  },
 };

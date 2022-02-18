@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import Profile from '../component/Profile';
 
 const MyPage = () => {
   return (
-    <div>
-      
+    <div className='section'>
+      <Profile></Profile>
     </div>
   );
 };

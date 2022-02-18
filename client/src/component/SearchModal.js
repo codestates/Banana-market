@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef} from "react";
 import styled from "styled-components";
 import '../App.css'; //이거 써줘야 css적용됨.
 
 import login from "../icon/login.png";
+import { ReactDOM } from 'react-dom';
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -93,37 +94,83 @@ const Wrapper = styled.div`
   }
 `;
 
+const ModalBack = styled.div `
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  left: 0px;
+  z-index: -1;
+  /* background-color: red; */
+`;
+
 const SearchModal = ({ setSearchBox }) => {
+  // 모달 밖 영역 클릭 시 모달 창 닫히는 함수 
+  const handleClickClose = (e) => {
+    setSearchBox(false);
+  }
+  // useState로 Input 값 받기
+  let[searchWord, setSearchWord] = useState('');
+
+  // Input 값 받는 함수
+  const handleChangeSearchWord = (e) => {
+    setSearchWord(e.target.value);
+  }
+  
+  // 검색하기 icon 클릭 시 검색 실행되는 함수
+  const handleClickSearch = (e) => {
+    // axios : 검색 요청
+    setSearchBox(false);
+    console.log(searchWord);
+  }
+
+  // Enter 입력 시 검색 실행되는 함수
+  const onCheckEnter = (e) => {
+    if(e.key === 'Enter') {
+      handleClickSearch();
+      setSearchBox(false);
+    }
+  }
+  // 검색어 클릭 시 검색 실행되는 함수
+  const handleClickSearchWord = (e) => {
+    let word = e.target.innerText;
+    setSearchBox(false);
+    console.log( e.target.innerText);
+    //axios 로 word 전송
+  }
+
   return (
-    <Wrapper>
-      <div className='search_box'>
-        <div className='search'>
-          <img src={login} className="icon exit_icon" onClick={() => {setSearchBox(false);}} />
-          <span>
-            <input className='input' type='text'/>
-          </span>
-          <div className='icon_wrapper'>
-            <img src={login} className="icon delete_icon" />
-            <img src={login} className="icon search_icon" />
+    <>
+      <Wrapper>
+        <div className='search_box'>
+          <div className='search'>
+            <img src={login} className="icon exit_icon" onClick={() => {setSearchBox(false);}} />
+            <span>
+              <input className='input' type='text' value={searchWord} onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>
+            </span>
+            <div className='icon_wrapper'>
+              <img src={login} className="icon delete_icon" onClick={(e)=>{setSearchWord('')}} />
+              <img src={login} className="icon search_icon" onClick={handleClickSearch}/>
+            </div>
+          </div>
+          <div className='word_box'>
+            <div>추천 검색어</div>
+            <div>
+              <div className='word' onClick={handleClickSearchWord}>사과</div>
+              <div className='word' onClick={handleClickSearchWord}>오징어</div>
+              <div className='word' onClick={handleClickSearchWord}>배</div>
+              <div className='word' onClick={handleClickSearchWord}>김치</div>
+              <div className='word' onClick={handleClickSearchWord}>수박</div>
+              <div className='word' onClick={handleClickSearchWord}>딸기</div>
+              <div className='word' onClick={handleClickSearchWord}>고등어</div>
+              <div className='word' onClick={handleClickSearchWord}>베이글</div>
+              <div className='word' onClick={handleClickSearchWord}>우유</div>
+              <div className='word' onClick={handleClickSearchWord}>요구르트</div>
+            </div>
           </div>
         </div>
-        <div className='word_box'>
-          <div>추천 검색어</div>
-          <div>
-            <div className='word'>사과</div>
-            <div className='word'>오징어</div>
-            <div className='word'>배</div>
-            <div className='word'>김치</div>
-            <div className='word'>수박</div>
-            <div className='word'>딸기</div>
-            <div className='word'>고등어</div>
-            <div className='word'>베이글</div>
-            <div className='word'>우유</div>
-            <div className='word'>요구르트</div>
-          </div>
-        </div>
-      </div>
-    </Wrapper>
+      </Wrapper>
+      <ModalBack onClick={handleClickClose}></ModalBack>
+    </>
   );
 };
 

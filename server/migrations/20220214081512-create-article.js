@@ -13,14 +13,13 @@ module.exports = {
         allowNull: false,
       },
       image: {
-        type: Sequelize.BLOB,
+        type: Sequelize.STRING,
       },
       content: {
         type: Sequelize.STRING,
       },
       category_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Categories', key: 'id' },
       },
       market: {
         type: Sequelize.STRING,
@@ -28,7 +27,6 @@ module.exports = {
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
       },
       date: {
         type: Sequelize.DATEONLY,

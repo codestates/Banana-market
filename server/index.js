@@ -5,22 +5,30 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const port = 3001;
 const models = require("./models/index.js");
+const { sequelize } = require("./models/index.js");
 require("dotenv").config();
 
-// ? 데이터베이스 연결 확인
-models.sequelize
-  .sync()
+sequelize
+  .authenticate()
   .then(() => {
-    console.log("DB 연결 성공");
+    console.log(' 😈 Connection has been established successfully.');
   })
-  .catch((err) => {
-    console.log("연결 실패");
-    console.log(err);
+  .catch(err => {
+    console.error(' 👿 Unable to connect to the database:', err);
   });
+
+// sequelize
+//   .sync()
+//   .then(()=> {
+//     console.log('🤢 re-sync db.')
+//   })
+//   .catch(err => {
+//     console.log('🤮 re-sync error: ', err)
+//   })
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser(process.env.SECRET));
+app.use(cookieParser(process.env.SECRET));
 
 app.use(
   cors({

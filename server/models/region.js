@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Region",
+      timestamps: false
     }
   );
   return Region;

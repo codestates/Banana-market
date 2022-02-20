@@ -11,24 +11,23 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'name',
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'email',
       },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       profile_image: {
-        type: Sequelize.BLOB,
+        type: Sequelize.STRING,
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
-        // allowNull: false,
+        allowNull: false,
       },
       block: {
         type: Sequelize.BOOLEAN,

@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         sourceKey: "id",
       });
-
+      
       models.User.hasMany(models.Report, {
         foreignKey: "user_id",
         // onUpdate: 'CASCADE'
@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'name',
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'email',
       },
       password: {
         type: DataTypes.STRING,

@@ -5,8 +5,6 @@ module.exports = async (req, res) => {
 
   const articleId = req.params.articleid
 
-  // console.log(postId)
-
   // 요청 id를 보내지 않았으면
   if (!articleId) {
     res.status(400).json({message:'No article id'})

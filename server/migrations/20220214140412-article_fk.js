@@ -1,76 +1,31 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Articles', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.addConstraint('Articles', {
+      fields: ['category_id'],
+      type: "foreign key",
+      name: "articles_category_id_fk",
+      references: {
+        table: "Categories",
+        field: "id",
       },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    await queryInterface.addConstraint('Articles', {
+      fields: ['region_id'],
+      type: "foreign key",
+      name: "articles_region_id_fk",
+      references: {
+        table: "Regions",
+        field: "id",
       },
-      image: {
-        type: Sequelize.BLOB
-      },
-      content: {
-        type: Sequelize.STRING
-      },
-      category_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Categories', key: 'id' },
-      },
-      market: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      region_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Regions', key: 'id' },
-      },
-      date: {
-        type: Sequelize.DATEONLY,
-        get: function() {
-          return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
-        },
-        allowNull: false,
-      },
-      time: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      total_mate: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      current_mate: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      trade_type: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW")
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW")
-      }
-    });
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Articles');
+    // await queryInterface.removeConstraint('Articles', 'articles_category_id_fk');
+    // await queryInterface.removeConstraint('Articles', 'articles_region_id_fk');
   }
 };

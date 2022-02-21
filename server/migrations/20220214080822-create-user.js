@@ -22,7 +22,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      profile_image: {
+      profile_image_key: {
+        type: Sequelize.STRING,
+      },
+      profile_image_location: {
         type: Sequelize.STRING,
       },
       region_id: {

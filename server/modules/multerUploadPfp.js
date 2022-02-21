@@ -37,7 +37,7 @@ const profileImageUpload = multer({
     },
     transforms: [
       {
-        // id: "resized",
+        id: "resized",
         key: function (req, file, cb) {
           cb(null, Date.now() + "." + file.originalname.split(".").pop());
         },

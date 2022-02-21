@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import { useHistory } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
   min-height: 710px;
   border: 1px solid #c4c4c4;
-  background-color: #fff;
   @media screen and (max-width: 767px) {
     border: none;
-    display: none;
+    height: 742px;
+    display: ${(props) => props.display};
   }
   > p {
     height: 35px;
@@ -18,12 +19,13 @@ const ChatListDiv = styled.div`
   }
 
   .chatList_div {
-    height: 660px;
+    height: 645px;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
     @media screen and (max-width: 767px) {
       width: 100%;
+      height: 670px;
     }
     > .grid {
       width: 360px;
@@ -89,33 +91,39 @@ const ChatListDiv = styled.div`
   }
 `;
 
-const ChatList = () => {
-  const fakelist = [1, 2, 3, 4, 1, 1, 2, 2, 3];
+const ChatList = ({ display, onClick2 }) => {
+  const history = useHistory();
+  const fakelist = [1];
   const [list, setList] = useState(fakelist);
+  const isSmallScreen = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
   return (
-    <ChatListDiv>
-      <p>채팅 리스트</p>
-      <div className="chatList_div">
-        <ul className="grid">
-          {list.map((el) => (
-            <li>
-              <ul className="in_grid">
-                <li className="profile_img"></li>
-                <li className="chat_info">
-                  <ul>
-                    <li className="chat_title">
-                      [ 공구 ] 사과 공구 같이하실 분
-                    </li>
-                    <li className="content">몇시에 뵐까요 ?</li>
-                    <li className="created_At">2022-02-16</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </ChatListDiv>
+    <>
+      <ChatListDiv display={display}>
+        <p>채팅 리스트</p>
+        <div className="chatList_div">
+          <ul className="grid">
+            {list.map((el) => (
+              <li onClick={onClick2}>
+                <ul className="in_grid">
+                  <li className="profile_img"></li>
+                  <li className="chat_info">
+                    <ul>
+                      <li className="chat_title">
+                        [ 공구 ] 사과 공구 같이하실 분
+                      </li>
+                      <li className="content">몇시에 뵐까요 ?</li>
+                      <li className="created_At">2022-02-16</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </ChatListDiv>
+    </>
   );
 };
 

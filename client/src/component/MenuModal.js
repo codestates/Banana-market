@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import logo from "../icon/logo.png";
 import close from "../icon/close.png";
 
-
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
 
@@ -32,15 +31,15 @@ const ModalWrapper = styled.div`
   /* height: 50px; */
   position: fixed;
   z-index: 100;
-  background:white;
-  .announcement{
+  background: white;
+  .announcement {
     text-align: left;
     padding-left: 22px;
     margin-top: 10px;
     position: relative;
     line-height: 30px;
   }
-  .menulist{
+  .menulist {
     padding: 20px 22px;
   }
   .menu {
@@ -52,34 +51,33 @@ const ModalWrapper = styled.div`
       height: 22px;
       /* background-color: white; */
     }
-    .icon{
+    .icon {
       margin-right: 20px;
     }
-    .arrow{
+    .arrow {
       float: right;
     }
-    >span{
+    > span {
       line-height: 50px;
     }
   }
 
-  @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
+  @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
     width: 450px;
     padding: 0;
     background-color: purple;
     position: static;
     float: right;
-    
-    >div .logo {
+
+    > div .logo {
       display: none;
     }
-    .menu_wrapper{
-      
+    .menu_wrapper {
       .icon.menu_icon {
         width: 43px;
         padding: 17px 0 17px 17px;
       }
-      .icon{
+      .icon {
         width: 60px;
         padding: 17px;
         .icon_img {
@@ -95,7 +93,7 @@ const HeaderBox = styled.div`
   width: 100%;
   height: 60px;
   padding: 0 10px;
-  margin : auto;
+  margin: auto;
   /* border: 2px solid black;
   background-color: violet; */
 
@@ -108,10 +106,10 @@ const HeaderBox = styled.div`
       height: 26px;
     }
   }
-  .menu_wrapper{
+  .menu_wrapper {
     height: 100%;
     float: right;
-    .icon{
+    .icon {
       width: 50px;
       height: 100%;
       padding: 14px;
@@ -123,10 +121,9 @@ const HeaderBox = styled.div`
       }
     }
   }
-  
 `;
 
-const ModalBack = styled.div `
+const ModalBack = styled.div`
   width: 100%;
   height: 100vh;
   position: fixed;
@@ -135,45 +132,75 @@ const ModalBack = styled.div `
   /* background-color: red; */
 `;
 
-const MenuModal = ({setMenuModal, setLoginModal}) => {
-  // 모달 밖 영역 클릭 시 모달 창 닫히는 함수 
+const MenuModal = ({ setMenuModal, setLoginModal }) => {
+  // 모달 밖 영역 클릭 시 모달 창 닫히는 함수
   const handleClickClose = (e) => {
     setMenuModal(false);
-    console.log('누름');
-  }
+    console.log("누름");
+  };
 
   return (
     <>
       <MenuModalArea>
         <ModalWrapper>
           <HeaderBox>
-            <div className='logo'>
+            <div className="logo">
               <img src={logo} className="logo_icon" />
             </div>
-            <div className='menu_wrapper'>
-              <div className='icon menu_icon'>
-                <img src={close} className="icon_img"  onClick={() => {setMenuModal(false);}}/>
+            <div className="menu_wrapper">
+              <div className="icon menu_icon">
+                <img
+                  src={close}
+                  className="icon_img"
+                  onClick={() => {
+                    setMenuModal(false);
+                  }}
+                />
               </div>
             </div>
           </HeaderBox>
-          <div className='announcement'><span onClick={() => {setMenuModal(false); setLoginModal(true);}}>로그인 후 이용해주세요</span></div>
-          <ul className='menulist'>
-            <Link to='/mypage'>
-              <li className='menu' onClick={() => {setMenuModal(false);}}>
+          <div className="announcement">
+            <span
+              onClick={() => {
+                setMenuModal(false);
+                setLoginModal(true);
+              }}
+            >
+              로그인 후 이용해주세요
+            </span>
+          </div>
+          <ul className="menulist">
+            <Link to="/mypage">
+              <li
+                className="menu"
+                onClick={() => {
+                  setMenuModal(false);
+                }}
+              >
                 <img src={close} className="icon_img icon" />
                 <span>마이페이지</span>
                 <img src={close} className="icon_img arrow" />
               </li>
             </Link>
-            <Link to='/posting' onClick={() => {setMenuModal(false);}}>
-              <li className='menu'>
+            <Link
+              to="/posting"
+              onClick={() => {
+                setMenuModal(false);
+              }}
+            >
+              <li className="menu">
                 <img src={close} className="icon_img icon" />
                 <span>게시글 작성</span>
                 <img src={close} className="icon_img arrow" />
               </li>
             </Link>
-            <Link to='/mylist' onClick={() => {setMenuModal(false);}}>
-              <li className='menu'>
+            <Link
+              to="/mylist"
+              onClick={() => {
+                setMenuModal(false);
+              }}
+            >
+              <li className="menu">
                 <img src={close} className="icon_img icon" />
                 <span>공구 내역</span>
                 <img src={close} className="icon_img arrow" />
@@ -181,7 +208,12 @@ const MenuModal = ({setMenuModal, setLoginModal}) => {
             </Link>
           </ul>
         </ModalWrapper>
-        <div className='modal_back'  onClick={() => {setMenuModal(false);}}></div>
+        <div
+          className="modal_back"
+          onClick={() => {
+            setMenuModal(false);
+          }}
+        ></div>
       </MenuModalArea>
       <ModalBack onClick={handleClickClose}></ModalBack>
     </>

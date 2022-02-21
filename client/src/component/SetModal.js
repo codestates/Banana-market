@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-// const SetDiv = styled.div`
-//   max-width: 1200px;
-//   background-color: beige;
-//   position: absolute;
-// `;
-
 const SetModalDiv = styled.div`
   width: 330px;
-  height: 710px;
+  height: 712px;
   background-color: darksalmon;
-  /* right: 0;
-  z-index: 1; */
   position: absolute;
-
+  right: 0%;
+  z-index: 1;
+  @media screen and (max-width: 768px) {
+    height: 745px;
+  }
   .close {
     width: 28px;
     height: 28px;
@@ -29,6 +25,9 @@ const SetModalDiv = styled.div`
     margin: 90px auto 0 auto;
     position: relative;
     border-bottom: 1px solid #ddd;
+    @media screen and (max-width: 768px) {
+      margin: 100px auto 0 auto;
+    }
     p {
       position: absolute;
       top: 3%;
@@ -47,6 +46,9 @@ const SetModalDiv = styled.div`
     -ms-overflow-style: none;
     scrollbar-width: none;
     margin: 50px auto;
+    @media screen and (max-width: 768px) {
+      height: 258px;
+    }
     .grid {
       display: grid;
       grid-template-columns: auto;
@@ -227,7 +229,6 @@ const SetModal = ({ setSecessionModal }) => {
 
   return (
     <>
-      {/* <SetDiv> */}
       <SetModalDiv>
         <div className="close" onClick={() => setSecessionModal(false)}>
           &times;
@@ -285,7 +286,6 @@ const SetModal = ({ setSecessionModal }) => {
         ) : null}
         {outBtn === true ? <UserOut setOutBtn={setOutBtn}></UserOut> : null}
       </SetModalDiv>
-      {/* </SetDiv> */}
     </>
   );
 };

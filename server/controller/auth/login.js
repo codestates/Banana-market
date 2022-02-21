@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
         return res
           .status(200)
           .send({ data: userData.dataValues, message: "ok" });
-        // res.redirect(302, "/posts/list");
+        // res.redirect(302, "/articles/list");
       } else {
         return res.status(404).send({ message: "Wrong email or password" });
       }

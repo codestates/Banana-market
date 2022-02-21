@@ -36,17 +36,6 @@ module.exports = async (req, res) => {
     res.status(400).send({message : 'Internal server error'})
   })
 
-  // const test = reportList.forEach(async (user) => {
-  //   // const reportu = user.Reports[0].count
-  //   // user = user.toJSON()
-  //   // console.log(user)
-  //   // const resData = {
-  //   //   ...user,
-  //   //   count : reportu
-  //   // }
-  //   // return resData
-  // })
-
   return res.status(200).json({
     data : {
       reportedUserInfo : reportList

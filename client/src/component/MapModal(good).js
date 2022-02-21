@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import github_icon from "../icon/github_icon.png";
 import axios from "axios";
-import guCodeList from '../resource/guCodeList'
+import marketList from '../resource/marketList'
 
 const { kakao } = window;
 
@@ -49,7 +49,7 @@ const MapModalWrapper = styled.div`
       width: 95%;
       height: 50px;
       margin: 50px auto 0 auto;
-      /* background-color: purple; */
+      background-color: purple;
 
     }
     > .search_box {
@@ -157,23 +157,18 @@ const MapModalWrapper = styled.div`
 
 const MapModal = ({ setMapModal }) => {
   // useState로 Input 값 받기
-  let[inputWord, setInputWord] = useState('');
-  let[searchWord, setSearchWord] = useState('');
+  let [searchWord, setSearchWord] = useState('');
   let[searching, setSearching] = useState(0);
-  let[myLocation, setMyLocation] = useState('서대문구'); //default : 내 프로필 구
-  let defaultMyLocation = '서대문구';
-  let[doroAddress, setDoroAddress] = useState('');
-  let[jibunAddress, setJibunAddress] = useState('');
+
    // Input 값 받는 함수
    const handleChangeSearchWord = (e) => {
-    setInputWord(e.target.value);
+    setSearchWord(e.target.value);
   }
 
   // 검색하기 icon 클릭 시 검색 실행되는 함수
   const handleClickSearch = (e) => {
     // axios : 검색 요청
-    setSearchWord(`${myLocation} ${inputWord}`);
-    setSearching(searching+1);
+    setSearching(searching+1)
     console.log(searchWord);
     console.log(searching);
   }
@@ -196,7 +191,7 @@ const MapModal = ({ setMapModal }) => {
     let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
             center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
+            level: 6 // 지도의 확대 레벨
         };  
 
     // 지도를 생성합니다    
@@ -212,26 +207,35 @@ const MapModal = ({ setMapModal }) => {
     ps.keywordSearch('백화점', placesSearchCB); 
     
     // 마커 이미지의 이미지 주소입니다
-    let imageSrc = "https://media.vlpt.us/images/ez0ez0/post/f1a16c30-2e31-41e0-a99c-b388b24b1cd2/groceries.png"; 
+    let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
     
 
     // 키워드 검색 완료 시 호출되는 콜백함수 입니다
     function placesSearchCB (data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
 
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+            // LatLngBounds 객체에 좌표를 추가합니다
+            // let bounds = new kakao.maps.LatLngBounds();
+
             for (let i=0; i<data.length; i++) {
-                displayMarker(data[i]); 
+                displayMarker(data[i]);   
+                console.log(displayMarker) 
+                // bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
             }       
+
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+            // map.setBounds(bounds);
         } 
     }
 
-    // 지도에 마커를 표시하는 함수입니다 ---------대형마트,백화점,슈퍼,홈플러스
+    // 지도에 마커를 표시하는 함수입니다
     function displayMarker(place) {
         // 마커 이미지의 이미지 크기 입니다
-        let imageSize = new kakao.maps.Size(44,44); 
-        
-        // 마커 이미지를 생성합니다    
-        let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+    let imageSize = new kakao.maps.Size(24, 35); 
+    
+    // 마커 이미지를 생성합니다    
+    let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
         
         // 마커를 생성하고 지도에 표시합니다
         let marker = new kakao.maps.Marker({
@@ -248,38 +252,13 @@ const MapModal = ({ setMapModal }) => {
         });
     }
     // 검색창에 검색할 경우 ---------------------------------
-    
-    // 마커 이미지의 이미지 주소입니다
-    let imageSrc2 = "https://media.vlpt.us/images/ez0ez0/post/2fa5b882-7250-4dff-8916-f2ce4c061212/your-location%20(1).png";  
-    
-
-    //지도상 현재 위치 찾아서 검색범위 설정하는 함수 ----------------------   
-    // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
-    kakao.maps.event.addListener(map, 'idle', function() {
-      let center = map.getCenter();
-      // console.log(center.getLat(), center.getLng());
-      let presentGeocoder = new kakao.maps.services.Geocoder();
-      console.log('지도변화',guCodeList[0]['행정구역'])
-      let callbackGuCode = function(result, status) {
-          if (status === kakao.maps.services.Status.OK) {
-            let guCode = result[0].code.slice(0,5);
-            // console.log(typeof(guCode),typeof(guCodeList[0]['행정구역']),guCodeList[0]['행정구역']);
-            guCodeList.map((el) => {
-              if(guCode === `${el['행정구역']}`){setMyLocation(el['구'])}
-              else(setMyLocation(defaultMyLocation))
-            })  
-          }
-      };
-      presentGeocoder.coord2RegionCode(center.getLng(), center.getLat(), callbackGuCode);
-    });
-
-    
-    
     // 키워드로 장소를 검색합니다
-    ps.keywordSearch(searchWord, myPlacesSearchCB);
+    ps.keywordSearch(searchWord, myPlacesSearchCB); 
+
     // 키워드 검색 완료 시 호출되는 콜백함수 입니다
     function myPlacesSearchCB (data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
+
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
             var bounds = new kakao.maps.LatLngBounds();
@@ -296,17 +275,11 @@ const MapModal = ({ setMapModal }) => {
 
     // 지도에 마커를 표시하는 함수입니다
     function displayMarkerSearching(place) {
-        // 마커 이미지의 이미지 크기 입니다
-        let imageSize = new kakao.maps.Size(35, 35); 
-        
-        // 마커 이미지를 생성합니다    
-        let markerImage = new kakao.maps.MarkerImage(imageSrc2, imageSize); 
         
         // 마커를 생성하고 지도에 표시합니다
         var marker = new kakao.maps.Marker({
             map: map,
-            position: new kakao.maps.LatLng(place.y, place.x), 
-            image : markerImage
+            position: new kakao.maps.LatLng(place.y, place.x) 
         });
 
         // 마커에 클릭이벤트를 등록합니다
@@ -316,25 +289,8 @@ const MapModal = ({ setMapModal }) => {
             infowindow.open(map, marker);
         });
     }
-    //클릭한 곳의 위치 찾기-------------------------
-    // 주소-좌표 변환 객체를 생성합니다
-    var geocoder = new kakao.maps.services.Geocoder();
-    var marker = new kakao.maps.Marker();
-
-    // 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-    kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-      searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
-        console.log(infowindow.getContent());
-        if (status === kakao.maps.services.Status.OK) {
-          result[0].road_address ? setDoroAddress(result[0].road_address.address_name) : setDoroAddress('');
-          result[0].address ? setJibunAddress(result[0].address.address_name) : setJibunAddress('');
-        }
-      });
-    });
-    function searchDetailAddrFromCoords(coords, callback) {
-      // 좌표로 법정동 상세 주소 정보를 요청합니다
-      geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-    }
+    //-------------------------
+    
 
   }, [searching]);
 
@@ -347,9 +303,6 @@ const MapModal = ({ setMapModal }) => {
         <div id='map'> 
         </div>
         <div id='result'> 
-          <div></div>
-          <div>도로명 주소 : {doroAddress}</div>
-          <div>지번주소 : {jibunAddress}</div>
         </div>
         <div className='search_box'>
           <input className='input' type='text' onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>

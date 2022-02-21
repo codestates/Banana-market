@@ -1,62 +1,31 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Articles', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.addConstraint('Articles', {
+      fields: ['category_id'],
+      type: "foreign key",
+      name: "articles_category_id_fk",
+      references: {
+        table: "Categories",
+        field: "id",
       },
-      title: {
-        type: Sequelize.STRING
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    await queryInterface.addConstraint('Articles', {
+      fields: ['region_id'],
+      type: "foreign key",
+      name: "articles_region_id_fk",
+      references: {
+        table: "Regions",
+        field: "id",
       },
-      image: {
-        type: Sequelize.BLOB
-      },
-      content: {
-        type: Sequelize.STRING
-      },
-      category_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Categories', key: 'id' },
-      },
-      market: {
-        type: Sequelize.STRING
-      },
-      region_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Regions', key: 'id' },
-      },
-      date: {
-        type: Sequelize.DATE
-      },
-      time: {
-        type: Sequelize.STRING
-      },
-      total_mate: {
-        type: Sequelize.INTEGER
-      },
-      current_mate: {
-        type: Sequelize.INTEGER
-      },
-      trade_type: {
-        type: Sequelize.STRING
-      },
-      status: {
-        type: Sequelize.BOOLEAN
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Articles');
+    // await queryInterface.removeConstraint('Articles', 'articles_category_id_fk');
+    // await queryInterface.removeConstraint('Articles', 'articles_region_id_fk');
   }
 };

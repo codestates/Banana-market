@@ -8,6 +8,21 @@ import '../App.css'; //이거 써줘야 css적용됨.
 import MapModal from './MapModal';
 
 const MapModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  @media only screen and (max-width: 768px){
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    min-height: 960px;
+  }
 `;
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -207,6 +222,8 @@ const UlDiv = styled.ul`
 const PostingWrite = () => {
   // useState로 Modal창 On(true)/Off(false)
   let [mapModal, setMapModal] = useState(false);
+  let [locationInfo, setLocationInfo] = useState(['','']);
+  let locationInfoText = `${locationInfo[0]}, ${locationInfo[1]}`;
 
   // textarea 박스크기 늘이기
   let[textareaHeight, setTextareaHeight] = useState(40);
@@ -301,7 +318,7 @@ const PostingWrite = () => {
   return (
     <>
       { mapModal ? <MapModalWrapper>
-        <MapModal className='map_modal'setMapModal={setMapModal} ></MapModal>
+        <MapModal className='map_modal'setMapModal={setMapModal} setLocationInfo={setLocationInfo} locationInfo={locationInfo}></MapModal>
       </MapModalWrapper> : <div></div>} 
       <Wrapper>
         <div className="detail">
@@ -342,7 +359,7 @@ const PostingWrite = () => {
             </li>
             <li className="location_box writing_area">
               <div className='text'>
-                <input type='text' readOnly placeholder='장소를 선택하세요' onChange={handleChangeLocation} />
+                <input type='text' readOnly value={locationInfoText} placeholder='장소를 선택하세요' onChange={handleChangeLocation} />
               </div>
               <div className='s_btn' onClick={(e)=> {setMapModal(!mapModal)}}>지도에서<br/>찾기</div>
             </li>

@@ -13,7 +13,6 @@ import Posting from "./pages/Posting";
 import PostingView from "./pages/PostingView";
 import PostList from "./pages/PostList";
 import SignUp from "./pages/SignUp";
-import Chat2 from "./pages/Chat2";
 
 function App() {
   return (
@@ -28,9 +27,6 @@ function App() {
         </Route>
         <Route path="/chat">
           <Chat></Chat>
-        </Route>
-        <Route path="/chatList">
-          <Chat2></Chat2>
         </Route>
         <Route path="/mylist">
           <MyList></MyList>

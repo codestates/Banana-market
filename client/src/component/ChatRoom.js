@@ -2,13 +2,26 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import SetModal from "./SetModal";
+import { useMediaQuery } from "react-responsive";
+
+const ChatRoomWrap = styled.div`
+  min-height: 710px;
+  box-sizing: border-box;
+  background-color: whitesmoke;
+  @media screen and (max-width: 768px) {
+    display: ${(props) => props.display1};
+  }
+`;
 
 const ChatRoomDiv = styled.div`
   min-height: 710px;
   border: 1px solid #c4c4c4;
+  box-sizing: border-box;
+  display: ${(props) => props.display1};
   @media screen and (max-width: 768px) {
     border: none;
     /* display: none; */
+    display: ${(props) => props.display1};
   }
   .chat_title {
     width: 100%;
@@ -23,15 +36,7 @@ const ChatRoomDiv = styled.div`
       grid-template-columns: 30px auto 40px;
       grid-gap: 10px;
     }
-    .back_btn {
-      display: none;
-      @media screen and (max-width: 768px) {
-        display: block;
-        min-height: 30px;
-        background-color: #ddd;
-        cursor: pointer;
-      }
-    }
+
     .title {
       height: 30px;
       margin-left: 5px;
@@ -59,7 +64,7 @@ const ChatRoomDiv = styled.div`
     background-color: #fff;
     overflow-y: scroll;
     @media screen and (max-width: 768px) {
-      height: 650px;
+      height: 635px;
     }
   }
   .chat_room {
@@ -107,52 +112,74 @@ const ChatRoomDiv = styled.div`
     }
   }
 `;
-
-const ChatRoom = () => {
+const SetDiv = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  height: 710px;
+  position: absolute;
+  z-index: 1;
+  @media screen and (max-width: 1200px) {
+    /* margin: 80px auto 30px auto; */
+    width: 95%;
+  }
+  @media screen and (max-width: 768px) {
+    /* margin: 80px auto 30px auto; */
+    width: 100%;
+  }
+`;
+const BackBtn = styled.div`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+    min-height: 30px;
+    background-color: #ddd;
+    cursor: pointer;
+  }
+`;
+const ChatRoom = ({ onClick, display1 }) => {
   const history = useHistory();
   const [secessionModal, setSecessionModal] = useState(false);
-
+  const isSmallScreen = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
   return (
     <>
-      {secessionModal === true ? (
-        <SetModal setSecessionModal={setSecessionModal}></SetModal>
-      ) : null}
-      <ChatRoomDiv>
-        <div className="chat_title">
-          <div
-            className="back_btn"
-            onClick={() => {
-              history.push("/chatList");
-            }}
-          >
-            <path></path>
-          </div>
-          <div className="title">
-            <p>[ 공구 ] 사과 공구 같이하실 분</p>
-          </div>
-          <div
-            className="set_btn"
-            onClick={(e) => {
-              setSecessionModal(true);
-            }}
-          >
-            {/* {secessionModal === true ? (
+      <ChatRoomWrap display1={display1}>
+        <ChatRoomDiv display1={display1}>
+          <div className="chat_title">
+            <BackBtn className="back_btn" onClick={onClick}></BackBtn>
+            <div className="title">
+              <p>[ 공구 ] 사과 공구 같이하실 분</p>
+            </div>
+            <div
+              className="set_btn"
+              onClick={(e) => {
+                setSecessionModal(true);
+              }}
+            >
+              {/* {secessionModal === true ? (
               <SecessionModal
                 setSecessionModal={setSecessionModal}
               ></SecessionModal>
             ) : null} */}
+            </div>
           </div>
-        </div>
-        <div className="chat_room"></div>
-        <div className="chat_content">
-          <input
-            type="text"
-            className="message"
-            placeholder="메세지를 입력해주세요."
-          ></input>
-          <div className="message_btn"></div>
-        </div>
-      </ChatRoomDiv>
+          <div className="chat_room"></div>
+          <div className="chat_content">
+            <input
+              type="text"
+              className="message"
+              placeholder="메세지를 입력해주세요."
+            ></input>
+            <div className="message_btn"></div>
+          </div>
+        </ChatRoomDiv>
+      </ChatRoomWrap>
+      {secessionModal === true ? (
+        <SetDiv>
+          <SetModal setSecessionModal={setSecessionModal}></SetModal>
+        </SetDiv>
+      ) : null}
     </>
   );
 };

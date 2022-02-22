@@ -17,7 +17,8 @@ sequelize
     console.error(' 👿 Unable to connect to the database:', err);
   });
 
-// sequelize.sync({ alter: true });
+// sequelize
+//   .sync({alter:true})
 //   .then(()=> {
 //     console.log('🤢 re-sync db.')
 //   })

@@ -1,7 +1,8 @@
 'use strict';
+const bcrypt = require("bcrypt");
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: async (queryInterface, Sequelize) => {
     const regionId = 6;
     const character = ['다오', '배찌', '디지니', '로두마니', '모스', '네오']
 
@@ -9,22 +10,24 @@ module.exports = {
       name: 'admin',
       email: 'admin@bananamarket.tk',
       password: 'admin',
-      // profile_image_key: ,
-      // profile_image_location: ,
+      // profile_image_key: '',
+      // profile_image_location: '',
       region_id : '1',
       block: false,
       type : 'ADMIN',
       createdAt: new Date(),
       updatedAt: new Date()
     }];
-    for (let i = 1; i < regionId; i++) {
+    for (let i = 0; i < regionId; i++) {  
+      const saltRounds = 10;
+      const hash = bcrypt.hashSync(character[i], saltRounds);
       let obj = {
         name: character[i],
         email: character[i],
-        password: character[i],
+        password: hash,
         // profile_image_key: new Date(),
         // profile_image_location: new Date(),
-        region_id : i,
+        region_id : i+1,
         block: false,
         type : 'USER',
         createdAt: new Date(),

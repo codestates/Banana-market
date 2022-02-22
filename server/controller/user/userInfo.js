@@ -1,4 +1,4 @@
-const { User, Region } = require('../../models');
+const { User, Region, Article } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
@@ -11,19 +11,15 @@ module.exports = async (req, res) => {
   const { id } = accessTokenData;
 
   const userData = await User.findOne({
+    include: [{ model: Region }, { model: Article }],
     where: { id },
   });
 
   if (!userData) {
     return res.status(404).send({ message: 'Not found' });
   }
-
-  const region = await Region.findOne({
-    where: {
-      id: userData.region_id,
-    },
-  });
-
+  const { city } = userData.dataValues.Region.dataValues;
+  const totalTrade = userData.Articles.length;
   const {
     name,
     email,
@@ -43,7 +39,8 @@ module.exports = async (req, res) => {
     type,
     createdAt,
     updatedAt,
-    region: region.dataValues.city,
+    region: city,
+    totalTrade,
   };
 
   res.status(200).send({ data: userInfo, message: 'ok' });

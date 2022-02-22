@@ -1,9 +1,10 @@
 import React from 'react';
+import Join from '../component/Join';
 
 const SignUp = () => {
   return (
-    <div>
-      
+    <div className='section'>
+      <Join></Join>
     </div>
   );
 };

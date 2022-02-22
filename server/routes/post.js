@@ -1,13 +1,15 @@
-const router = require("express").Router();
-const controller = require("./../controller");
+const router = require('express').Router();
+const controller = require('./../controller');
 
-router.post("/", controller.uploadPost);
-router.get("/users/location", controller.getUserLocation);
-router.get("/:postid", controller.getPostDetail);
-router.patch("/:postid", controller.updatePost);
-router.delete("/:postid", controller.deletePost);
+router.get('/lists', controller.postList);
 
-router.patch("/close/:postid", controller.postStatus);
-router.get("/?category&search&page", controller.postList);
+router.post('/', controller.uploadPost);
+router.get('/users/location', controller.getUserLocation);
+router.get('/:articleid', controller.getPostDetail);
+router.patch('/:articleid', controller.updatePost);
+router.delete('/:articleid', controller.deletePost);
+
+router.patch('/close/:articleid', controller.postStatus);
+// router.get("/lists/?category&search&page", controller.postList);
 
 module.exports = router;

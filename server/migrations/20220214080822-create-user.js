@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Users", {
+    await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,45 +11,50 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: 'name',
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: 'email',
       },
       password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      profile_image: {
-        type: Sequelize.BLOB,
+      profile_image_key: {
+        type: Sequelize.STRING,
+      },
+      profile_image_location: {
+        type: Sequelize.STRING,
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
+        allowNull: false,
       },
       block: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       type: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: 'USER',
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.fn('NOW'),
       },
     });
-    // .then(function() {
-    //   queryInterface.createTable('users')
-    // })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable('Users');
   },
 };

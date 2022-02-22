@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
     listByCategory = await listByCategory.rows[0].getArticles({
       limit: limit,
       offset: offset,      
-      attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
       order : [['createdAt', 'DESC']]
     })
     return res.status(200).json({
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
           [Op.substring]: search
         }
       },
-      attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
       order : [['createdAt', 'DESC']]
     })
 
@@ -189,7 +189,7 @@ module.exports = async (req, res) => {
     userUploadList = await userUploadList.rows[0].getArticles({
       limit: limit,
       offset: offset,      
-      attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
       order : [['createdAt', 'DESC']],
       joinTableAttributes : [],
       through : {
@@ -226,7 +226,7 @@ module.exports = async (req, res) => {
       const allListOrderByDuedate = await Article.findAndCountAll({
         limit: limit,
         offset: offset,
-        attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+        attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
         // where : {
         //   date : {
         //     [Op.gt]: new Date()
@@ -260,9 +260,9 @@ module.exports = async (req, res) => {
   const allListOrderByUpload = await Article.findAndCountAll({
     limit: limit,
     offset: offset,
-    attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+    attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
     order: [['createdAt', 'DESC']],
-  }).catch(e => console.log(err))
+  }).catch(e => console.log(e))
 
   const articleCount = allListOrderByUpload.count;
 

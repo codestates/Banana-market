@@ -1,11 +1,11 @@
-const { User, Region } = require("../../models");
-const { checkAccessToken } = require("../tokenFunction");
+const { User, Region } = require('../../models');
+const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
   // 회원 정보 요청
   const accessTokenData = checkAccessToken(req);
   if (!accessTokenData) {
-    return res.status(401).send({ message: "Not authorized" });
+    return res.status(401).send({ message: 'Not authorized' });
   }
 
   const { id } = accessTokenData;
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   });
 
   if (!userData) {
-    return res.status(404).send({ message: "Not found" });
+    return res.status(404).send({ message: 'Not found' });
   }
 
   const region = await Region.findOne({
@@ -46,5 +46,5 @@ module.exports = async (req, res) => {
     region: region.dataValues.city,
   };
 
-  res.status(200).send({ data: userInfo, message: "ok" });
+  res.status(200).send({ data: userInfo, message: 'ok' });
 };

@@ -8,7 +8,7 @@ const s3 = new aws.S3({
   region: 'ap-northeast-2',
 });
 
-const deleteProfileImage = (params) => {
+const deleteImage = (params) => {
   s3.deleteObject(params, function (err, data) {
     if (err) {
       console.log(err);
@@ -19,4 +19,4 @@ const deleteProfileImage = (params) => {
   });
 };
 
-module.exports = deleteProfileImage;
+module.exports = deleteImage;

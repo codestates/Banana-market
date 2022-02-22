@@ -122,7 +122,5 @@ module.exports = async (req, res) => {
     });
   });
 
-  // return res.status(201).send({ data: {
-  // }})
   return res.redirect(302, `/articles/${originalData.id}`);
 };

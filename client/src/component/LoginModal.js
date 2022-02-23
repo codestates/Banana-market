@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import github_icon from "../icon/github_icon.png";
 import axios from "axios";
 
+import { useSelector, useDispatch } from 'react-redux'; 
+import { setLogin, setLogout } from "../redux/actions/actions";
+
 axios.defaults.withCredentials = true;
 
 const Login_div = styled.div`
@@ -138,56 +141,54 @@ const Login_div = styled.div`
   }
 `;
 
-const LoginModal = ({ setLoginModal }) => {
+const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
+  let setLoginState = useSelector((state) => state.setLoginReducer); 
+  let dispatch = useDispatch();
+  const history = useHistory();
   // useState로 Input 값 받기
-  const [idValue, setIdValue] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
+  const [loginInfo, setLoginInfo] = useState({
+    'email': "",
+    'password': "",
+  });
+  const handleInputValue = (key) => (e) => {
+    setLoginInfo({ ...loginInfo, [key]: e.target.value });
+  };
 
-  const handleClickLoginBtn = (e) => {
-    // axios로 idValue, passwordValue전송.
-  }
-
-  // const history = useHistory();
-  // const [loginInfo, setLoginInfo] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-  // const handleInputValue = (key) => (e) => {
-  //   console.log("핸들인풋");
-  //   setLoginInfo({ ...loginInfo, [key]: e.target.value });
-  // };
-  // const handleLogin = () => {
-  //   const { email, password } = loginInfo;
-  //   if (email === "" || password === "") {
-  //     return alert("이메일과 비밀번호를 입력하세요");
-  //   } else {
-  //   //   axios
-  //   //     .post(
-  //   //       "http://localhost:3001/login",
-  //   //       {
-  //   //         email,
-  //   //         password,
-  //   //       },
-  //   //       {
-  //   //         withCredentials: true,
-  //   //       }
-  //   //     )
-  //   //     .then((data) => {
-  //   //       console.log(data);
-  //   //       setIsLogin(true);
-  //   //       handleResponseSuccess();
-  //   //       closeModal();
-  //   //     })
-  //   //     .catch((err) => {
-  //   //       alert("이메일 혹은 비밀번호를 확인해주세요");
-  //   //     });
-  //   // }
-  // };
+  const handleClickLoginBtn = () => {
+    console.log(loginInfo);
+    // axios로 idValue, passwordValue전송. 
+    const { email, password } = loginInfo;
+    if (email === "" || password === "") {
+      return alert("이메일과 비밀번호를 입력하세요");
+    } else {
+      axios
+        .post(
+          "http://localhost:3001/login",
+          {
+            email,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((data) => {
+          console.log(data);
+          dispatch(setLogin())
+          setLoginModal(!loginModal);
+          handleResponseSuccess();
+          history.push('/');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <Login_div>
       <div className="loginmodal">
-        <div className="close" onClick={() => setLoginModal(false)}>
+        <div className="close" onClick={() => setLoginModal(!loginModal)}>
           &times;
         </div>
         <div className="login_div">
@@ -205,13 +206,13 @@ const LoginModal = ({ setLoginModal }) => {
             type="text"
             className="loginId"
             placeholder="이메일을 입력해주세요."
-            onChange = {(e) => {setIdValue(e.target.value)}}
+            onChange={handleInputValue("email")}
           />
           <input
             className="password"
-            type="password"
+            // type="password"
             placeholder="비밀번호를 입력해주세요."
-            onChange = {(e) => {setPasswordValue(e.target.value)}}
+            onChange={handleInputValue("password")}
           />
           <div
             className="sign_div"
@@ -223,7 +224,7 @@ const LoginModal = ({ setLoginModal }) => {
           <Link to ='/signup'>
             <div
               className="join"
-              onClick={() => {setLoginModal(false);}}
+              onClick={() => {setLoginModal(!loginModal);}}
             >
               <p
                 style={{

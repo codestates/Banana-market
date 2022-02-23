@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+<<<<<<< HEAD
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
@@ -18,11 +19,19 @@ import store from "./redux/store";
 // }
 
 // let store = createStore(reducer);
+=======
+import { Provider } from 'react-redux';
+import store from './redux/store';
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
+<<<<<<< HEAD
       <Provider store={store}>
+=======
+      <Provider store={store} >
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         <App />
       </Provider>
     </BrowserRouter>

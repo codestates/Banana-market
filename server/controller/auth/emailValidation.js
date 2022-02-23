@@ -1,6 +1,6 @@
-const { User } = require("../../models");
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+const { User } = require('../../models');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 module.exports = async (req, res) => {
   // 이메일 중복 확인
@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   if (!email) {
     return res
       .status(422)
-      .send({ message: "Insufficient parameters supplied" });
+      .send({ message: 'Insufficient parameters supplied' });
   }
 
   const userInfo = await User.findOne({
@@ -17,20 +17,20 @@ module.exports = async (req, res) => {
     },
   }).catch((err) => {
     res.status(500).send({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   });
 
   if (userInfo) {
     return res.status(409).send({
-      message: "Already exist name",
+      message: 'Already exist name',
     });
   }
 
   // 사용할 수 있는 이메일이면 인증 이메일을 보내도록 한다.
   // 메일 발송 객체 생성
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail',
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD,
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
   const mailOptions = {
     from: process.env.EMAIL,
     to: email,
-    subject: "🍌 Banana Market 인증 이메일입니다 🍌",
+    subject: '🍌 Banana Market 인증 이메일입니다 🍌',
     html: `<div
     style='
     text-align: center; 
@@ -68,11 +68,11 @@ module.exports = async (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log("Email sent" + info.response);
+      console.log('Email sent' + info.response);
     }
   });
 
   return res
     .status(200)
-    .send({ data: { authorizationNum: randomNumFloor }, message: "ok" });
+    .send({ data: { authorizationNum: randomNumFloor }, message: 'ok' });
 };

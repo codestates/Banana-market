@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
     // 1. 카테고리 리스트 전달
     listByCategory = await listByCategory.rows[0].getArticles({
       limit: limit,
+<<<<<<< HEAD
       offset: offset,
       attributes: [
         "id",
@@ -55,6 +56,12 @@ module.exports = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+=======
+      offset: offset,      
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      order : [['createdAt', 'DESC']]
+    })
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
     return res.status(200).json({
       data: {
         articleList: listByCategory,
@@ -73,6 +80,7 @@ module.exports = async (req, res) => {
           [Op.substring]: search,
         },
       },
+<<<<<<< HEAD
       attributes: [
         "id",
         "title",
@@ -87,6 +95,11 @@ module.exports = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+=======
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      order : [['createdAt', 'DESC']]
+    })
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
 
     const articleCount = listBySearch.count;
     // 2. 검색 결과가 없는 경우
@@ -224,6 +237,7 @@ module.exports = async (req, res) => {
     // 4. 유저 작성 리스트 전달
     userUploadList = await userUploadList.rows[0].getArticles({
       limit: limit,
+<<<<<<< HEAD
       offset: offset,
       attributes: [
         "id",
@@ -242,6 +256,15 @@ module.exports = async (req, res) => {
       through: {
         where: {
           is_host: true,
+=======
+      offset: offset,      
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      order : [['createdAt', 'DESC']],
+      joinTableAttributes : [],
+      through : {
+        where : {
+          is_host : true
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         },
         attributes: [],
       },
@@ -273,6 +296,7 @@ module.exports = async (req, res) => {
       const allListOrderByDuedate = await Article.findAndCountAll({
         limit: limit,
         offset: offset,
+<<<<<<< HEAD
         attributes: [
           "id",
           "title",
@@ -285,6 +309,9 @@ module.exports = async (req, res) => {
           ["trade_type", "tradeType"],
           "status",
         ],
+=======
+        attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         // where : {
         //   date : {
         //     [Op.gt]: new Date()
@@ -318,6 +345,7 @@ module.exports = async (req, res) => {
   const allListOrderByUpload = await Article.findAndCountAll({
     limit: limit,
     offset: offset,
+<<<<<<< HEAD
     attributes: [
       "id",
       "title",
@@ -332,6 +360,11 @@ module.exports = async (req, res) => {
     ],
     order: [["createdAt", "DESC"]],
   }).catch((e) => console.log(e));
+=======
+    attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+    order: [['createdAt', 'DESC']],
+  }).catch(e => console.log(e))
+>>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
 
   const articleCount = allListOrderByUpload.count;
 

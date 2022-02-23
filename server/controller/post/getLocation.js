@@ -1,36 +1,33 @@
-const { User, Region } = require("../../models");
-const { checkAccessToken } = require("../tokenFunction");
+const { User, Region } = require('../../models');
+const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
   // 사용자 지역 정보 요청
   const accessTokenData = checkAccessToken(req);
   if (!accessTokenData) {
-    return res.status(401).send("Not authorized");
+    return res.status(401).send('Not authorized');
   }
 
   const { id } = accessTokenData;
 
-  const userData = await User.findOne({
+  User.findOne({
+    include: [{ model: Region }],
     where: { id },
-  });
-
-  const { region_id } = userData.dataValues;
-
-  Region.findOne({
-    where: {
-      id: region_id,
-    },
   })
-    .then((regionData) => {
+    .then((userData) => {
+      if (!userData) {
+        return res.status(404).send('Not found user');
+      }
+      const { city } = userData.dataValues.Region.dataValues;
       res.status(200).send({
         data: {
-          region: regionData.dataValues.city,
+          region: city,
         },
-        message: "ok",
+        message: 'ok',
       });
     })
     .catch((err) => {
       console.log(err);
-      return res.status(500).send({ message: "Internal server error" });
+      return res.status(500).send({ message: 'Internal server error' });
     });
 };

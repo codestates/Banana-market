@@ -6,23 +6,23 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       article_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Articles',
-          key: 'id'
-        }
+          key: 'id',
+        },
       },
       is_host: {
         type: Sequelize.STRING,
@@ -30,15 +30,17 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('UserArticles');
-  }
+  },
 };

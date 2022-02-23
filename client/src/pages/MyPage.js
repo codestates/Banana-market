@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import Profile from '../component/Profile';
 
-const MyPage = () => {
+const MyPage = ({handleChangeAuth}) => {
+
   return (
     <div className='section'>
-      <Profile></Profile>
+      <Profile 
+        handleChangeAuth={handleChangeAuth}
+      ></Profile>
     </div>
   );
 };

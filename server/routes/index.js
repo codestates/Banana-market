@@ -9,6 +9,7 @@ const validationRouter = require('./validation');
 const adminRouter = require('./admin');
 
 router.post('/login', controller.login);
+router.post('/login/google/callback', controller.googleLogin);
 router.post('/logout', controller.logout);
 router.post('/signup', controller.signup);
 router.get('/token', controller.token);

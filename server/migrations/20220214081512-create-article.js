@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Articles", {
+    await queryInterface.createTable('Articles', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -33,7 +33,7 @@ module.exports = {
       },
       date: {
         type: Sequelize.DATEONLY,
-        get: function() {
+        get: function () {
           return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
         },
         allowNull: false,
@@ -49,6 +49,7 @@ module.exports = {
       current_mate: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        defaultValue: 1,
       },
       trade_type: {
         type: Sequelize.STRING,
@@ -57,21 +58,21 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: true
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
+        defaultValue: Sequelize.fn('NOW'),
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Articles");
+    await queryInterface.dropTable('Articles');
   },
 };

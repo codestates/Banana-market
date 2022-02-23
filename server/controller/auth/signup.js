@@ -1,11 +1,11 @@
-const { User, Region } = require("../../models");
-const bcrypt = require("bcrypt");
+const { User, Region } = require('../../models');
+const bcrypt = require('bcrypt');
 const {
   generateAccessToken,
   sendAccessToken,
   generateRefreshToken,
   sendRefreshToken,
-} = require("../tokenFunction");
+} = require('../tokenFunction');
 
 module.exports = async (req, res) => {
   //회원가입 요청
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   if (!email || !password || !name || !region) {
     return res
       .status(422)
-      .send({ message: "Insufficient parameters supplied" });
+      .send({ message: 'Insufficient parameters supplied' });
   }
 
   const regionInfo = await Region.findOne({
@@ -40,16 +40,14 @@ module.exports = async (req, res) => {
           const refreshToken = generateRefreshToken(userInfo.dataValues);
           sendAccessToken(res, accessToken);
           sendRefreshToken(res, refreshToken);
-          return (
-            res
-              .status(201)
-              .send({ data: userInfo.dataValues, message: "ok" })
-              // .redirect(302, "/posts/list")
-          );
+          return res
+            .status(201)
+            .send({ data: userInfo.dataValues, message: 'ok' });
+          // .redirect(302, "/posts/list")
         })
         .catch((err) => {
           console.log(err);
-          return res.status(500).send({ message: "Internal server error" });
+          return res.status(500).send({ message: 'Internal server error' });
         });
     });
   });

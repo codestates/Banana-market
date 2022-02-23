@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import "../App.css"; //이거 써줘야 css적용됨.
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import '../App.css'; //이거 써줘야 css적용됨.
 
-import SearchModal from "./SearchModal";
-import LoginModal from "./LoginModal";
-import MenuModal from "./MenuModal";
+import SearchModal from './SearchModal';
+import LoginModal from './LoginModal';
+import MenuModal from './MenuModal';
 
-import logo from "../icon/logo.png";
-import login from "../icon/login.png";
+import logo from '../icon/logo.png';
+import login from '../icon/login.png';
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -171,7 +171,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Header = ( {handleResponseSuccess}) => {
+const Header = ({ handleResponseSuccess }) => {
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
@@ -179,7 +179,6 @@ const Header = ( {handleResponseSuccess}) => {
 
   return (
     <>
-<<<<<<< HEAD
       {searchBox ? (
         <SearchModalWrapper>
           <SearchModal
@@ -194,7 +193,9 @@ const Header = ( {handleResponseSuccess}) => {
         <LoginModalWrapper>
           <LoginModal
             className="login_modal"
+            loginModal={loginModal}
             setLoginModal={setLoginModal}
+            handleResponseSuccess={handleResponseSuccess}
           ></LoginModal>
         </LoginModalWrapper>
       ) : (
@@ -213,28 +214,6 @@ const Header = ( {handleResponseSuccess}) => {
       )}
 
       <div className="header">
-=======
-      {searchBox ? <SearchModalWrapper>
-        <SearchModal className='search_modal'setSearchBox={setSearchBox} ></SearchModal>
-      </SearchModalWrapper> : <div></div>}
-      {loginModal ? <LoginModalWrapper>
-        <LoginModal 
-          className='login_modal'
-          loginModal={loginModal}
-          setLoginModal={setLoginModal} 
-          handleResponseSuccess={handleResponseSuccess}
-        ></LoginModal>
-      </LoginModalWrapper> : <div></div>} 
-      {menuModal ? <MenuModalWrapper>
-        <MenuModal 
-          className='menu_modal'
-          setMenuModal={setMenuModal} 
-          setLoginModal={setLoginModal} 
-        ></MenuModal>
-      </MenuModalWrapper> : <div></div>} 
-      
-      <div className='header'>
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         <Wrapper>
           <Link to="/list">
             <div className="logo">

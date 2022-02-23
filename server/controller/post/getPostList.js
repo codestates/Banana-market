@@ -1,6 +1,6 @@
-const { Op } = require("sequelize");
-const { Article, Category, User, UserArticles } = require("../../models");
-const { checkAccessToken } = require("../tokenFunction");
+const { Op } = require('sequelize');
+const { Article, Category, User, UserArticles } = require('../../models');
+const { checkAccessToken } = require('../tokenFunction');
 // const { Post } = require('../../models')
 
 module.exports = async (req, res) => {
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
     const articleCount = listByCategory.count;
     // 1. 카테고리에 해당하는 article이 없다면
     if (articleCount === 0) {
-      return res.status(200).json({ message: "Article Is Empty!" });
+      return res.status(200).json({ message: 'Article Is Empty!' });
     }
     // 1. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
     else if (articleCount < offset) {
@@ -33,35 +33,28 @@ module.exports = async (req, res) => {
         data: {
           articleList: [],
         },
-        message: "No more articles",
+        message: 'No more articles',
       });
     }
 
     // 1. 카테고리 리스트 전달
     listByCategory = await listByCategory.rows[0].getArticles({
       limit: limit,
-<<<<<<< HEAD
       offset: offset,
       attributes: [
-        "id",
-        "title",
-        ["image_location", "image"],
-        "market",
-        "date",
-        "time",
-        ["total_mate", "totalMate"],
-        ["current_mate", "currentMate"],
-        ["trade_type", "tradeType"],
-        "status",
+        'id',
+        'title',
+        ['image_location', 'image'],
+        'market',
+        'date',
+        'time',
+        ['total_mate', 'totalMate'],
+        ['current_mate', 'currentMate'],
+        ['trade_type', 'tradeType'],
+        'status',
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
-=======
-      offset: offset,      
-      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
-      order : [['createdAt', 'DESC']]
-    })
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
     return res.status(200).json({
       data: {
         articleList: listByCategory,
@@ -80,31 +73,25 @@ module.exports = async (req, res) => {
           [Op.substring]: search,
         },
       },
-<<<<<<< HEAD
       attributes: [
-        "id",
-        "title",
-        ["image_location", "image"],
-        "market",
-        "date",
-        "time",
-        ["total_mate", "totalMate"],
-        ["current_mate", "currentMate"],
-        ["trade_type", "tradeType"],
-        "status",
+        'id',
+        'title',
+        ['image_location', 'image'],
+        'market',
+        'date',
+        'time',
+        ['total_mate', 'totalMate'],
+        ['current_mate', 'currentMate'],
+        ['trade_type', 'tradeType'],
+        'status',
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
-=======
-      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
-      order : [['createdAt', 'DESC']]
-    })
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
 
     const articleCount = listBySearch.count;
     // 2. 검색 결과가 없는 경우
     if (articleCount === 0) {
-      return res.status(200).json({ message: "No results found!" });
+      return res.status(200).json({ message: 'No results found!' });
     }
     // 2. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
     else if (articleCount < offset) {
@@ -112,7 +99,7 @@ module.exports = async (req, res) => {
         data: {
           articleList: [],
         },
-        message: "No more articles",
+        message: 'No more articles',
       });
     }
     // 2. 전체 리스트 전달
@@ -125,11 +112,11 @@ module.exports = async (req, res) => {
   }
 
   // 3. 내가 참여한 게시글 목록
-  if (isHost === "true, false") {
+  if (isHost === 'true, false') {
     const accessTokenData = checkAccessToken(req);
     // 3. 토큰이 유효하지 않은 경우
     if (!accessTokenData) {
-      res.status(401).send({ message: "Not authorized" });
+      res.status(401).send({ message: 'Not authorized' });
     }
     const { id } = accessTokenData;
 
@@ -143,7 +130,7 @@ module.exports = async (req, res) => {
     const articleCount = userArticleList.count;
     // 3. 해당 유저가 참여한 article이 없다면
     if (articleCount === 0) {
-      return res.status(200).json({ message: "Article Is Empty!" });
+      return res.status(200).json({ message: 'Article Is Empty!' });
     }
     // 3. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
     else if (articleCount < offset) {
@@ -151,7 +138,7 @@ module.exports = async (req, res) => {
         data: {
           articleList: [],
         },
-        message: "No more articles",
+        message: 'No more articles',
       });
     }
 
@@ -160,19 +147,19 @@ module.exports = async (req, res) => {
       limit: limit,
       offset: offset,
       attributes: [
-        "id",
-        "title",
-        "image",
-        "market",
-        "date",
-        "time",
-        ["total_mate", "totalMate"],
-        ["current_mate", "currentMate"],
-        ["trade_type", "tradeType"],
-        "status",
+        'id',
+        'title',
+        'image',
+        'market',
+        'date',
+        'time',
+        ['total_mate', 'totalMate'],
+        ['current_mate', 'currentMate'],
+        ['trade_type', 'tradeType'],
+        'status',
       ],
       joinTableAttributes: [],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
 
     const myArticleList = await Promise.all(
@@ -195,11 +182,11 @@ module.exports = async (req, res) => {
   }
 
   // 4. 내가 작성한 게시글 목록
-  if (isHost === "true") {
+  if (isHost === 'true') {
     const accessTokenData = checkAccessToken(req);
 
     if (!accessTokenData) {
-      res.status(401).send({ message: "Not authorized" });
+      res.status(401).send({ message: 'Not authorized' });
     }
     const { id } = accessTokenData;
 
@@ -222,7 +209,7 @@ module.exports = async (req, res) => {
     const articleCount = userUploadList.count;
     // 4. 해당 유저가 작성한 article이 없다면
     if (articleCount === 0) {
-      return res.status(200).json({ message: "Article Is Empty!" });
+      return res.status(200).json({ message: 'Article Is Empty!' });
     }
     // 4. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
     else if (articleCount < offset) {
@@ -230,41 +217,31 @@ module.exports = async (req, res) => {
         data: {
           articleList: [],
         },
-        message: "No more articles",
+        message: 'No more articles',
       });
     }
 
     // 4. 유저 작성 리스트 전달
     userUploadList = await userUploadList.rows[0].getArticles({
       limit: limit,
-<<<<<<< HEAD
       offset: offset,
       attributes: [
-        "id",
-        "title",
-        ["image_location", "image"],
-        "market",
-        "date",
-        "time",
-        ["total_mate", "totalMate"],
-        ["current_mate", "currentMate"],
-        ["trade_type", "tradeType"],
-        "status",
+        'id',
+        'title',
+        ['image_location', 'image'],
+        'market',
+        'date',
+        'time',
+        ['total_mate', 'totalMate'],
+        ['current_mate', 'currentMate'],
+        ['trade_type', 'tradeType'],
+        'status',
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
       joinTableAttributes: [],
       through: {
         where: {
           is_host: true,
-=======
-      offset: offset,      
-      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
-      order : [['createdAt', 'DESC']],
-      joinTableAttributes : [],
-      through : {
-        where : {
-          is_host : true
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         },
         attributes: [],
       },
@@ -292,44 +269,40 @@ module.exports = async (req, res) => {
   // 5. sort query만 있는 경우, 리스트 전체 전달
   if (sort) {
     // 5-1. 마감 기한 순 전체 정렬
-    if (sort === "due-date") {
+    if (sort === 'due-date') {
       const allListOrderByDuedate = await Article.findAndCountAll({
         limit: limit,
         offset: offset,
-<<<<<<< HEAD
         attributes: [
-          "id",
-          "title",
-          ["image_location", "image"],
-          "market",
-          "date",
-          "time",
-          ["total_mate", "totalMate"],
-          ["current_mate", "currentMate"],
-          ["trade_type", "tradeType"],
-          "status",
+          'id',
+          'title',
+          ['image_location', 'image'],
+          'market',
+          'date',
+          'time',
+          ['total_mate', 'totalMate'],
+          ['current_mate', 'currentMate'],
+          ['trade_type', 'tradeType'],
+          'status',
         ],
-=======
-        attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
         // where : {
         //   date : {
         //     [Op.gt]: new Date()
         //   },
         //   status : true
         // },
-        order: [["date"], ["time", "DESC"], ["createdAt"]],
+        order: [['date'], ['time', 'DESC'], ['createdAt']],
       }).catch((e) => console.log(err));
 
       const articleCount = allListOrderByDuedate.count;
 
       // 5-1. article이 없다면
       if (articleCount === 0) {
-        return res.status(200).json({ message: "Article Is Empty!" });
+        return res.status(200).json({ message: 'Article Is Empty!' });
       }
       // 5-1. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
       else if (articleCount < offset) {
-        return res.status(200).send({ message: "No more articles" });
+        return res.status(200).send({ message: 'No more articles' });
       }
       // 5-1. 전체 리스트 응답
       return res.status(200).json({
@@ -345,32 +318,26 @@ module.exports = async (req, res) => {
   const allListOrderByUpload = await Article.findAndCountAll({
     limit: limit,
     offset: offset,
-<<<<<<< HEAD
     attributes: [
-      "id",
-      "title",
-      ["image_location", "image"],
-      "market",
-      "date",
-      "time",
-      ["total_mate", "totalMate"],
-      ["current_mate", "currentMate"],
-      ["trade_type", "tradeType"],
-      "status",
+      'id',
+      'title',
+      ['image_location', 'image'],
+      'market',
+      'date',
+      'time',
+      ['total_mate', 'totalMate'],
+      ['current_mate', 'currentMate'],
+      ['trade_type', 'tradeType'],
+      'status',
     ],
-    order: [["createdAt", "DESC"]],
-  }).catch((e) => console.log(e));
-=======
-    attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
     order: [['createdAt', 'DESC']],
-  }).catch(e => console.log(e))
->>>>>>> aaa54e1746e97686b1e2fcfa9b719b63021607c9
+  }).catch((e) => console.log(e));
 
   const articleCount = allListOrderByUpload.count;
 
   // 6-2. article이 없다면
   if (articleCount === 0) {
-    return res.status(200).json({ message: "Article Is Empty!" });
+    return res.status(200).json({ message: 'Article Is Empty!' });
   }
   // 6-2. 존재하는 article 수 * 페이지를 벗어나는 페이지를 요구한 경우
   else if (articleCount < offset) {
@@ -378,7 +345,7 @@ module.exports = async (req, res) => {
       data: {
         articleList: [],
       },
-      message: "No more articles",
+      message: 'No more articles',
     });
   }
   // 6-2. 전체 리스트 전달

@@ -172,7 +172,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Header = () => {
+const Header = ( {handleResponseSuccess}) => {
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
@@ -184,10 +184,19 @@ const Header = () => {
         <SearchModal className='search_modal'setSearchBox={setSearchBox} ></SearchModal>
       </SearchModalWrapper> : <div></div>}
       {loginModal ? <LoginModalWrapper>
-        <LoginModal className='login_modal'setLoginModal={setLoginModal} ></LoginModal>
+        <LoginModal 
+          className='login_modal'
+          loginModal={loginModal}
+          setLoginModal={setLoginModal} 
+          handleResponseSuccess={handleResponseSuccess}
+        ></LoginModal>
       </LoginModalWrapper> : <div></div>} 
       {menuModal ? <MenuModalWrapper>
-        <MenuModal className='menu_modal'setMenuModal={setMenuModal} setLoginModal={setLoginModal} ></MenuModal>
+        <MenuModal 
+          className='menu_modal'
+          setMenuModal={setMenuModal} 
+          setLoginModal={setLoginModal} 
+        ></MenuModal>
       </MenuModalWrapper> : <div></div>} 
       
       <div className='header'>

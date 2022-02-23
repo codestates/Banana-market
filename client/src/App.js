@@ -15,6 +15,19 @@ import PostList from "./pages/PostList";
 import SignUp from "./pages/SignUp";
 
 function App() {
+  const [chatListDetail, setChatListDetail] = useState({});
+
+  const handleChatClick = (articleid) => {
+    axios
+      .get(`http://localhost:3001/articles/${articleid}`)
+      .then((detailData) => {
+        console.log(detailData);
+        setChatListDetail(detailData.data.data.post);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="App">
       <Header></Header>
@@ -37,11 +50,14 @@ function App() {
         <Route path="/posting">
           <Posting></Posting>
         </Route>
-        <Route path="/view">
-          <PostingView></PostingView>
+        <Route path="/view/:id">
+          <PostingView
+            chatListDetail={chatListDetail}
+            setChatListDetail={setChatListDetail}
+          ></PostingView>
         </Route>
         <Route path="/list">
-          <PostList></PostList>
+          <PostList handleChatClick={handleChatClick}></PostList>
         </Route>
         <Route path="/signup">
           <SignUp></SignUp>

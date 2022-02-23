@@ -4,23 +4,18 @@ import { useHistory } from "react-router-dom";
 import SetModal from "./SetModal";
 import { useMediaQuery } from "react-responsive";
 
-const ChatRoomWrap = styled.div`
-  min-height: 710px;
-  box-sizing: border-box;
-  background-color: whitesmoke;
-  @media screen and (max-width: 768px) {
-    display: ${(props) => props.display1};
-  }
-`;
-
 const ChatRoomDiv = styled.div`
+  /* min-width: 800px; */
   min-height: 710px;
   border: 1px solid #c4c4c4;
+  /* position: absolute;
+  right: 0; */
   box-sizing: border-box;
   display: ${(props) => props.display1};
   @media screen and (max-width: 768px) {
     border: none;
     /* display: none; */
+    width: 100%;
     display: ${(props) => props.display1};
   }
   .chat_title {
@@ -64,7 +59,7 @@ const ChatRoomDiv = styled.div`
     background-color: #fff;
     overflow-y: scroll;
     @media screen and (max-width: 768px) {
-      height: 635px;
+      height: 632px;
     }
   }
   .chat_room {
@@ -117,6 +112,7 @@ const SetDiv = styled.div`
   width: 100%;
   height: 710px;
   position: absolute;
+  /* background-color: wheat; */
   z-index: 1;
   @media screen and (max-width: 1200px) {
     /* margin: 80px auto 30px auto; */
@@ -136,7 +132,19 @@ const BackBtn = styled.div`
     cursor: pointer;
   }
 `;
-const ChatRoom = ({ onClick, display1 }) => {
+
+const ChatRoomWrap = styled.div`
+  min-height: 710px;
+  box-sizing: border-box;
+  background-color: whitesmoke;
+  text-align: center;
+  line-height: 710px;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const ChatRoom = ({ onClick, display1, setChatRoom, curChatRoom }) => {
   const history = useHistory();
   const [secessionModal, setSecessionModal] = useState(false);
   const isSmallScreen = useMediaQuery({
@@ -144,12 +152,18 @@ const ChatRoom = ({ onClick, display1 }) => {
   });
   return (
     <>
-      <ChatRoomWrap display1={display1}>
+      {curChatRoom ? (
         <ChatRoomDiv display1={display1}>
           <div className="chat_title">
-            <BackBtn className="back_btn" onClick={onClick}></BackBtn>
+            <BackBtn
+              className="back_btn"
+              // onClick={() => {
+              //   setChatRoom(false);
+              // }}
+              onClick={onClick}
+            ></BackBtn>
             <div className="title">
-              <p>[ 공구 ] 사과 공구 같이하실 분</p>
+              <p>{curChatRoom.title}</p>
             </div>
             <div
               className="set_btn"
@@ -174,7 +188,10 @@ const ChatRoom = ({ onClick, display1 }) => {
             <div className="message_btn"></div>
           </div>
         </ChatRoomDiv>
-      </ChatRoomWrap>
+      ) : (
+        <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>
+      )}
+
       {secessionModal === true ? (
         <SetDiv>
           <SetModal setSecessionModal={setSecessionModal}></SetModal>

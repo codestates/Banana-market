@@ -198,7 +198,7 @@ const UlDiv = styled.ul`
   }
 `;
 
-const PostDetail = () => {
+const PostDetail = ({ chatListDetail, handleClick }) => {
   const history = useHistory();
   return (
     <DetailDiv>
@@ -229,6 +229,7 @@ const PostDetail = () => {
       <div
         className="btn"
         onClick={() => {
+          // handleClick();
           history.push("/chat");
         }}
       >

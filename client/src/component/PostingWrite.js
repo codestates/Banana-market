@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import searchList from '../resource/cityList'
 import '../App.css'; //이거 써줘야 css적용됨.
 import MapModal from './MapModal';
+import market from "../icon/market.png";
+import give from "../icon/give.png";
 
 const MapModalWrapper = styled.div`
   position: fixed;
@@ -69,15 +71,15 @@ const UlDiv = styled.ul`
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 0;
-    
     >li.radio_box.writing_area {
       height: 30px;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin : 20px auto 20px auto;
     }
   }
-  .radio_box {
-    margin-top: 20px;
+  >li.radio_box {
+    display: block;
+    width: 155px;
+    margin : 20px auto 0 auto;
     input[type='radio']{
       appearance: none;
       display: inline-block;
@@ -99,13 +101,13 @@ const UlDiv = styled.ul`
     >label{
       display: inline-block;
       font-size: 20px;
-      background-color: red;
+      /* background-color: red; */
     }
   }
   .image_box {
     width: 285px;
     height: 100px;
-    background-color: orange;
+    /* background-color: orange; */
     box-sizing: border-box;
     margin: 0 auto 20px auto;
     .image {
@@ -114,23 +116,40 @@ const UlDiv = styled.ul`
       height: 100px;
       border-radius: 10px;
       margin-right: 25px;
-      background-color: white;
+      background-color: rgba(255, 250, 176, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      > img.basic_image {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      }
     }
     .btn_list {
+      margin-top: 6px;
       float: left;
       width: 160px;
-      height: 100px;
+      height: 88px;
       .profile_btn{
+        display: inline-block;
         width: 100%;
         font-size: 14px;
-        height: 40px;
-        border-radius: 8px;
+        height: 36px;
+        border-radius: 10px;
         text-align: center;
-        line-height: 40px;
-        background-color: seagreen;
+        line-height: 36px;
+        background-color: #95c710;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        >input.input_hidden{
+          display: none;
+        }
       }
-      .delete_btn{
-        margin-top: 20px;
+      .profile_btn.delete_btn{
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.6);
+        background-color: white;
+        margin-top: 18px;
       }
     }
   }
@@ -138,7 +157,7 @@ const UlDiv = styled.ul`
     width: 380px;
     height: 60px;
     font-size: 16px;
-    background-color: salmon;
+    /* background-color: salmon; */
     box-sizing: border-box;
     .text{
       border: 1px solid red;
@@ -224,7 +243,7 @@ const PostingWrite = () => {
   let [mapModal, setMapModal] = useState(false);
   let [locationInfo, setLocationInfo] = useState(['','']);
   let locationInfoText = `${locationInfo[0]}, ${locationInfo[1]}`;
-
+  
   // textarea 박스크기 늘이기
   let[textareaHeight, setTextareaHeight] = useState(40);
   const handleChangeHeight = (e) => {
@@ -270,6 +289,8 @@ const PostingWrite = () => {
   let[selectTime, setSelectTime] = useState(0);
   let[selectPeopleNum, setSelectPeopleNum] = useState(0);
   let[inputText, setInputText] = useState('');
+  let [imageFile, setImageFile] = useState({selectedFile: null});
+  let [thumbnail, setThumbnail] = useState(null);
 
   // Input 값 받는 함수
   const handleChangeRadioBox = (e) => {
@@ -312,8 +333,29 @@ const PostingWrite = () => {
       inputText
     )
 	};
-
-
+  //이미지 업로드 버튼 실행함수
+  const handleChangeUpload = (e) => {
+    setImageFile({selectedFile : e.target.files[0]});
+    if (e.target.files[0]) {
+      // console.log('2', thumbnail)
+      let reader = new FileReader();
+      // 1. 파일을 읽어 버퍼에 저장합니다. 파일 상태 업데이트
+      reader.readAsDataURL(e.target.files[0]); 
+      reader.onloadend = () => {
+        // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+        const image_code = reader.result;
+        if (image_code) { //  images.push(base64.toString())
+          setThumbnail(image_code.toString());
+        // console.log('3', thumbnail)
+        }
+      }
+    }
+  };
+  //이미지 삭제버튼 실행함수
+  const handleClickDeleteImg = (e) => {
+    setThumbnail(null);
+    setImageFile({selectedFile: null});
+  }
 
   return (
     <>
@@ -335,11 +377,16 @@ const PostingWrite = () => {
             </li>
             <li className="image_box">
               <div className="image">
-                <img></img>
+                { imageFile.selectedFile ? <img className="basic_image" src={thumbnail} />
+                : <img className="basic_image" src={selectRadioBox === '공구' ? market : give}/>
+                }
               </div>
               <div className="btn_list">
-                <div className='upload_btn profile_btn'>이미지 업로드</div>
-                <div className='delete_btn profile_btn'>삭 제</div>
+                <label htmlFor='image' className='upload_btn profile_btn'>
+                  <input id='image' type='file' accept='image/*' className='input_hidden' onChange={handleChangeUpload}/>
+                  이미지 업로드
+                </label>
+                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>이미지 제거</div>
               </div>
             </li>
             <li className="category_box writing_area">

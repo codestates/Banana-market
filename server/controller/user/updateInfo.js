@@ -67,7 +67,9 @@ module.exports = async (req, res) => {
       const refreshToken = generateRefreshToken(userInfo.dataValues);
       sendAccessToken(res, accessToken);
       sendRefreshToken(res, refreshToken);
-      return res.redirect(302, '/users/info');
+      return res.status(200).send({message: "OK"});
+      // return res.redirect(302, "/users/info");
+
     })
     .catch((err) => {
       console.log(err);

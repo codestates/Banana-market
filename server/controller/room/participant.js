@@ -49,5 +49,5 @@ module.exports = async (req, res) => {
   const data = { participant : users };
 
   // participant list 전달
-  res.status(200).json({ data, message : 'ok'});
+  res.status(200).json({ data, message : 'Ok'});
 };

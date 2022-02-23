@@ -1,4 +1,4 @@
-const { User, Article, Chat, UserArticles } = require('../../models');
+const { User, Article, Chat } = require('../../models');
 const { Op } = require("sequelize");
 const { checkAccessToken } = require('../tokenFunction');
 
@@ -16,6 +16,7 @@ module.exports = async (req, res) => {
     return res.status(400).send({ message: 'Article id required' });
   }
 
+  // article 별 message list
   const articleMessages = await Article.findAll({
     where : {
       id : articleid
@@ -38,6 +39,7 @@ module.exports = async (req, res) => {
   ]
   })
   
+
   let userChat = {}
   await articleMessages.map((article) => {
     article = article.toJSON()
@@ -66,5 +68,5 @@ module.exports = async (req, res) => {
 
   const data = { ...userChat }
 
-  return res.status(200).json({ data });
+  return res.status(200).json({ data, message : 'Ok' });
 };

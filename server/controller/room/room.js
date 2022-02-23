@@ -21,6 +21,7 @@ module.exports = async (req, res) => {
 
   const articles = await joinList.map(ua => ua.dataValues.articleId)
 
+  // 내가 참여하고 있는 모든 채팅방과 모든 메세지
   const articleChatList = await Article.findAndCountAll({
     attributes : [['image_location', 'image'], 'title', ['id', 'articleId']],
     where : {
@@ -37,7 +38,8 @@ module.exports = async (req, res) => {
     ]
   })
 
-  const latestarticleChatList = await Promise.all(
+  // 채팅 리스트별 최신 메세지 1개
+  const chatListLatestMessage = await Promise.all(
     articleChatList.rows.map((article) => {
       const chats = article.Chats[0].toJSON();
       const room = {
@@ -50,7 +52,7 @@ module.exports = async (req, res) => {
     })
   )
 
-  const data = { roomList : latestarticleChatList }
+  const data = { roomList : chatListLatestMessage }
 
-  res.status(200).json({data});
+  res.status(200).json({data, message : 'Ok'});
 };

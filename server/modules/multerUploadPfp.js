@@ -42,7 +42,15 @@ const profileImageUpload = multer({
           cb(null, Date.now() + '.' + file.originalname.split('.').pop());
         },
         transform: function (req, file, cb) {
-          cb(null, sharp().resize(200, 200));
+          cb(
+            null,
+            sharp().resize({
+              width: 300,
+              height: 300,
+              fit: 'cover',
+            })
+            // .toBuffer()
+          );
         },
       },
     ],

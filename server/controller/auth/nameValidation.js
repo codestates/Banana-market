@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { User } = require('../../models');
 
 module.exports = async (req, res) => {
   // 닉네임 중복 확인
@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   if (!name) {
     return res
       .status(422)
-      .send({ message: "Insufficient parameters supplied" });
+      .send({ message: 'Insufficient parameters supplied' });
   }
 
   const userInfo = await User.findOne({
@@ -15,17 +15,17 @@ module.exports = async (req, res) => {
     },
   }).catch((err) => {
     res.status(500).send({
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   });
 
   if (!userInfo) {
     return res.status(200).send({
-      message: "ok",
+      message: 'ok',
     });
   } else {
     return res.status(409).send({
-      message: "Already exist name",
+      message: 'Already exist name',
     });
   }
 };

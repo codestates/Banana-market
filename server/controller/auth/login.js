@@ -1,19 +1,19 @@
-const bcrypt = require("bcrypt");
-const { send } = require("express/lib/response");
-const { User } = require("../../models");
+const bcrypt = require('bcrypt');
+const { send } = require('express/lib/response');
+const { User } = require('../../models');
 const {
   generateAccessToken,
   generateRefreshToken,
   sendAccessToken,
   sendRefreshToken,
-} = require("../tokenFunction");
+} = require('../tokenFunction');
 
 module.exports = async (req, res) => {
   // 로그인
 
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).send({ message: "Bad request" });
+    return res.status(400).send({ message: 'Bad request' });
   }
 
   User.findOne({
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     },
   }).then((userData) => {
     if (!userData) {
-      return res.status(404).send({ message: "Wrong email or password" });
+      return res.status(404).send({ message: 'Wrong email or password' });
     }
     const encodedPassword = userData.password;
 
@@ -35,10 +35,10 @@ module.exports = async (req, res) => {
         sendRefreshToken(res, refreshToken);
         return res
           .status(200)
-          .send({ data: userData.dataValues, message: "ok" });
+          .send({ data: userData.dataValues, message: 'ok' });
         // res.redirect(302, "/articles/list");
       } else {
-        return res.status(404).send({ message: "Wrong email or password" });
+        return res.status(404).send({ message: 'Wrong email or password' });
       }
     });
   });

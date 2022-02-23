@@ -10,8 +10,8 @@ const s3 = new aws.S3({
   region: 'ap-northeast-2',
 });
 
-//  이미지 사이즈는 최대 2MB로 제한
-const maxSize = 2 * 1024 * 1024;
+//  이미지 사이즈는 최대 3MB로 제한
+const maxSize = 3 * 1024 * 1024;
 
 // 이미지 타입이 아닌 것은 제한한다.
 const multerFilter = (req, file, cb) => {
@@ -25,7 +25,7 @@ const multerFilter = (req, file, cb) => {
 const profileImageUpload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'banana-profile-img',
+    bucket: 'banana-mk-image',
     acl: 'public-read',
     limits: {
       fileSize: maxSize,
@@ -45,11 +45,10 @@ const profileImageUpload = multer({
           cb(
             null,
             sharp().resize({
-              width: 300,
-              height: 300,
+              width: 800,
+              height: 800,
               fit: 'cover',
             })
-            // .toBuffer()
           );
         },
       },

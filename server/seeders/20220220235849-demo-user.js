@@ -12,8 +12,9 @@ module.exports = {
         name: 'admin',
         email: 'admin@bananamarket.tk',
         password: 'admin',
-        // profile_image_key: '',
-        // profile_image_location: '',
+        profile_image_key: '1645110272558.png',
+        profile_image_location:
+          'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
         region_id: '1',
         block: false,
         type: 'ADMIN',
@@ -28,8 +29,9 @@ module.exports = {
         name: character[i],
         email: character[i],
         password: hash,
-        // profile_image_key: new Date(),
-        // profile_image_location: new Date(),
+        profile_image_key: '1645110272558.png',
+        profile_image_location:
+          'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
         region_id: i + 1,
         block: false,
         type: 'USER',

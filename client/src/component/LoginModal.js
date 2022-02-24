@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
-import github_icon from "../icon/github_icon.png";
-import axios from "axios";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
+import github_icon from '../icon/github_icon.png';
+import google_icon from '../icon/google_icon.png';
+import axios from 'axios';
 
-import { useSelector, useDispatch } from 'react-redux'; 
-import { setLogin, setLogout } from "../redux/actions/actions";
+import { useSelector, useDispatch } from 'react-redux';
+import { setLogin, setLogout } from '../redux/actions/actions';
 
 axios.defaults.withCredentials = true;
 
@@ -110,7 +111,7 @@ const Login_div = styled.div`
         cursor: pointer;
         line-height: 40px;
         border-radius: 20px;
-        .git_icon {
+        .google_icon {
           position: absolute;
           top: 8px;
           left: 60px;
@@ -125,7 +126,7 @@ const Login_div = styled.div`
       }
     }
   }
-  @media only screen and (max-width: 768px){
+  @media only screen and (max-width: 768px) {
     > .loginmodal {
       width: 100%;
       height: 100vh;
@@ -141,14 +142,14 @@ const Login_div = styled.div`
   }
 `;
 
-const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
-  let setLoginState = useSelector((state) => state.setLoginReducer); 
+const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
+  let setLoginState = useSelector((state) => state.setLoginReducer);
   let dispatch = useDispatch();
   const history = useHistory();
   // useState로 Input 값 받기
   const [loginInfo, setLoginInfo] = useState({
-    'email': "",
-    'password': "",
+    email: '',
+    password: '',
   });
   const handleInputValue = (key) => (e) => {
     setLoginInfo({ ...loginInfo, [key]: e.target.value });
@@ -156,14 +157,14 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
 
   const handleClickLoginBtn = () => {
     console.log(loginInfo);
-    // axios로 idValue, passwordValue전송. 
+    // axios로 idValue, passwordValue전송.
     const { email, password } = loginInfo;
-    if (email === "" || password === "") {
-      return alert("이메일과 비밀번호를 입력하세요");
+    if (email === '' || password === '') {
+      return alert('이메일과 비밀번호를 입력하세요');
     } else {
       axios
         .post(
-          "http://localhost:3001/login",
+          'http://localhost:3001/login',
           {
             email,
             password,
@@ -174,7 +175,7 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
         )
         .then((data) => {
           console.log(data);
-          dispatch(setLogin())
+          dispatch(setLogin());
           setLoginModal(!loginModal);
           handleResponseSuccess();
           history.push('/');
@@ -183,6 +184,11 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
           console.log(err);
         });
     }
+  };
+
+  const handleClickGoogleSocialLoginBtn = () => {
+    const GOOGLE_LOGIN_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email&response_type=code`;
+    window.location.assign(GOOGLE_LOGIN_URL);
   };
 
   return (
@@ -194,10 +200,10 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
         <div className="login_div">
           <p
             style={{
-              fontSize: "28px",
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#2b2828",
+              fontSize: '28px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              color: '#2b2828',
             }}
           >
             LOGIN
@@ -206,50 +212,54 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess  }) => {
             type="text"
             className="loginId"
             placeholder="이메일을 입력해주세요."
-            onChange={handleInputValue("email")}
+            onChange={handleInputValue('email')}
           />
           <input
             className="password"
             // type="password"
             placeholder="비밀번호를 입력해주세요."
-            onChange={handleInputValue("password")}
+            onChange={handleInputValue('password')}
           />
-          <div
-            className="sign_div"
-            onClick = {handleClickLoginBtn}
-          >
+          <div className="sign_div" onClick={handleClickLoginBtn}>
             LOGIN
           </div>
           <div className="line"></div>
-          <Link to ='/signup'>
+          <Link to="/signup">
             <div
               className="join"
-              onClick={() => {setLoginModal(!loginModal);}}
+              onClick={() => {
+                setLoginModal(!loginModal);
+              }}
             >
               <p
                 style={{
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                  color: "#FCFCFC",
-                  textAlign: "center",
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                  color: '#FCFCFC',
+                  textAlign: 'center',
                 }}
               >
                 JOIN
               </p>
             </div>
           </Link>
-          <div className="socialjoin">
+          <div
+            className="socialjoin"
+            onClick={() => {
+              handleClickGoogleSocialLoginBtn();
+            }}
+          >
             <p
               style={{
-                fontSize: "15px",
-                fontWeight: "500",
-                color: "#2b2828",
-                textAlign: "center",
-                marginTop: "0px",
+                fontSize: '15px',
+                fontWeight: '500',
+                color: '#2b2828',
+                textAlign: 'center',
+                marginTop: '0px',
               }}
             >
-              <img className="git_icon" src={github_icon} />
-              GitHub 로그인
+              <img className="google_icon" src={google_icon} />
+              Google 로그인
             </p>
           </div>
         </div>

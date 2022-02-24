@@ -11,9 +11,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Chat.belongsTo(models.User, {
         foreignKey: 'user_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       });
       models.Chat.belongsTo(models.Article, {
         foreignKey: 'article_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       });
     }
   }

@@ -1,6 +1,7 @@
 module.exports = {
   //auth
   login: require('./auth/login'),
+  googleLogin: require('./auth/googleAccessToken'),
   logout: require('./auth/logout'),
   signup: require('./auth/signup'),
   token: require('./auth/token'),

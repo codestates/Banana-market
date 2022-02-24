@@ -1,32 +1,29 @@
-import { SHOW_POSTLIST } from "../actions/index";
+import { initialList } from './initialState';
+import { SHOW_POSTLIST } from '../actions/actions';
 
-const initialState = {
-  chatList: [],
-};
-
-const postListReducer = (state = initialState, action) => {
-  //   switch (action.type) {
-  //     case ADD_TO_CHATLIST:
-  //       let found = state.findIndex((el) => {
-  //         return el.id === action.payload.id;
-  //       });
-  //       return Object.assign({}, state, {
-  //         chatList: [
-  //           ...state.chatList.slice(0, found),
-  //           action.payload,
-  //           ...state.chatList.slice(found + 1),
-  //         ],
-  //       });
-  //   }
+const postListReducer = (state = initialList, action) => {
   switch (action.type) {
     case SHOW_POSTLIST:
-      return {
-        ...state,
-        chatList: action.payload,
-      };
+      let response = action.payload;
+      return response;
+    // case SHOW_POSTDETAIL:
     default:
       return state;
   }
 };
 
 export default postListReducer;
+
+//   switch (action.type) {
+//     case ADD_TO_CHATLIST:
+//       let found = state.findIndex((el) => {
+//         return el.id === action.payload.id;
+//       });
+//       return Object.assign({}, state, {
+//         chatList: [
+//           ...state.chatList.slice(0, found),
+//           action.payload,
+//           ...state.chatList.slice(found + 1),
+//         ],
+//       });
+//   }

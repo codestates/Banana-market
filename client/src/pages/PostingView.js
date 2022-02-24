@@ -1,7 +1,6 @@
-import React from "react";
-import PostDetail from "../component/PostDetail";
-import { useSelector, useDispatch } from "react-redux";
-import { addToChatList } from "../redux/actions";
+import React from 'react';
+import PostDetail from '../component/PostDetail';
+import { useSelector, useDispatch } from 'react-redux';
 
 const PostingView = ({ chatListDetail, setChatListDetail }) => {
   // const state = useSelector((state) => state.postListReducer);

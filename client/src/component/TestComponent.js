@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
-import ReactLoading from "react-loading";
-import axios from "axios";
+import React, { useEffect, useState, useRef } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
+// import ReactLoading from "react-loading";
+import axios from 'axios';
 
 // const Wrapper = styled.div`
 //   //( 기본적용 )모바일 : 768px 이하 ::  @media only제외한 모든 사이즈 적용
@@ -100,7 +100,7 @@ const TestComponent = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchPhotos = async (pageNumber) => {
-    const Access_Key = "VaS3ud1C-0gdW1nw41FbBryaV_Q5obZ04o-3Vi2QC1E";
+    const Access_Key = 'VaS3ud1C-0gdW1nw41FbBryaV_Q5obZ04o-3Vi2QC1E';
     const res = await fetch(
       `https://api.unsplash.com/photos/?client_id=${Access_Key}&page=${pageNumber}&per_page=5`
     );

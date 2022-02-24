@@ -1,59 +1,49 @@
-import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
+import './App.css';
+import React, { useEffect, useState } from 'react';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux'; 
-import { setLogin, setLogout, setUpdateUserInfo, setUserInfoNull} from "./redux/actions/actions";
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setLogin,
+  setLogout,
+  setUpdateUserInfo,
+  setUserInfoNull,
+} from './redux/actions/actions';
 
-import axios from "axios";
-import Footer from "./component/Footer";
-import Header from "./component/Header";
-import Main from "./pages/Main";
-import Test from "./pages/Test";
-import Chat from "./pages/Chat";
-import MyList from "./pages/MyList";
-import MyPage from "./pages/MyPage";
-import Posting from "./pages/Posting";
-import PostingView from "./pages/PostingView";
-import PostList from "./pages/PostList";
-import SignUp from "./pages/SignUp";
-import Logout from "./pages/Logout";
+import axios from 'axios';
+import Footer from './component/Footer';
+import Header from './component/Header';
+import Main from './pages/Main';
+import Test from './pages/Test';
+import Chat from './pages/Chat';
+import MyList from './pages/MyList';
+import MyPage from './pages/MyPage';
+import Posting from './pages/Posting';
+import PostingView from './pages/PostingView';
+import PostList from './pages/PostList';
+import SignUp from './pages/SignUp';
+import Logout from './pages/Logout';
 
 function App(props) {
-
   const history = useHistory();
-  let setLoginState = useSelector((state) => state.setLoginReducer); 
-  let setUserInfo = useSelector((state) => state.setUserInfoReducer); 
+  let setLoginState = useSelector((state) => state.setLoginReducer);
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let dispatch = useDispatch();
 
   const isAuthenticated = () => {
     axios
-      .get("http://localhost:3001/users/info", {
+      .get('http://localhost:3001/users/info', {
         withCredentials: true,
       })
       .then((res) => {
-        dispatch({type: 'SET_UPDATE_USER_INFO' , payload: res.data.data });
-        dispatch(setLogin());        
+        dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
+        dispatch(setLogin());
       })
       .catch((err) => {
         dispatch(setLogout());
       });
   };
 
-function App() {
-  const [chatListDetail, setChatListDetail] = useState({});
-
-  // const handleChatClick = (articleid) => {
-  //   axios
-  //     .get(`http://localhost:3001/articles/${articleid}`)
-  //     .then((detailData) => {
-  //       console.log(detailData);
-  //       setChatListDetail(detailData.data.data.post);
-
-
-  //     };
-
-      
   const handleResponseSuccess = () => {
     isAuthenticated();
   };
@@ -66,32 +56,25 @@ function App() {
   // 로그아웃 버튼 클릭 시 진행되는 함수
   const handleChangeAuth = (e) => {
     axios
-      .post(
-        "http://localhost:3001/logout",
-        {
-          withCredentials: true,
-        }
-      )
+      .post('http://localhost:3001/logout', {
+        withCredentials: true,
+      })
       .then((data) => {
         dispatch(setUserInfoNull());
-        console.log("로그아웃되었습니다");
+        console.log('로그아웃되었습니다');
         history.push({
-          pathname: '/'
-        })
-        dispatch(setLogout())
+          pathname: '/',
+        });
+        dispatch(setLogout());
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-
-  
   return (
     <div className="App">
-      <Header
-        handleResponseSuccess={handleResponseSuccess}
-      ></Header>
+      <Header handleResponseSuccess={handleResponseSuccess}></Header>
       <Switch>
         <Route exact path="/">
           <Main></Main>
@@ -106,21 +89,16 @@ function App() {
           <MyList></MyList>
         </Route>
         <Route path="/mypage">
-          <MyPage
-            handleChangeAuth={handleChangeAuth}
-          ></MyPage>
+          <MyPage handleChangeAuth={handleChangeAuth}></MyPage>
         </Route>
         <Route path="/posting">
           <Posting></Posting>
         </Route>
-        <Route path="/view/:id">
-          <PostingView
-            chatListDetail={chatListDetail}
-            setChatListDetail={setChatListDetail}
-          ></PostingView>
+        <Route path="/view">
+          <PostingView></PostingView>
         </Route>
         <Route path="/list">
-          <PostList handleChatClick={handleChatClick}></PostList>
+          <PostList></PostList>
         </Route>
         <Route path="/signup">
           <SignUp></SignUp>
@@ -133,5 +111,5 @@ function App() {
     </div>
   );
 }
-}
+
 export default App;

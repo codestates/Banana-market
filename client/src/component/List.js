@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { showPostList, showPostDetail } from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -154,6 +155,7 @@ const ListDiv = styled.div`
           /* border: 1px solid #fff; */
           background-color: #ddd;
           border-radius: 10px;
+          background-size: cover;
           @media screen and (max-width: 1200px) {
             /* min-width: 300px; */
             min-height: 115px;
@@ -161,6 +163,11 @@ const ListDiv = styled.div`
 
           @media screen and (max-width: 768px) {
             min-height: 110px;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
           }
         }
 
@@ -231,9 +238,51 @@ const ListDiv = styled.div`
   }
 `;
 
-const List = ({ handleChatClick, list }) => {
+const List = () => {
   const history = useHistory();
-  // const list = useSelector((state) => state.postListReducer);
+  const [postid, setPostid] = useState(0);
+  const list = useSelector((state) => state.postListReducer);
+  const dispatch = useDispatch();
+
+  const showPostList = () => {
+    axios
+      .get('http://localhost:3001/articles/lists')
+      .then((chatData) => {
+        console.log(chatData);
+        dispatch({
+          type: 'SHOW_POSTLIST',
+          payload: chatData.data.data.articleList,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    showPostList();
+  }, []);
+
+  const showPostDetail = (articleid) => {
+    axios
+      .get(`http://localhost:3001/articles/${articleid}`)
+      .then((detailData) => {
+        console.log(detailData);
+        setPostid(articleid);
+        dispatch({
+          type: 'SHOW_POSTDETAIL',
+          payload: detailData.data.data.post,
+        });
+        dispatch({
+          type: 'SHOW_MY_POSTDETAIL',
+          payload: detailData.data.data.postWriter,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <SelectBtn>
@@ -269,12 +318,14 @@ const List = ({ handleChatClick, list }) => {
               key={idx}
               className="list_detail"
               onClick={() => {
-                // handleChatClick(el.id);
-                history.push("/view/" + el.id);
+                showPostDetail(el.id);
+                history.push('/view');
               }}
             >
               <ul className="in_grid">
-                <li className="img"></li>
+                <li className="img">
+                  <img src={el.image}></img>
+                </li>
                 <li className="inf">
                   <ul>
                     <li className="title">{el.title}</li>

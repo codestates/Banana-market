@@ -3,10 +3,12 @@
 import { combineReducers } from 'redux';
 import setLoginReducer from './setLoginReducer'; //리듀서 가져오기
 import setUserInfoReducer from './setUserInfoReducer';
+import postListReducer from './postListReducer';
 
 const rootReducer = combineReducers({
-  setLoginReducer, 
-  setUserInfoReducer, 
+  setLoginReducer,
+  setUserInfoReducer,
+  postListReducer,
 });
 
 export default rootReducer;

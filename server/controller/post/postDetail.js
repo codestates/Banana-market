@@ -14,102 +14,73 @@ module.exports = async (req, res) => {
     return res.status(401).send({ message: 'Not authorized' });
   }
 
-  const myId = accessTokenData.id;
+  const userId = accessTokenData.id;
+
   const articleId = req.params.articleid;
   if (!articleId) {
     return res.status(422).send({ message: 'Incorrect parameters supplied' });
   }
-  //? article 데이터
-  const articleData = await Article.findOne({
+
+  Article.findOne({
+    include: [
+      { model: Region },
+      { model: Category },
+      {
+        model: User,
+        include: [{ model: Article }, { model: Region }],
+        through: {
+          where: { is_host: true },
+        },
+      },
+    ],
     where: { id: articleId },
-  });
+  }).then((articleData) => {
+    if (!articleData) {
+      return res.status(404).send({ message: 'Not found article' });
+    }
+    const article = articleData.dataValues;
+    const region = article.Region.dataValues.city;
+    const category = article.Category.dataValues.food_type;
+    const user = article.Users[0].dataValues;
 
-  if (!articleData) {
-    return res.status(404).send({ message: 'Not found article' });
-  }
+    delete article.Region;
+    delete article.Category;
+    delete article.Users;
 
-  const {
-    title,
-    content,
-    category_id,
-    market,
-    region_id,
-    date,
-    time,
-    total_mate,
-    current_mate,
-    status,
-    trade_type,
-    createdAt,
-    updatedAt,
-    image_location,
-  } = articleData.dataValues;
+    article.region = region;
+    article.category = category;
+    article.image = article.image_location;
+    article.totalMate = article.total_mate;
+    article.currentMate = article.current_mate;
+    article.tradeType = article.trade_type;
 
-  //? article 작성자 데이터
-  const articleWriter = await UserArticles.findOne({
-    where: {
-      article_id: articleId,
-      is_host: true,
-    },
-  });
+    delete article.image_location;
+    delete article.image_key;
+    delete article.region_id;
+    delete article.category_id;
+    delete article.total_mate;
+    delete article.current_mate;
+    delete article.trade_type;
 
-  const writerId = articleWriter.dataValues.user_id;
-  const writerData = await User.findOne({
-    where: { id: writerId },
-  });
-  const { name, profile_image_location } = writerData.dataValues;
-  const writerRegionId = writerData.dataValues.region_id;
-  const writerRegion = await Region.findOne({
-    where: { id: writerRegionId },
-  });
-  const writerCity = writerRegion.dataValues.city;
-  const writerTotalTrade = await UserArticles.findAll({
-    where: { user_id: writerId },
-  });
+    const totalTrade = user.Articles.length;
+    user.totalTrade = totalTrade;
+    user.profile_image = user.profile_image_location;
+    user.region = user.Region.city;
 
-  const totalTrade = writerTotalTrade.length;
-  const isMyPost = myId === writerId;
+    delete user.UserArticles;
+    delete user.profile_image_location;
+    delete user.profile_image_key;
+    delete user.password;
+    delete user.region_id;
+    delete user.Region;
+    delete user.Articles;
 
-  //? article region 데이터
-  const region = await Region.findOne({
-    where: { id: region_id },
-  });
-  const { city } = region.dataValues;
-
-  //? article category 데이터
-  const category = await Category.findOne({
-    where: { id: category_id },
-  });
-  const { food_type } = category.dataValues;
-
-  return res.status(200).send({
-    data: {
-      post: {
-        id: articleId,
-        title,
-        image: image_location,
-        content,
-        category: food_type,
-        market,
-        region: city,
-        date,
-        time,
-        totalMate: total_mate,
-        currentMate: current_mate,
-        status,
-        tradeType: trade_type,
-        createdAt,
-        updatedAt,
+    return res.status(200).send({
+      data: {
+        post: article,
+        postWriter: user,
       },
-      postWriter: {
-        userId: writerId,
-        isMyPost,
-        name,
-        profileImage: profile_image_location,
-        region: writerCity,
-        totalTrade,
-      },
-    },
-    message: 'ok',
+      message: 'ok',
+    });
   });
 };

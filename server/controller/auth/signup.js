@@ -6,6 +6,8 @@ const {
   generateRefreshToken,
   sendRefreshToken,
 } = require('../tokenFunction');
+const profileImageUpload = require('../../modules/multerUploadPfp');
+const profileImage = profileImageUpload.single('profileImage');
 
 module.exports = async (req, res) => {
   //회원가입 요청
@@ -17,6 +19,19 @@ module.exports = async (req, res) => {
       .status(422)
       .send({ message: 'Insufficient parameters supplied' });
   }
+  const location = null;
+  const key = null;
+
+  profileImage(req, res, function (err) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send({ message: 'Fail profile image upload' });
+    }
+    if (req.file) {
+      location = req.file.transforms[0].location;
+      key = req.file.transforms[0].key;
+    }
+  });
 
   const regionInfo = await Region.findOne({
     where: {
@@ -33,6 +48,8 @@ module.exports = async (req, res) => {
         name,
         password: hash,
         region_id: regionId,
+        profile_image_location: location,
+        profile_image_key: key,
       })
         .then((userInfo) => {
           delete userInfo.dataValues.password;
@@ -43,7 +60,6 @@ module.exports = async (req, res) => {
           return res
             .status(201)
             .send({ data: userInfo.dataValues, message: 'ok' });
-          // .redirect(302, "/posts/list")
         })
         .catch((err) => {
           console.log(err);

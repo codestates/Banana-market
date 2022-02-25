@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { showPostList, showPostDetail } from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
   height: 35px;
-  margin: 60px auto 55px auto;
+  margin: 80px auto 55px auto;
   /* background-color: sienna; */
   @media screen and (max-width: 1200px) {
     margin: 50px 15px 15px 15px;
@@ -87,22 +90,21 @@ const SelectBtn = styled.div`
 
 const ListDiv = styled.div`
   max-width: 1200px;
-  height: 100%;
+  min-height: 690px;
   /* background-color: aquamarine; */
-  margin: 0 auto;
+  margin: 55px auto 80px;
 
   > ul {
     max-width: 1200px;
-    margin: 0px auto 70px auto;
+    /* margin: 0px auto 70px auto; */
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 50% auto;
     padding: 5px;
 
-    grid-gap: 30px;
-    /* background-color: ChatList; */
+    grid-gap: 25px;
 
     @media screen and (max-width: 1200px) {
-      grid-template-columns: auto auto;
+      grid-template-columns: 50% auto;
       grid-gap: 25px;
       padding: 15px;
       margin: 35px auto 80px auto;
@@ -118,8 +120,7 @@ const ListDiv = styled.div`
     > .list_detail {
       box-shadow: 2px 3px 4px 2px #ddd;
       /* min-width: 379px; */
-      min-height: 140px;
-
+      min-height: 150px;
       border-radius: 10px;
       cursor: pointer;
       background-color: #fff;
@@ -154,6 +155,7 @@ const ListDiv = styled.div`
           /* border: 1px solid #fff; */
           background-color: #ddd;
           border-radius: 10px;
+          background-size: cover;
           @media screen and (max-width: 1200px) {
             /* min-width: 300px; */
             min-height: 115px;
@@ -161,6 +163,11 @@ const ListDiv = styled.div`
 
           @media screen and (max-width: 768px) {
             min-height: 110px;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
           }
         }
 
@@ -233,8 +240,30 @@ const ListDiv = styled.div`
 
 const List = () => {
   const history = useHistory();
-  const fakelist = [1, 2, 3, 4, 1, 2, 3, 4, 6, 7];
-  const [list, setList] = useState(fakelist);
+  const [postid, setPostid] = useState(0);
+  const list = useSelector((state) => state.postListReducer);
+  const dispatch = useDispatch();
+
+  const showPostDetail = (articleid) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
+      .then((detailData) => {
+        console.log(detailData);
+        setPostid(articleid);
+        dispatch({
+          type: 'SHOW_POST',
+          payload: detailData.data.data.post,
+        });
+        dispatch({
+          type: 'SHOW_WRITER',
+          payload: detailData.data.data.postWriter,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <SelectBtn>
@@ -267,19 +296,27 @@ const List = () => {
         <ul>
           {list.map((el, idx) => (
             <li
+              key={idx}
               className="list_detail"
               onClick={() => {
-                history.push("/view");
+                showPostDetail(el.id);
+                history.push('/view');
               }}
             >
               <ul className="in_grid">
-                <li className="img"></li>
+                <li className="img">
+                  <img src={el.image}></img>
+                </li>
                 <li className="inf">
                   <ul>
-                    <li className="title">[공구] 사과 공구 같이하실 분</li>
-                    <li className="location">하나마트</li>
-                    <li className="date">2월 28월 (월) &#124; 오후</li>
-                    <li className="pepole">지금 2명 &#124; 전체 3명</li>
+                    <li className="title">{el.title}</li>
+                    <li className="location">{el.market}</li>
+                    <li className="date">
+                      {el.date} &#124; {el.time}
+                    </li>
+                    <li className="pepole">
+                      지금 {el.currentMate}명 &#124; 전체 {el.totalMate}명
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -292,4 +329,3 @@ const List = () => {
 };
 
 export default List;
-

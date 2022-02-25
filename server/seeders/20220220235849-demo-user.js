@@ -8,7 +8,8 @@ module.exports = {
     const regionIdNum = 25;
 
     const saltRounds = 10;
-    const hashAdmin = bcrypt.hashSync('Admin', saltRounds);
+    const hashAdmin = bcrypt.hashSync('admin', saltRounds);
+
     let users = [
       {
         name: 'admin',
@@ -41,7 +42,7 @@ module.exports = {
       };
       users.push(obj);
     }
-
+    
     const hashTutu = bcrypt.hashSync('xnxn', saltRounds);
     const engUser = {
       name: '투투',

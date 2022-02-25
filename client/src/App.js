@@ -41,6 +41,7 @@ function App(props) {
       })
       .catch((err) => {
         dispatch(setLogout());
+        dispatch({ type: 'SET_USER_INFO_NULL' });
       });
   };
 
@@ -79,12 +80,12 @@ function App(props) {
         withCredentials: true,
       })
       .then((data) => {
+        dispatch(setLogout());
         dispatch(setUserInfoNull());
         console.log('로그아웃되었습니다');
         history.push({
           pathname: '/',
         });
-        dispatch(setLogout());
       })
       .catch((err) => {
         console.log(err);

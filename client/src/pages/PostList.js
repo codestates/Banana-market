@@ -46,7 +46,7 @@ const PostList = () => {
   const postList = async (pageNumber) => {
     // pageNumber = state.length / 8;
     await axios
-      .get(`http://localhost:3001/articles/lists/`, {
+      .get(`${process.env.REACT_APP_API_URL}/articles/lists/`, {
         params: {
           page: pageNumber,
         },

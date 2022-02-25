@@ -246,7 +246,7 @@ const List = () => {
 
   const showPostDetail = (articleid) => {
     axios
-      .get(`http://localhost:3001/articles/${articleid}`)
+      .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
       .then((detailData) => {
         console.log(detailData);
         setPostid(articleid);

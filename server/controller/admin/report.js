@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   }
 
   const reportList = await User.findAll({
-    attributes : [['id', 'userId'], 'name', 'email', ['profile_image', 'profileImage'], 'block'],
+    attributes : [['id', 'userId'], 'name', 'email', ['profile_image_location', 'profileImage'], 'block'],
     include : [{
       model : Report,
       attributes : [],

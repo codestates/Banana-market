@@ -14,7 +14,7 @@ export const SET_UPDATE_USER_INFO = 'SET_UPDATE_USER_INFO';
 export const SET_USER_INFO_NULL = 'SET_USER_INFO_NULL';
 export const SET_USER_INFO_NICKNAME = 'SET_USER_INFO_NICKNAME';
 export const SET_USER_INFO_REGION = 'SET_USER_INFO_REGION';
-export const SET_USER_INFO_PROFILE_IMG = 'SET_USER_INFO_PROFILE_IMG';
+export const SET_USER_INFO_PROFILE_IMG_NULL = 'SET_USER_INFO_PROFILE_IMG_NULL';
 
 export const setUpdateUserInfo = (payload) => ({
   type: SET_UPDATE_USER_INFO,
@@ -29,9 +29,8 @@ export const setUserInfoRegion = (payload) => ({
   type: SET_USER_INFO_REGION,
   payload
 });
-export const setUserInfoProfileImg = (payload) => ({
-  type: SET_USER_INFO_PROFILE_IMG,
-  payload
+export const setUserInfoProfileImgNull = (payload) => ({
+  type: SET_USER_INFO_PROFILE_IMG_NULL
 });
 
 

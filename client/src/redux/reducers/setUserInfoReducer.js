@@ -1,6 +1,6 @@
 //Reducer 는 현재의 state와 Action을 이용해서 새로운 state를 만들어 내는 pure function
 
-import { SET_UPDATE_USER_INFO, SET_USER_INFO_NULL, SET_USER_INFO_NICKNAME, SET_USER_INFO_REGION, SET_USER_INFO_PROFILE_IMG } from "../actions/actions"; // actions.js에 정의한 type명 변수 불러옴.
+import { SET_UPDATE_USER_INFO, SET_USER_INFO_NULL, SET_USER_INFO_NICKNAME, SET_USER_INFO_REGION, SET_USER_INFO_PROFILE_IMG_NULL } from "../actions/actions"; // actions.js에 정의한 type명 변수 불러옴.
 import { initialStateUserInfo } from "./initialState"; // state초기값 불러옴.
 
 // action.type에 따른 함수 생성
@@ -52,12 +52,12 @@ const setUserInfoReducer = ( state=initialStateUserInfo, action ) => {
         type: state.type,
         totalTrade: state.totalTrade,
       });
-    case SET_USER_INFO_PROFILE_IMG:
+    case SET_USER_INFO_PROFILE_IMG_NULL:
       return Object.assign({}, state, {
         userId: state.userId,
         nickName: state.nickName,
         email: state.email,
-        profileImage: action.payload,
+        profileImage: null,
         region:  state.region,
         block: state.block,
         type: state.type,

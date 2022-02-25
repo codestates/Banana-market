@@ -66,7 +66,7 @@ const ModalWrapper = styled.div`
   @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
     width: 450px;
     padding: 0;
-    background-color: purple;
+    background-color: rgba(255, 250, 176);
     position: static;
     float: right;
 

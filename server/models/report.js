@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Report.belongsTo(models.User, {
         foreignKey: 'user_id',
-        // onUpdate: 'CASCADE'
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       });
     }
   }

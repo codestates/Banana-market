@@ -5,6 +5,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const regionId = 6;
     const character = ['다오', '배찌', '디지니', '로두마니', '모스', '네오'];
+    const regionIdNum = 25;
 
     const saltRounds = 10;
     const hashAdmin = bcrypt.hashSync('admin', saltRounds);
@@ -57,6 +58,22 @@ module.exports = {
     }
     users.push(engUser)
 
+
+    const hashTutu = bcrypt.hashSync('xnxn', saltRounds);
+    const engUser = {
+      name: '투투',
+      email: '투투',
+      password: hashTutu,
+      profile_image_key: '1645110272558.png',
+      profile_image_location:
+        'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
+      region_id: '1',
+      block: false,
+      type: 'USER',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    users.push(engUser);
 
     return queryInterface.bulkInsert('Users', users, {});
   },

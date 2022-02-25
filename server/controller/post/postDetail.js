@@ -10,11 +10,11 @@ const { checkAccessToken } = require('../tokenFunction');
 module.exports = async (req, res) => {
   // 포스트 상세 내용 요청
   const accessTokenData = checkAccessToken(req);
-  if (!accessTokenData) {
-    return res.status(401).send({ message: 'Not authorized' });
-  }
+  // if (!accessTokenData) {
+  //   return res.status(401).send({ message: 'Not authorized' });
+  // }
 
-  const userId = accessTokenData.id;
+  // const userId = accessTokenData.id;
 
   const articleId = req.params.articleid;
   if (!articleId) {
@@ -42,6 +42,13 @@ module.exports = async (req, res) => {
     const region = article.Region.dataValues.city;
     const category = article.Category.dataValues.food_type;
     const user = article.Users[0].dataValues;
+    if (accessTokenData) {
+      const userId = accessTokenData.id;
+      const isMyPost = userId === user.id;
+      user.isMyPost = isMyPost;
+    } else {
+      user.isMyPost = false;
+    }
 
     delete article.Region;
     delete article.Category;

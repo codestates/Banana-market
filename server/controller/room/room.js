@@ -17,6 +17,9 @@ module.exports = async (req, res) => {
       user_id : id
     },
     attributes : [['article_id', 'articleId']]
+  }).catch((err) => {
+    console.log(err)
+    res.status(500).send({ message: 'Internal server error' })
   })
 
   const articles = await joinList.map(ua => ua.dataValues.articleId)
@@ -36,6 +39,9 @@ module.exports = async (req, res) => {
     order : [
       [Chat, 'createdAt', 'DESC']
     ]
+  }).catch((err) => {
+    console.log(err)
+    res.status(500).send({ message: 'Internal server error' })
   })
 
   // 채팅 리스트별 최신 메세지 1개

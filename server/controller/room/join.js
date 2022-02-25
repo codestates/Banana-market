@@ -29,6 +29,8 @@ module.exports = async (req, res) => {
       attributes : ['id'],
       joinTableAttributes : ['user_id']
     }]
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
   })
 
   // 존재하지 않는 채팅방
@@ -57,6 +59,8 @@ module.exports = async (req, res) => {
     user_id : id,
     article_id : articleid,
     is_host : false 
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
   })
 
   res.status(200).send({ message: 'Ok' });

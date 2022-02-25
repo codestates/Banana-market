@@ -13,18 +13,28 @@ export const initialStateUserInfo = {
 
 export const initialList = [];
 
-export const initiaListDetail = {
-  id: null,
-  title: null,
-  image: null,
-  content: null,
-  category: null,
-  market: null,
-  region: null,
-  date: null,
-  time: null,
-  totalMate: null,
-  currentMate: null,
-  status: null,
-  tradeType: null,
+export const initiaPostDetail = {
+  post: {
+    id: null,
+    title: null,
+    image: null,
+    content: null,
+    category: null,
+    market: null,
+    region: null,
+    date: null,
+    time: null,
+    totalMate: null,
+    currentMate: null,
+    status: null,
+    tradeType: null,
+  },
+  postWriter: {
+    userId: null,
+    isMyPost: null,
+    name: null,
+    profileImage: null,
+    region: null,
+    totalTrade: null,
+  },
 };

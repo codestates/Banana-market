@@ -244,25 +244,6 @@ const List = () => {
   const list = useSelector((state) => state.postListReducer);
   const dispatch = useDispatch();
 
-  const showPostList = () => {
-    axios
-      .get('http://localhost:3001/articles/lists')
-      .then((chatData) => {
-        console.log(chatData);
-        dispatch({
-          type: 'SHOW_POSTLIST',
-          payload: chatData.data.data.articleList,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    showPostList();
-  }, []);
-
   const showPostDetail = (articleid) => {
     axios
       .get(`http://localhost:3001/articles/${articleid}`)
@@ -270,11 +251,11 @@ const List = () => {
         console.log(detailData);
         setPostid(articleid);
         dispatch({
-          type: 'SHOW_POSTDETAIL',
+          type: 'SHOW_POST',
           payload: detailData.data.data.post,
         });
         dispatch({
-          type: 'SHOW_MY_POSTDETAIL',
+          type: 'SHOW_WRITER',
           payload: detailData.data.data.postWriter,
         });
       })

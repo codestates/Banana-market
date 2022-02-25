@@ -36,6 +36,7 @@ export const setUserInfoProfileImg = (payload) => ({
 
 // ---------------postListReducer-----------------
 export const SHOW_POSTLIST = 'SHOW_POSTLIST';
+export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
 
 export const showPostList = (payload) => {
   return {
@@ -44,20 +45,27 @@ export const showPostList = (payload) => {
   };
 };
 
+export const showMorePostList = (payload) => {
+  return {
+    type: SHOW_MORE_POSTLIST,
+    payload,
+  };
+};
+
 // ---------------postDetailReducer-----------------
-export const SHOW_POSTDETAIL = 'SHOW_POSTDETAIL';
-export const SHOW_MY_POSTDETAIL = 'SHOW_MY_POSTDETAIL';
+export const SHOW_POST = 'SHOW_POST';
+export const SHOW_WRITER = 'SHOW_WRITER';
 
 export const showPostDetail = (payload) => {
   return {
-    type: SHOW_POSTDETAIL,
+    type: SHOW_POST,
     payload,
   };
 };
 
 export const showMyPostDetail = (payload) => {
   return {
-    type: SHOW_MY_POSTDETAIL,
+    type: SHOW_WRITER,
     payload,
   };
 };

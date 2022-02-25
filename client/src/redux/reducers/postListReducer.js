@@ -1,12 +1,15 @@
 import { initialList } from './initialState';
-import { SHOW_POSTLIST } from '../actions/actions';
+import { SHOW_POSTLIST, SHOW_MORE_POSTLIST } from '../actions/actions';
 
 const postListReducer = (state = initialList, action) => {
   switch (action.type) {
     case SHOW_POSTLIST:
       let response = action.payload;
       return response;
-    // case SHOW_POSTDETAIL:
+
+    case SHOW_MORE_POSTLIST:
+      let data = action.payload;
+      return [...state, ...data];
     default:
       return state;
   }

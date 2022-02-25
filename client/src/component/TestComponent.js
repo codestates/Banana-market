@@ -96,7 +96,7 @@ import axios from 'axios';
 
 const TestComponent = () => {
   const [photos, setPhotos] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const fetchPhotos = async (pageNumber) => {

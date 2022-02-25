@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import github_icon from "../icon/github_icon.png";
-import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux'; 
+import { setLogin, setLogout, setUpdateUserInfo} from "../redux/actions/actions";
 
+import axios from "axios";
 axios.defaults.withCredentials = true;
 
 const Wrapper = styled.div`
@@ -97,6 +99,11 @@ const Wrapper = styled.div`
 `;
 
 const SecessionModal = ({ setIsSecessionModalOn }) => {
+  const history = useHistory();
+  let setLoginState = useSelector((state) => state.setLoginReducer); 
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer); 
+  let dispatch = useDispatch();
+
   // useState로 Input 값 받기
   let [inputPassword, setInputPassword] = useState('');
   
@@ -108,6 +115,40 @@ const SecessionModal = ({ setIsSecessionModalOn }) => {
   //탈퇴하기 버튼 클리 시 진행되는 함수 
   const handleClickSecession = (e) => {
     // axios : 비밀번호 확인 후 탈퇴 진행
+    if(inputPassword !== '') {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/login`,
+          {
+            email: setUserInfo.email,
+            password: inputPassword,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((data) => {
+          axios
+            .delete(
+              `${process.env.REACT_APP_API_URL}/users/info`,
+              {
+                withCredentials: true,
+              }
+            )
+          .then((data) => {
+            alert('성공적으로 탈퇴되었습니다.')
+            setIsSecessionModalOn(false);
+            history.push('/');
+          })
+          .catch((err) => {
+            alert('탈퇴되지 않았습니다.')
+            console.log(err);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   return (
@@ -120,7 +161,7 @@ const SecessionModal = ({ setIsSecessionModalOn }) => {
         <div className="secession_box">
           <input
             className="password"
-            type="password"
+            // type="password"
             placeholder="비밀번호를 입력해주세요."
             onChange={handleChangePassword}
           />

@@ -2,7 +2,9 @@ import React, { useState, useRef} from "react";
 import styled from "styled-components";
 import '../App.css'; //이거 써줘야 css적용됨.
 
-import login from "../icon/login.png";
+import search_icon from "../icon/search_icon.png";
+import close from "../icon/close.png";
+import back_icon from "../icon/back_icon.png";
 import { ReactDOM } from 'react-dom';
 
 const BREAK_POINT_TABLET = 768;
@@ -143,13 +145,13 @@ const SearchModal = ({ setSearchBox }) => {
       <Wrapper>
         <div className='search_box'>
           <div className='search'>
-            <img src={login} className="icon exit_icon" onClick={() => {setSearchBox(false);}} />
+            <img src={back_icon} className="icon exit_icon" onClick={() => {setSearchBox(false);}} />
             <span>
               <input className='input' type='text' value={searchWord} onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>
             </span>
             <div className='icon_wrapper'>
-              <img src={login} className="icon delete_icon" onClick={(e)=>{setSearchWord('')}} />
-              <img src={login} className="icon search_icon" onClick={handleClickSearch}/>
+              <img src={close} className="icon delete_icon" onClick={(e)=>{setSearchWord('')}} />
+              <img src={search_icon} className="icon search_icon" onClick={handleClickSearch}/>
             </div>
           </div>
           <div className='word_box'>

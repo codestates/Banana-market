@@ -1,6 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { showPostList, showPostDetail } from '../redux/actions/actions';
+import { useSelector, useDispatch } from 'react-redux';
 
 const DetailDiv = styled.div`
   max-width: 1200px;
@@ -34,17 +36,13 @@ const DetailDiv = styled.div`
     margin: 40px auto 0 auto;
     border-radius: 50px;
     cursor: pointer;
+    text-align: center;
+    line-height: 45px;
     @media screen and (max-width: 767px) {
       margin: 30px auto 0 auto;
       width: 90%;
       height: 40px;
-    }
-    p {
-      text-align: center;
-      line-height: 45px;
-      @media screen and (max-width: 767px) {
-        line-height: 40px;
-      }
+      line-height: 40px;
     }
   }
 `;
@@ -89,6 +87,12 @@ const UlDiv = styled.ul`
         border-radius: 50px;
         @media screen and (max-width: 768px) {
           min-height: 65px;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
         }
       }
       .profile_info {
@@ -198,41 +202,54 @@ const UlDiv = styled.ul`
   }
 `;
 
-const PostDetail = () => {
+const PostDetail = ({ chatListDetail, handleClick }) => {
   const history = useHistory();
+  const postDetail = useSelector((state) => state.postDetailReducer);
+  const { post, postWriter } = postDetail;
+  const basicProfileImage =
+    postWriter.profile_image ||
+    'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645707095761.png';
   return (
     <DetailDiv>
       <div className="detail">
         <UlDiv>
           <div className="profile">
             <ul className="in_grid">
-              <li className="image"></li>
+              <li className="image">
+                <img src={basicProfileImage}></img>
+              </li>
               <li className="profile_info">
                 <ul>
-                  <li className="id">바나바나</li>
-                  <li className="location">일산동구</li>
-                  <li className="deal_total">총 거래 : 2회</li>
+                  <li className="id">{postWriter.name}</li>
+                  <li className="location">{postWriter.region}</li>
+                  <li className="deal_total">
+                    총 거래 : {postWriter.totalTrade}회
+                  </li>
                 </ul>
               </li>
             </ul>
           </div>
-          <li className="title">[공구] 사과 공구 같이하실 분</li>
-          <li className="content">
-            사과 같이 공구하실 분 찾습니다. <br></br>한박스 같이 사서 몇개 나눠
-            가지실 분 <br></br>연락부탁드립니다 :)
+          <li className="title">
+            [{post.tradeType}] {post.title}
           </li>
-          <li className="date">2월 28월 (월) &#124; 오후</li>
-          <li className="pepole">지금 2명 &#124; 전체 3명</li>
+          <li className="content">{postDetail.content}</li>
+          <li className="date">
+            {post.date} &#124; {post.time}
+          </li>
+          <li className="pepole">
+            지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
+          </li>
           <li className="map"></li>
         </UlDiv>
       </div>
       <div
         className="btn"
         onClick={() => {
-          history.push("/chat");
+          // handleClick();
+          history.push('/chat');
         }}
       >
-        <p>참여하기</p>
+        참여하기
       </div>
     </DetailDiv>
   );

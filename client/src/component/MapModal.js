@@ -650,6 +650,7 @@ const MapModal = ({ setMapModal, setLocationInfo, locationInfo }) => {
             image : markerImage
         });
         searchMarkerList = searchMarkerList.concat([place]);
+        console.log(searchMarkerList);
         // console.log(place, searchMarkerList)
         // 마커에 클릭이벤트를 등록합니다
         kakao.maps.event.addListener(marker, 'click', function() {
@@ -717,7 +718,7 @@ const MapModal = ({ setMapModal, setLocationInfo, locationInfo }) => {
                     <li className='search_result' key={idx} value={idx} onClick={handleClickMarker}> 
                       <span className='title' value={idx}>{el['place_name']}</span>
                       <span className='info' value={idx}>{el['category_group_name']}</span>
-                      <div className='address' value={idx}>{el['road_address_name']}</div>
+                      <div className='address' value={idx}>{el['road_address_name'] || el['address_name']}</div>
                       {/* <div className={ idx + ' btn' } value={idx} onClick={handleClickChoiceLocationInfo}> 장소 선정 </div>  */}
                       <label htmlFor={idx} onClick={handleClickChoiceLocationInfo}>
                         <input id={idx} type="radio" name='choice_location' value={idx} checked={locationInfo[0] === el['place_name']} onChange={handleClickChoiceLocationInfo}/>

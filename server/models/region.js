@@ -12,9 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       models.Region.hasMany(models.User, {
         foreignKey: 'region_id',
         constraint: true,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       });
       models.Region.hasMany(models.Article, {
         foreignKey: 'region_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       });
     }
   }

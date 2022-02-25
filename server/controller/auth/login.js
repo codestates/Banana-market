@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const { send } = require('express/lib/response');
 const { User } = require('../../models');
 const {
   generateAccessToken,

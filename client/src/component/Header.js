@@ -7,8 +7,13 @@ import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
 
-import logo from '../icon/logo.png';
-import login from '../icon/login.png';
+
+import logo from "../icon/logo.png";
+import login from "../icon/login.png";
+import chat_icon from "../icon/chat_icon.png";
+import menu_icon from "../icon/menu_icon.png";
+import search_icon from "../icon/search_icon.png";
+
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -67,6 +72,10 @@ const Wrapper = styled.div`
       .icon_img {
         height: 22px;
         /* background-color: white; */
+      }
+      .icon_img.login_img{
+        height: 19px;
+        margin-top: 1px;
       }
     }
   }
@@ -166,6 +175,10 @@ const Wrapper = styled.div`
         .icon_img {
           height: 26px;
         }
+        .icon_img.login_img{
+        height: 22px;
+        margin-top: 2px;
+      }
       }
     }
   }
@@ -212,7 +225,6 @@ const Header = ({ handleResponseSuccess }) => {
       ) : (
         <div></div>
       )}
-
       <div className="header">
         <Wrapper>
           <Link to="/list">
@@ -220,50 +232,29 @@ const Header = ({ handleResponseSuccess }) => {
               <img src={logo} className="logo_icon" />
             </div>
           </Link>
-          <div className="search_box1">
-            <div
-              className="search"
-              onClick={() => {
-                setSearchBox(true);
-              }}
-            >
-              <img src={login} className="search_icon" />
+
+          <div className='search_box1'>
+            <div className='search'  onClick={() => {setSearchBox(true);}}>
+              <img src={search_icon} className="search_icon" />
               <span>검색어 입력</span>
             </div>
           </div>
-          <div className="menu_wrapper">
-            <div className="icon login_icon">
-              <img
-                src={login}
-                className="icon_img"
-                onClick={() => {
-                  setLoginModal(true);
-                }}
-              />
+          <div className='menu_wrapper'>
+            <div className='icon login_icon'>
+              <img src={login} className="icon_img login_img" onClick={() => {setLoginModal(true);}}/>
             </div>
-            <Link to="/chat">
-              <div className="icon chat_icon">
-                <img src={login} className="icon_img" />
+            <Link to='/chat'>
+              <div className='icon chat_icon'>
+                <img src={chat_icon} className="icon_img" />
               </div>
             </Link>
-            <div className="icon menu_icon">
-              <img
-                src={login}
-                className="icon_img"
-                onClick={() => {
-                  setMenuModal(true);
-                }}
-              />
+            <div className='icon menu_icon'>
+              <img src={menu_icon} className="icon_img"  onClick={() => {setMenuModal(true);}}/>
             </div>
           </div>
-          <div className="search_box2">
-            <div
-              className="search"
-              onClick={() => {
-                setSearchBox(true);
-              }}
-            >
-              <img src={login} className="search_icon" />
+          <div className='search_box2'>
+            <div className='search'   onClick={() => {setSearchBox(true);}}>
+              <img src={search_icon} className="search_icon" />
               <span>검색어 입력</span>
             </div>
           </div>

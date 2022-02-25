@@ -32,7 +32,7 @@ function App(props) {
 
   const isAuthenticated = () => {
     axios
-      .get('http://localhost:3001/users/info', {
+      .get(`${process.env.REACT_APP_API_URL}/users/info`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -48,15 +48,34 @@ function App(props) {
     isAuthenticated();
   };
 
+  // google social login 시 authorization code를 server에 보내준다.
+  const getGoogleAccessToken = async (authorizationCode) => {
+    const result = await axios.post(
+      `${process.env.REACT_APP_API_URL}/login/google/callback`,
+      {
+        authorizationCode,
+      }
+    );
+  };
+  // url에 authorizationCode가 있다면 AccessToken 요청
+  const isGoogleAuthorizationCode = async () => {
+    const url = new URL(window.location.href);
+    const authorizationCode = url.searchParams.get('code');
+    if (authorizationCode) {
+      getGoogleAccessToken(authorizationCode);
+    }
+  };
+
   //리로딩시 로그인이 풀리지 않도록함.
   useEffect(() => {
+    isGoogleAuthorizationCode();
     handleResponseSuccess();
   }, []);
 
   // 로그아웃 버튼 클릭 시 진행되는 함수
   const handleChangeAuth = (e) => {
     axios
-      .post('http://localhost:3001/logout', {
+      .post(`${process.env.REACT_APP_API_URL}/logout`, {
         withCredentials: true,
       })
       .then((data) => {

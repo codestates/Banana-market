@@ -170,7 +170,7 @@ const UlDiv = styled.ul`
       float: right;
       border-radius: 100px;
       border:  1px solid #95c710;
-      color: #95c710;;
+      color: #95c710;
     }
     @media screen and (max-width: 767px) {
       width: 90%;
@@ -227,8 +227,6 @@ const Profile = ({handleChangeAuth}) => {
   let [inputNickName, setInputNickName] = useState(''); // 수정중
   let [selectCity, setSelectCity] = useState(''); // 수정중
   let [selectDistrict, setSelectDistrict] = useState(''); // 수정중
-  let [imageFile, setImageFile] = useState({selectedFile: setUserInfo.profileImage});
-  let [thumbnail, setThumbnail] = useState(null);
   
   // useState로 Modal창 On(true)/Off(false)
   let [isPasswordModalOn, setIsPasswordModalOn] = useState(false);
@@ -265,7 +263,7 @@ const Profile = ({handleChangeAuth}) => {
       }else {
         //inputNickName을 axios로 닉네임 중복검사 해야함.
         axios.post(
-          "http://localhost:3001/validation/name",{
+          `${process.env.REACT_APP_API_URL}/validation/name`,{
             name: inputNickName
           },
           {
@@ -274,7 +272,7 @@ const Profile = ({handleChangeAuth}) => {
         ).then((res) => {
           //닉네임 수정요청
           axios.patch(
-            'http://localhost:3001/users/info',{
+            `${process.env.REACT_APP_API_URL}/users/info`,{
               name: inputNickName
             },
             {
@@ -297,7 +295,7 @@ const Profile = ({handleChangeAuth}) => {
       if ( selectCity === '' || selectDistrict === ''){
       } else {
         axios.patch(
-          'http://localhost:3001/users/info',{
+          `${process.env.REACT_APP_API_URL}/users/info`,{
             region: selectDistrict
           },
           {
@@ -315,31 +313,30 @@ const Profile = ({handleChangeAuth}) => {
 
   //이미지 업로드 버튼 실행함수
   const handleChangeUpload = (e) => {
-    setImageFile({selectedFile : e.target.files[0]});
-      if (e.target.files[0]) {
-        console.log(e.target.files[0])
-        let img = e.target.files[0];
+    const uploadFile = e.target.files[0]
+    const formData = new FormData();
+    formData.append('profileImage', uploadFile);
+    const config = {
+      Headers: {
+        'content-type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    }
+    console.log('formData',formData)
+      if (formData) {        
         axios.put(
-          'http://localhost:3001/users/profile-image',{
-            profileImage: img
-          },
-          {
-            withCredentials: true,
-          }
+          `${process.env.REACT_APP_API_URL}/users/profile-image`, formData, config
         ).then((res) => {
-          dispatch({type: 'SET_USER_INFO_PROFILE_IMG', payload: e.target.files[0]});
-          // let reader = new FileReader();
-          // // 1. 파일을 읽어 버퍼에 저장합니다. 파일 상태 업데이트
-          // reader.readAsDataURL(e.target.files[0]); 
-          // reader.onloadend = () => {
-          //   // 2. 읽기가 완료되면 아래코드가 실행됩니다.
-          //   const image_code = reader.result;
-          //   if (image_code) { //  images.push(base64.toString())
-          //     setThumbnail(image_code.toString());
-          //   // console.log('3', thumbnail)
-          //   }
-          // }
-          setChangeBtnSpot(!changeBtnSpot); 
+          axios
+            .get(`${process.env.REACT_APP_API_URL}/users/info`, {
+              withCredentials: true,
+            })
+            .then((res) => {
+              dispatch({type: 'SET_UPDATE_USER_INFO' , payload: res.data.data });
+            })
+            .catch((err) => {
+              dispatch(setLogout());
+            });
         }).catch((err) => {
           console.log(err)
         })
@@ -347,12 +344,21 @@ const Profile = ({handleChangeAuth}) => {
     };
   //이미지 삭제버튼 실행함수
   const handleClickDeleteImg = (e) => {
-    setThumbnail(null);
-    setImageFile({selectedFile: null});
+    axios.delete(
+      `${process.env.REACT_APP_API_URL}/users/profile-image`, {
+        withCredentials: true,
+      }
+    ).then((res) => {
+      dispatch({type: 'SET_USER_INFO_PROFILE_IMG_NULL'});
+      document.getElementById('image').value = '';
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 
   //페이지 리로딩시 값 default로 설정하기
   useEffect(() => {
+    console.log('setUserInfo함')
     setInputNickName('');
   },[setUserInfo])
 
@@ -365,7 +371,7 @@ const Profile = ({handleChangeAuth}) => {
         <UlDiv>
           <li className="profile">
             <div className="image">
-                { imageFile.selectedFile ? <img className="basic_image" src={thumbnail} />
+                { setUserInfo.profileImage? <img className="basic_image" src={setUserInfo.profileImage} />
                 : <img className="basic_image" src={monkey}/>
                 }
             </div>

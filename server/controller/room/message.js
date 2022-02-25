@@ -25,18 +25,16 @@ module.exports = async (req, res) => {
       [Chat, 'createdAt', 'DESC']
     ], 
     attributes : ['title'],
-    include : [
-      {
+    include : [{
       model : Chat,
       attributes : ['contents', 'createdAt'],
-      include : [
-        {
+      include : [{
         model : User,
         attributes : ['name', ['profile_image_location', 'profileImage']]
-      }
-    ]
-    }
-  ]
+      }]
+    }]
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
   })
   
 

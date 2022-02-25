@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   }
 
   const reportList = await User.findAll({
-    attributes : [['id', 'userId'], 'name', 'email', ['profile_image', 'profileImage'], 'block'],
+    attributes : [['id', 'userId'], 'name', 'email', ['profile_image_location', 'profileImage'], 'block'],
     include : [{
       model : Report,
       attributes : [],
@@ -30,10 +30,8 @@ module.exports = async (req, res) => {
         }
       }
     }]
-  })
-  .catch((err) => {
-    console.log(err)
-    res.status(400).send({message : 'Internal server error'})
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
   })
 
   return res.status(200).json({

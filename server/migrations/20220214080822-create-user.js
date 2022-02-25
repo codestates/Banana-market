@@ -20,7 +20,6 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       profile_image_key: {
         type: Sequelize.STRING,

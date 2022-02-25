@@ -74,26 +74,26 @@ module.exports = {
 
     for (let market of markets) {
       for (let i = 0; i < 9; i++) {
-        let obj = {
-          title: `${market} -- ${categories[i]} -- ${times[i]}`,
-          image_key: 'jointPurchaseDefaultImage.jpeg',
-          image_location:
-            'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
-          content: '',
-          category_id: `${i + 1}`,
-          market: `${market}`,
-          region_id: `${i + 1}`,
-          date: `2022-03-0${i + 1}`,
-          // date : '2022-03-0' + i+1,
-          time: `${times[i]}`,
-          total_mate: 3,
-          current_mate: 1,
-          trade_type: '공구',
-          status: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        articles.push(obj);
+          let obj = {
+            title: `${market} -- ${categories[i]} -- ${times[i]}`,
+            image_key: 'jointPurchaseDefaultImage.jpeg',
+            image_location:
+              'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
+            content: '',
+            category_id: `${i+1}`,
+            market: `${market}`,
+            region_id: `${i+1}`,
+            date: `2022-03-0${i + 1}`,
+            // date : '2022-03-0' + i+1,
+            time: `${times[i]}`,
+            total_mate: 3,
+            current_mate: 1,
+            trade_type: '공구',
+            status: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+          articles.push(obj);
       }
     }
     return queryInterface.bulkInsert('Articles', articles, {});

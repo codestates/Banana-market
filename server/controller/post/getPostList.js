@@ -15,12 +15,13 @@ module.exports = async (req, res) => {
       where: {
         food_type: category,
       },
-      include: [
-        {
-          model: Article,
-        },
-      ],
-    });
+      include : [{
+        model : Article
+      }]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
+
 
     const articleCount = listByCategory.count;
     // 1. 카테고리에 해당하는 article이 없다면
@@ -40,21 +41,13 @@ module.exports = async (req, res) => {
     // 1. 카테고리 리스트 전달
     listByCategory = await listByCategory.rows[0].getArticles({
       limit: limit,
-      offset: offset,
-      attributes: [
-        'id',
-        'title',
-        ['image_location', 'image'],
-        'market',
-        'date',
-        'time',
-        ['total_mate', 'totalMate'],
-        ['current_mate', 'currentMate'],
-        ['trade_type', 'tradeType'],
-        'status',
-      ],
-      order: [['createdAt', 'DESC']],
-    });
+      offset: offset,      
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      order : [['createdAt', 'DESC']]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
+
     return res.status(200).json({
       data: {
         articleList: listByCategory,
@@ -73,20 +66,12 @@ module.exports = async (req, res) => {
           [Op.substring]: search,
         },
       },
-      attributes: [
-        'id',
-        'title',
-        ['image_location', 'image'],
-        'market',
-        'date',
-        'time',
-        ['total_mate', 'totalMate'],
-        ['current_mate', 'currentMate'],
-        ['trade_type', 'tradeType'],
-        'status',
-      ],
-      order: [['createdAt', 'DESC']],
-    });
+      attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+      order : [['createdAt', 'DESC']]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
+
 
     const articleCount = listBySearch.count;
     // 2. 검색 결과가 없는 경우
@@ -124,8 +109,10 @@ module.exports = async (req, res) => {
       where: {
         id: id,
       },
-      include: Article,
-    });
+      include: Article
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     const articleCount = userArticleList.count;
     // 3. 해당 유저가 참여한 article이 없다면
@@ -144,23 +131,14 @@ module.exports = async (req, res) => {
 
     // 3. 유저 참여 리스트 전달
     userArticleList = await userArticleList.rows[0].getArticles({
-      limit: limit,
-      offset: offset,
-      attributes: [
-        'id',
-        'title',
-        'image',
-        'market',
-        'date',
-        'time',
-        ['total_mate', 'totalMate'],
-        ['current_mate', 'currentMate'],
-        ['trade_type', 'tradeType'],
-        'status',
-      ],
-      joinTableAttributes: [],
-      order: [['createdAt', 'DESC']],
-    });
+    limit: limit,
+    offset: offset,      
+    attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+    joinTableAttributes : [],
+    order : [['createdAt', 'DESC']]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     const myArticleList = await Promise.all(
       userArticleList.map((article) => {
@@ -171,7 +149,9 @@ module.exports = async (req, res) => {
         };
         return resData;
       })
-    );
+    ).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     return res.status(200).json({
       data: {
@@ -194,17 +174,17 @@ module.exports = async (req, res) => {
       where: {
         id: id,
       },
-      include: [
-        {
-          model: Article,
-          through: {
-            where: {
-              is_host: true,
-            },
-          },
-        },
-      ],
-    });
+      include : [{
+        model : Article,
+        through : {
+          where : {
+            is_host : true
+          }
+        }
+      }]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     const articleCount = userUploadList.count;
     // 4. 해당 유저가 작성한 article이 없다면
@@ -243,9 +223,11 @@ module.exports = async (req, res) => {
         where: {
           is_host: true,
         },
-        attributes: [],
-      },
-    });
+        attributes : []
+      }
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     const myUploadList = await Promise.all(
       userUploadList.map((article) => {
@@ -256,7 +238,9 @@ module.exports = async (req, res) => {
         };
         return resData;
       })
-    );
+    ).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     return res.status(200).json({
       data: {
@@ -292,7 +276,9 @@ module.exports = async (req, res) => {
         //   status : true
         // },
         order: [['date'], ['time', 'DESC'], ['createdAt']],
-      }).catch((e) => console.log(err));
+      }).catch((err) => {
+        res.status(500).send({message : 'Internal server error'})
+      })
 
       const articleCount = allListOrderByDuedate.count;
 
@@ -331,7 +317,9 @@ module.exports = async (req, res) => {
       'status',
     ],
     order: [['createdAt', 'DESC']],
-  }).catch((e) => console.log(e));
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
 
   const articleCount = allListOrderByUpload.count;
 

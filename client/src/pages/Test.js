@@ -1,9 +1,9 @@
-import React from 'react';
-import TestComponent from '../component/TestComponent';
+import React from "react";
+import TestComponent from "../component/TestComponent";
 
 const Test = () => {
   return (
-    <div>
+    <div className="section">
       <TestComponent></TestComponent>
     </div>
   );

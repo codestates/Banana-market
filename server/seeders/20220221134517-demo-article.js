@@ -96,8 +96,6 @@ module.exports = {
           articles.push(obj);
       }
     }
-
-
     return queryInterface.bulkInsert('Articles', articles, {});
   },
 

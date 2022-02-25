@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+// import { useMediaQuery } from "react-responsive";
+// import ChatRoom from "../component/ChatRoom";
+
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
   min-height: 710px;
@@ -33,11 +35,12 @@ const ChatListDiv = styled.div`
       grid-template-columns: auto;
       padding: 15px 0 15px 15px;
       grid-gap: 15px;
+      /* background-color: violet; */
       @media screen and (max-width: 767px) {
         width: 96%;
       }
       > li {
-        box-shadow: 2px 2px 3px 1px #ddd;
+        box-shadow: 2px 2px 3px 2px #ddd;
         min-height: 85px;
         /* border: 1px solid #ddd; */
         border-radius: 10px;
@@ -50,9 +53,14 @@ const ChatListDiv = styled.div`
           padding: 10px;
           margin-top: 3px;
           .profile_img {
-            min-height: 60px;
+            height: 60px;
             background-color: #ddd;
             border-radius: 10px;
+            img {
+              width: 100%;
+              height: 60px;
+              border-radius: 10px;
+            }
           }
           .chat_info {
             min-height: 60px;
@@ -90,39 +98,75 @@ const ChatListDiv = styled.div`
     } */
   }
 `;
+const ChatRoomDiv = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  height: 710px;
+  position: absolute;
+  /* background-color: whitesmoke; */
+  z-index: 1;
+  @media screen and (max-width: 1200px) {
+    /* margin: 80px auto 30px auto; */
 
-const ChatList = ({ display, onClick2 }) => {
+    width: 95%;
+  }
+  @media screen and (max-width: 768px) {
+    /* margin: 80px auto 30px auto; */
+    width: 100%;
+  }
+`;
+
+const ChatList = ({ display, onClick2, chatList, handleCardClick }) => {
   const history = useHistory();
-  const fakelist = [1];
-  const [list, setList] = useState(fakelist);
-  const isSmallScreen = useMediaQuery({
-    query: "(max-width: 768px)",
-  });
+  const [chatRoom, setChatRoom] = useState(false);
+
   return (
     <>
       <ChatListDiv display={display}>
         <p>채팅 리스트</p>
         <div className="chatList_div">
-          <ul className="grid">
-            {list.map((el) => (
-              <li onClick={onClick2}>
-                <ul className="in_grid">
-                  <li className="profile_img"></li>
-                  <li className="chat_info">
-                    <ul>
-                      <li className="chat_title">
-                        [ 공구 ] 사과 공구 같이하실 분
-                      </li>
-                      <li className="content">몇시에 뵐까요 ?</li>
-                      <li className="created_At">2022-02-16</li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            ))}
-          </ul>
+          {chatList.length === 0 ? (
+            <p style={{ textAlign: "center", lineHeight: "645px" }}>
+              "채팅 목록이 비었습니다"
+            </p>
+          ) : (
+            <ul className="grid">
+              {chatList.map((el) => (
+                <li
+                  // onClick={() => {
+                  //   setChatRoom(true);
+                  // }}
+                  onClick={() => {
+                    handleCardClick(el.id);
+                    onClick2();
+                  }}
+                  // onClick={onClick2}
+                >
+                  <ul className="in_grid">
+                    <li className="profile_img">
+                      <img src={el.image}></img>
+                    </li>
+                    <li className="chat_info">
+                      <ul>
+                        <li className="chat_title">{el.title}</li>
+                        <li className="content">{el.content}</li>
+                        <li className="created_At">{el.createdAt}</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </ChatListDiv>
+      {/* {chatRoom === true ? (
+        // <ChatRoomDiv>
+        <ChatRoom setChatRoom={setChatRoom}></ChatRoom>
+      ) : (
+        // </ChatRoomDiv>
+        <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>
+      )} */}
     </>
   );
 };

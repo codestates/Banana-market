@@ -41,6 +41,7 @@ module.exports = async (req, res) => {
     const article = articleData.dataValues;
     const region = article.Region.dataValues.city;
     const category = article.Category.dataValues.food_type;
+    // console.log(article.Users);
     const user = article.Users[0].dataValues;
     if (accessTokenData) {
       const userId = accessTokenData.id;

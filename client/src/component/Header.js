@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../App.css'; //이거 써줘야 css적용됨.
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setLogin, setLogout } from '../redux/actions/actions';
 
 import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
@@ -185,6 +189,10 @@ const Wrapper = styled.div`
 `;
 
 const Header = ({ handleResponseSuccess }) => {
+  let setLoginState = useSelector((state) => state.setLoginReducer);
+  let dispatch = useDispatch();
+  const history = useHistory();
+
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
@@ -240,9 +248,10 @@ const Header = ({ handleResponseSuccess }) => {
             </div>
           </div>
           <div className='menu_wrapper'>
-            <div className='icon login_icon'>
-              <img src={login} className="icon_img login_img" onClick={() => {setLoginModal(true);}}/>
-            </div>
+            { setLoginState?  <div></div>
+              : <div className='icon login_icon'>
+                <img src={login} className="icon_img login_img" onClick={() => {setLoginModal(true)}} />
+              </div> }
             <Link to='/chat'>
               <div className='icon chat_icon'>
                 <img src={chat_icon} className="icon_img" />

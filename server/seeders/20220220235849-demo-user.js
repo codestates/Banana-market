@@ -43,40 +43,7 @@ module.exports = {
       users.push(obj);
     }
     
-    const hashTutu = bcrypt.hashSync('투투', saltRounds);
-    const engUser = {
-      name: '투투',
-      email: '투투',
-      password: hashTutu,
-      profile_image_key: '1645110272558.png',
-      profile_image_location:
-        'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
-      region_id: '1',
-      block: false,
-      type: 'USER',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
-    users.push(engUser)
-
-
     const hashTutu = bcrypt.hashSync('xnxn', saltRounds);
-    const engUser = {
-      name: '투투',
-      email: '투투',
-      password: hashTutu,
-      profile_image_key: '1645110272558.png',
-      profile_image_location:
-        'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
-      region_id: '1',
-      block: false,
-      type: 'USER',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    users.push(engUser);
-
-    const hashTutu = bcrypt.hashSync('투투', saltRounds);
     const engUser = {
       name: '투투',
       email: '투투',

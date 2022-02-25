@@ -267,6 +267,7 @@ const Join = () => {
   let [selectCity, setSelectCity] = useState('');
   let [selectDistrict, setSelectDistrict] = useState('');
   let [inputNewPassword, setInputNewPassword] = useState('');
+  let [securityNum, setSecurityNum] = useState('');
   
   //----------------------이메일-----------------------
   // 이메일 유효성 검사 :
@@ -386,6 +387,7 @@ const Join = () => {
   // 닉네임 작성 함수
   const handleChangeNickName = (e) => {
     if(userNickname !== e.target.value) setIsCheckedNickname(false) 
+    else if(e.target.value === '') setIsCheckedNickname(false)
     else setIsCheckedNickname(true)
     setInputNickname(e.target.value);
 	};

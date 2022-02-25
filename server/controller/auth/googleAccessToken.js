@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     )
     .catch((err) => {
       console.log(err);
-      res.status(500).send('Internal server error');
+      return res.status(500).send('Internal server error');
     });
 
   if (!getAccessToken) {
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send('Internal server error');
+      return res.status(500).send('Internal server error');
     });
   const { email, verified_email, name, picture } = userData.data;
   // console.log(userinfo);
@@ -67,13 +67,13 @@ module.exports = async (req, res) => {
         return res.status(404).send('Not found user');
       }
       const userInfo = data[0].dataValues;
-      console.log(userInfo);
+      // console.log(userInfo);
       delete userInfo.password;
       const localAccessToken = generateAccessToken(userInfo);
       const localRefreshToken = generateRefreshToken(userInfo);
       sendAccessToken(res, localAccessToken);
       sendRefreshToken(res, localRefreshToken);
-      res.status(200).send({ message: 'ok' });
+      return res.status(200).send({ message: 'ok' });
     })
     .catch((err) => {
       console.log(err);

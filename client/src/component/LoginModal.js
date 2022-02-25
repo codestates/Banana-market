@@ -164,7 +164,7 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
     } else {
       axios
         .post(
-          'http://localhost:3001/login',
+          `${process.env.REACT_APP_API_URL}/login`,
           {
             email,
             password,

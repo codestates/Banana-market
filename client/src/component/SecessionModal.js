@@ -137,6 +137,7 @@ const SecessionModal = ({ setIsSecessionModalOn }) => {
             )
           .then((data) => {
             alert('성공적으로 탈퇴되었습니다.')
+            dispatch(setLogout())
             setIsSecessionModalOn(false);
             history.push('/');
           })

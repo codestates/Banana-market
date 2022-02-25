@@ -242,6 +242,7 @@ const UlDiv = styled.ul`
 `;
 
 const Join = () => {
+  const history = useHistory();
   let setLoginState = useSelector((state) => state.setLoginReducer); 
   let setUserInfo = useSelector((state) => state.setUserInfoReducer); 
   let dispatch = useDispatch();
@@ -250,6 +251,7 @@ const Join = () => {
   // useState로 Input 값 받기
   let [inputId, setInputId] = useState('');
   let [inputNickname, setInputNickname] = useState(''); 
+  let [imgBase64, setImgBase64] = useState(null); 
 
   // 통과여부 
   let [checkEmail, setCheckEmail] = useState(false); // 이메일 유효성 검사 통과여부
@@ -262,12 +264,38 @@ const Join = () => {
  
   // OK 된 값 (제출 확정 값)
   let [userId, setUserId] = useState('');
-  let [inputSecurityNum, setInputSecurityNum] = useState('');
+  let [inputSecurityNum, setInputSecurityNum] = useState(null);
   let [userNickname, setUserNickname] = useState('');
   let [selectCity, setSelectCity] = useState('');
   let [selectDistrict, setSelectDistrict] = useState('');
   let [inputNewPassword, setInputNewPassword] = useState('');
-  let [securityNum, setSecurityNum] = useState('');
+  let [securityNum, setSecurityNum] = useState(null);
+  let [profileImg, setProfileImg] = useState(null);
+
+   //----------------------이미지-----------------------
+  //이미지 업로드 버튼 실행함수
+  const handleChangeUpload = (e) => {
+    const uploadFile = e.target.files[0]
+    setThumbnail(uploadFile); // 썸네일 만들기
+    const formData = new FormData();
+    formData.append('profileImage', uploadFile);
+    setProfileImg(formData);
+  };
+  //이미지 삭제버튼 실행함수
+  const handleClickDeleteImg = (e) => {
+    setProfileImg(null);
+  }
+  // 썸네일 만드는 함수
+  const setThumbnail = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob); 
+    return new Promise((resolve) => { 
+      reader.onload = () => { 
+        setImgBase64(reader.result); 
+        resolve(); 
+      }; 
+    });
+  }
   
   //----------------------이메일-----------------------
   // 이메일 유효성 검사 :
@@ -285,9 +313,6 @@ const Join = () => {
   };
   // 이메일 인증번호확인 버튼 클릭 시 진행되는 함수
   const handleClickSendSecurityNum = (e) => {
-    // axios : Id 중복 확인 
-    // -> Id 중복일 시 : span(이미 가입된 이메일입니다.), setInputId('')
-    // -> Id 통과 시 : setUserId(inputId), 인증번호 전송, span(입력된 이메일로 인증번호가 전송되었습니다.), 
     axios.post(
       `${process.env.REACT_APP_API_URL}/validation/email`,{
         email: inputId
@@ -297,6 +322,8 @@ const Join = () => {
       }
     ).then((res) => {
       alert('이메일에 인증번호가 전송되었습니다');
+      // 이메일 인증번호 저장
+      setSecurityNum(res.data.data.authorizationNum);
       setUserId(inputId);
       // 이메일 전송
     }).catch((err) => {
@@ -306,84 +333,12 @@ const Join = () => {
   }
   // 인증번호 작성 함수
   const handleChangeSecurityNum = (e) => {
+    console.log(e.target.value)
+    console.log('securityNum', securityNum, Number(securityNum) === Number(e.target.value))
     setInputSecurityNum(e.target.value);
 	};
   
-  //----------------------비밀번호-----------------------
-  // 비밀번호 유효성 검사 :
-  const handleChangeNewPassword = (e) => {
-    setInputNewPassword(e.target.value);
-    if(true === regPassword.test(e.target.value)) {
-      setCheckNewPassword(true);
-    } else {
-      setCheckNewPassword(false);
-    }
-	};
-  // 비밀번호 재확인 검사 :
-  const handleChangeRePassword = (e) => {
-    if(inputNewPassword === e.target.value){
-      setCheckReNewPassword(true);
-    } else {
-      setCheckReNewPassword(false);
-    }
-	};
-  //----------------------장소-----------------------
-  // 시에 따라 구 select box 값 정하는 함수
-  const handleChangeCity = (e) => {
-    setSelectCity(e.target.value);
-    setSelectDistrict('');
-	};
-  const handleChangeDistrict = (e) => {
-    setSelectDistrict(e.target.value);
-	};
-
-  //----------------------이미지-----------------------
-  //이미지 업로드 버튼 실행함수
-  const handleChangeUpload = (e) => {
-    const uploadFile = e.target.files[0]
-    const formData = new FormData();
-    formData.append('profileImage', uploadFile);
-    const config = {
-      Headers: {
-        'content-type': 'multipart/form-data',
-      },
-      withCredentials: true,
-    }
-    console.log('formData',formData)
-      if (formData) {        
-        axios.put(
-          `${process.env.REACT_APP_API_URL}/users/profile-image`, formData, config
-        ).then((res) => {
-          axios
-            .get(`${process.env.REACT_APP_API_URL}/users/info`, {
-              withCredentials: true,
-            })
-            .then((res) => {
-              dispatch({type: 'SET_UPDATE_USER_INFO' , payload: res.data.data });
-            })
-            .catch((err) => {
-              dispatch(setLogout());
-            });
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-    };
-  //이미지 삭제버튼 실행함수
-  const handleClickDeleteImg = (e) => {
-    axios.delete(
-      `${process.env.REACT_APP_API_URL}/users/profile-image`, {
-        withCredentials: true,
-      }
-    ).then((res) => {
-      dispatch({type: 'SET_USER_INFO_PROFILE_IMG_NULL'});
-      document.getElementById('image').value = '';
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
-
-  //----------------------닉네임-----------------------
+   //----------------------닉네임-----------------------
   // 닉네임 작성 함수
   const handleChangeNickName = (e) => {
     if(userNickname !== e.target.value) setIsCheckedNickname(false) 
@@ -413,49 +368,101 @@ const Join = () => {
       })
     }
   }
+  //----------------------장소-----------------------
+  // 시에 따라 구 select box 값 정하는 함수
+  const handleChangeCity = (e) => {
+    setSelectCity(e.target.value);
+    setSelectDistrict('');
+	};
+  const handleChangeDistrict = (e) => {
+    setSelectDistrict(e.target.value);
+	};
+  //----------------------비밀번호-----------------------
+  // 비밀번호 유효성 검사 :
+  const handleChangeNewPassword = (e) => {
+    setInputNewPassword(e.target.value);
+    if(true === regPassword.test(e.target.value)) {
+      setCheckNewPassword(true);
+    } else {
+      setCheckNewPassword(false);
+    }
+	};
+  // 비밀번호 재확인 검사 :
+  const handleChangeRePassword = (e) => {
+    if(inputNewPassword === e.target.value){
+      setCheckReNewPassword(true);
+    } else {
+      setCheckReNewPassword(false);
+    }
+	}; 
 
   //----------------------가입하기-----------------------
   // 가입하기 버튼 클릭 시 진행되는 함수
   const handleClickSubmit = (e) => {
-    // axios : 회원가입 제출.
-    // if (userId && inputSecurityNum && userNickname && selectCity !== '' && selectDistrict !== '' && inputPassword && inputRePassword )
-    // false => alert(입력사항을 모두 기입하세요.)
-    // true =>
-    // -> Id && 인증번호 매칭 확인 -> 틀리면 alert(인증번호를 확인해주세요), setInputSecurityNum('')
-    // -> inputPassword === inputRePassword -> 틀리면 alert(비밀번호를 재확인해주세요), setInputRePassword('')
-    console.log(
-      userId,
-      inputSecurityNum,
-      userNickname,
-      inputNewPassword,
-      selectCity,
-      selectDistrict,
-    )
-    console.log(inputId, userId, inputNickname,userNickname, checkNewPassword, checkReNewPassword, selectDistrict  )
-    console.log('inputId', inputId)
-    console.log('userId', userId)
-    if(inputId === userId && inputNickname === userNickname && checkNewPassword && checkReNewPassword && selectDistrict !== ''){
-      // console.log(inputId, userId, inputNickname,userNickname, checkNewPassword, checkReNewPassword, selectDistrict  )
-      alert('가입이 가능합니다.')
-      axios.post(
-        `${process.env.REACT_APP_API_URL}/signup`,{
-          email: userId,
-          password: inputNewPassword,
-          region: selectDistrict,
-          name: userNickname,
-        },
-        {
-          withCredentials: true,
-        }
-      ).then((res) => {
-        
-      }).catch((err) => {
-        setCheckNickname(false);
-        console.log(err)
-      })
+    if(securityNum && Number(securityNum) === Number(inputSecurityNum)) {
+      if(inputId === userId && inputNickname === userNickname && checkNewPassword && checkReNewPassword && selectDistrict !== ''){
+        // console.log(inputId, userId, inputNickname,userNickname, checkNewPassword, checkReNewPassword, selectDistrict  )
+        //1.회원가입
+        axios.post(`${process.env.REACT_APP_API_URL}/signup`,{
+            email: userId,
+            password: inputNewPassword,
+            region: selectDistrict,
+            name: userNickname,
+          },
+          {
+            withCredentials: true,
+          }
+        ).then((res) => {
+          //회원가입 성공
+          alert(`회원가입이 성공적으로 진행되었습니다.`)
+          // 2. 로그인
+          axios.post(`${process.env.REACT_APP_API_URL}/login`,{
+            email: userId,
+            password: inputNewPassword,
+          },
+          {
+            withCredentials: true,
+          })
+          .then((data) => {
+            // 로그인 성공
+            dispatch(setLogin());
+            const config = {
+              Headers: {
+                'content-type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+            //3. 프로필 업로드
+            if(profileImg){
+              axios.put(`${process.env.REACT_APP_API_URL}/users/profile-image`, profileImg, config)
+              .then((res) => {
+                alert(`프로필업로드에 성공했습니다.`);
+                history.push('/');
+              }).catch((err) => {
+                //프로필 업로드 실패
+                console.log(err);
+              })
+            } else {
+              history.push('/');
+            }
+          })
+          .catch((err) => {
+            // 로그인 실패
+            console.log(err);
+          });
+        })
+        .catch((err) => {
+          // 회원가입 실패
+          alert(`회원가입에 실패했습니다.`)
+          setCheckNickname(false);
+          console.log(err)
+        })
+      } else {
+        alert('잘못 기입된 것이 있습니다. 이메일, 닉네임, 나의지역, 비밀번호를 모두 통과하셔야 합니다.')
+      }
     } else {
-      alert('잘못 기입된 것이 있습니다. 이메일, 닉네임, 나의지역, 비밀번호를 모두 통과하셔야 합니다.')
-    }
+      alert('이메일에 보내진 인증번호를 기입해주세요')
+    } 
 	};
 
 
@@ -474,9 +481,7 @@ const Join = () => {
         <UlDiv>
           <li className="profile">
             <div className="image">
-                { setUserInfo.profileImage? <img className="basic_image" src={setUserInfo.profileImage} />
-                : <img className="basic_image" src={monkey}/>
-                }
+              <img className="basic_image" src={imgBase64 || monkey}/>
             </div>
             <div className="btn_list">
                 <label htmlFor='image' className='upload_btn profile_btn'>

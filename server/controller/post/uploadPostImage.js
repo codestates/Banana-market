@@ -17,6 +17,15 @@ module.exports = async (req, res) => {
     location = req.file.transforms[0].location;
     key = req.file.transforms[0].key;
 
+    if (!req.file) {
+      return res.status(204).send({
+        data: {
+          imageLocation: null,
+          imageKey: null,
+        },
+        message: 'No image',
+      });
+    }
     res.status(201).send({
       data: {
         imageLocation: location,

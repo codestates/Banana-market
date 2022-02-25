@@ -19,6 +19,8 @@ module.exports = async (req, res) => {
       include : [{
         model : Article
       }]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
 
     const articleCount = listByCategory.count
@@ -42,7 +44,10 @@ module.exports = async (req, res) => {
       offset: offset,      
       attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
       order : [['createdAt', 'DESC']]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
+
     return res.status(200).json({
       data : {
         articleList : listByCategory
@@ -63,6 +68,8 @@ module.exports = async (req, res) => {
       },
       attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
       order : [['createdAt', 'DESC']]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
 
     const articleCount = listBySearch.count
@@ -102,6 +109,8 @@ module.exports = async (req, res) => {
         id : id
       },
       include: Article
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
 
     const articleCount = userArticleList.count
@@ -123,10 +132,12 @@ module.exports = async (req, res) => {
     userArticleList = await userArticleList.rows[0].getArticles({
     limit: limit,
     offset: offset,      
-    attributes : ['id', 'title', 'image', 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
+    attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
     joinTableAttributes : [],
     order : [['createdAt', 'DESC']]
-    });
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     const myArticleList = await Promise.all(
       userArticleList.map(article => {
@@ -137,7 +148,9 @@ module.exports = async (req, res) => {
         }
         return resData
       })
-    )
+    ).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     return res.status(200).json({
       data : {
@@ -168,6 +181,8 @@ module.exports = async (req, res) => {
           }
         }
       }]
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
 
     const articleCount = userUploadList.count
@@ -198,6 +213,8 @@ module.exports = async (req, res) => {
         },
         attributes : []
       }
+    }).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
     })
 
     const myUploadList = await Promise.all(
@@ -209,7 +226,9 @@ module.exports = async (req, res) => {
         }
         return resData
       })
-    )
+    ).catch((err) => {
+      res.status(500).send({message : 'Internal server error'})
+    })
 
     return res.status(200).json({
       data : {
@@ -234,7 +253,9 @@ module.exports = async (req, res) => {
         //   status : true
         // },
         order: [['date'], ['time', 'DESC'], ['createdAt']],
-      }).catch(e => console.log(err))
+      }).catch((err) => {
+        res.status(500).send({message : 'Internal server error'})
+      })
 
       const articleCount = allListOrderByDuedate.count;
       
@@ -262,7 +283,9 @@ module.exports = async (req, res) => {
     offset: offset,
     attributes : ['id', 'title', ['image_location', 'image'], 'market', 'date', 'time', ['total_mate', 'totalMate'], ['current_mate', 'currentMate'], ['trade_type', 'tradeType'], 'status'],
     order: [['createdAt', 'DESC']],
-  }).catch(e => console.log(e))
+  }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
 
   const articleCount = allListOrderByUpload.count;
 

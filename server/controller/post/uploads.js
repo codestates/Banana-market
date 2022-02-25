@@ -16,6 +16,7 @@ module.exports = async (req, res) => {
     return res.status(401).send({ message: 'Not authorized' });
   }
   const userId = accessTokenData.id;
+
   const {
     title,
     content,
@@ -27,6 +28,8 @@ module.exports = async (req, res) => {
     totalMate,
     region,
     address,
+    imageLocation,
+    imageKey,
   } = req.body;
 
   if (
@@ -57,31 +60,22 @@ module.exports = async (req, res) => {
   });
   const regionId = regionData.dataValues.id;
 
-  let location =
-    'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';
-  let key = 'jointPurchaseDefaultImage.jpeg';
-  articleImage(req, res, function (err) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({ message: 'Fail image upload' });
-    }
-
+  if (!imageLocation && !imageKey) {
     if (tradeType === 'share') {
-      if (!req.file) {
-        location =
-          'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/shareDefaultImage.jpeg';
-        key = 'shareDefaultImage.jpeg';
-      } else {
-        location = req.file.transforms[0].location;
-        key = req.file.transforms[0].key;
-      }
+      imageLocation =
+        'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/shareDefaultImage.jpeg';
+      imageKey = 'shareDefaultImage.jpeg';
+    } else if (tradeType === 'jointPurchase') {
+      imageLocation =
+        'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';
+      imageKey = 'jointPurchaseDefaultImage.jpeg';
     }
-  });
+  }
 
   Article.create({
     title,
-    image_key: key,
-    image_location: location,
+    image_key: imageKey,
+    image_location: imageLocation,
     content,
     category_id: categoryId,
     market,

@@ -23,6 +23,7 @@ module.exports = {
   deletePost: require('./post/deletePost'),
   postStatus: require('./post/postStatus'),
   postList: require('./post/getPostList'),
+  uploadPostImage: require('./post/uploadPostImage'),
   // room
   getMessage: require('./room/message'),
   getRoomList: require('./room/room'),

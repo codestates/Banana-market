@@ -61,13 +61,14 @@ const PostList = () => {
       })
       .then((listData) => {
         console.log(listData);
-        setIsLoding(true);
+
         if (listData.data.data.articleList.length === 0) {
           // setTimeout(() => {
           //   setIsLoding(false);
           // }, 500);
           setIsLoding(false);
         } else {
+          setIsLoding(true);
           dispatch({
             type: 'SHOW_MORE_POSTLIST',
             payload: listData.data.data.articleList,

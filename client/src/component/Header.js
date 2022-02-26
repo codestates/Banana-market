@@ -201,9 +201,6 @@ const Wrapper = styled.div`
 
 const Header = ({ handleResponseSuccess }) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
-  let dispatch = useDispatch();
-  const history = useHistory();
-
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);

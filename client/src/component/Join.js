@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 import searchList from '../resource/cityList'
 import check_icon from "../icon/check_icon.png";
 import error_icon from "../icon/error_icon.png";
+import next_icon from "../icon/next_icon.png";
 import { useSelector, useDispatch } from 'react-redux'; 
 import { setLogin, setLogout, setUpdateUserInfo} from "../redux/actions/actions";
-import monkey from "../icon/monkey.png";
-
+import PersonalInformModal from './PersonalInformModal';
 import axios from "axios";
 
 const Wrapper = styled.div`
@@ -35,6 +35,7 @@ const Wrapper = styled.div`
     border: 1px solid #000;
     box-sizing: border-box;
     margin: 0 auto;
+    padding-top: 40px;
     /* background-color: peachpuff; */
     border-radius: 10px;
     @media screen and (max-width: 767px) {
@@ -67,6 +68,28 @@ const UlDiv = styled.ul`
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 0;
+  }
+  .pi_inform {
+    padding: 16px 0;
+    >div.line{
+      width: 100%;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+    >img{
+      padding-top: 5px;
+      display: block;
+      float: right;
+      width: 16px;
+      opacity: 0.3;
+      /* height: 16px; */
+    }
+    >span#check_pi_inform{
+      font-size: 16px;
+      color: black;
+      padding-left: 0px;
+    }
   }
   .profile {
     width: 285px;
@@ -118,6 +141,7 @@ const UlDiv = styled.ul`
     }
   }
   >li.info_area {
+    display: block;
     width: 380px;
     height: auto;
     font-size: 16px;
@@ -272,6 +296,10 @@ const Join = () => {
   let [securityNum, setSecurityNum] = useState(null);
   let [profileImg, setProfileImg] = useState(null);
 
+  // PersonalInformModal On / Off
+  let [personalInformModal, setPersonalInformModal] = useState(false); 
+  let [piCheck, setPiCheck] = useState(false);  // 개인정보처리방침 동의여부
+
    //----------------------이미지-----------------------
   //이미지 업로드 버튼 실행함수
   const handleChangeUpload = (e) => {
@@ -327,8 +355,10 @@ const Join = () => {
       setUserId(inputId);
       // 이메일 전송
     }).catch((err) => {
-      alert('가입된 이메일입니다');
       console.log(err)
+      let result = String(err);
+      if(result.includes('409')) alert('가입된 이메일입니다');
+      else if(result.includes('500')) alert('서버오류입니다');
     })
   }
   // 인증번호 작성 함수
@@ -363,8 +393,10 @@ const Join = () => {
         setCheckNickname(true);
         setUserNickname(inputNickname);
       }).catch((err) => {
-        setCheckNickname(false);
         console.log(err)
+        let result = String(err);
+        if(result.includes('409')) setCheckNickname(false);
+        else if(result.includes('500')) setIsCheckedNickname(false);
       })
     }
   }
@@ -399,70 +431,39 @@ const Join = () => {
   //----------------------가입하기-----------------------
   // 가입하기 버튼 클릭 시 진행되는 함수
   const handleClickSubmit = (e) => {
-    if(securityNum && Number(securityNum) === Number(inputSecurityNum)) {
-      if(inputId === userId && inputNickname === userNickname && checkNewPassword && checkReNewPassword && selectDistrict !== ''){
-        // console.log(inputId, userId, inputNickname,userNickname, checkNewPassword, checkReNewPassword, selectDistrict  )
-        //1.회원가입
-        axios.post(`${process.env.REACT_APP_API_URL}/signup`,{
-            email: userId,
-            password: inputNewPassword,
-            region: selectDistrict,
-            name: userNickname,
-          },
-          {
-            withCredentials: true,
-          }
-        ).then((res) => {
-          //회원가입 성공
-          alert(`회원가입이 성공적으로 진행되었습니다.`)
-          // 2. 로그인
-          axios.post(`${process.env.REACT_APP_API_URL}/login`,{
-            email: userId,
-            password: inputNewPassword,
-          },
-          {
-            withCredentials: true,
-          })
-          .then((data) => {
-            // 로그인 성공
-            dispatch(setLogin());
-            const config = {
-              Headers: {
-                'content-type': 'multipart/form-data',
-              },
+    if(piCheck){
+      if(securityNum && Number(securityNum) === Number(inputSecurityNum)) {
+        if(inputId === userId && inputNickname === userNickname && checkNewPassword && checkReNewPassword && selectDistrict !== ''){
+          // console.log(inputId, userId, inputNickname,userNickname, checkNewPassword, checkReNewPassword, selectDistrict  )
+          //1.회원가입
+          axios.post(`${process.env.REACT_APP_API_URL}/signup`,{
+              email: userId,
+              password: inputNewPassword,
+              region: selectDistrict,
+              name: userNickname,
+            },
+            {
               withCredentials: true,
             }
-            //3. 프로필 업로드
-            if(profileImg){
-              axios.put(`${process.env.REACT_APP_API_URL}/users/profile-image`, profileImg, config)
-              .then((res) => {
-                alert(`프로필업로드에 성공했습니다.`);
-                history.push('/');
-              }).catch((err) => {
-                //프로필 업로드 실패
-                console.log(err);
-              })
-            } else {
-              history.push('/');
-            }
+          ).then((res) => {
+            //회원가입 성공
+            alert(`회원가입이 성공적으로 진행되었습니다.`)
           })
           .catch((err) => {
-            // 로그인 실패
-            console.log(err);
-          });
-        })
-        .catch((err) => {
-          // 회원가입 실패
-          alert(`회원가입에 실패했습니다.`)
-          setCheckNickname(false);
-          console.log(err)
-        })
+            // 회원가입 실패
+            alert(`회원가입에 실패했습니다.`)
+            setCheckNickname(false);
+            console.log(err)
+          })
+        } else {
+          alert('잘못 기입된 것이 있습니다. 이메일, 닉네임, 나의지역, 비밀번호를 모두 통과하셔야 합니다.')
+        }
       } else {
-        alert('잘못 기입된 것이 있습니다. 이메일, 닉네임, 나의지역, 비밀번호를 모두 통과하셔야 합니다.')
+        alert('이메일 인증을 진행해주세요')
       }
     } else {
-      alert('이메일에 보내진 인증번호를 기입해주세요')
-    } 
+      alert('개인정보처리방침에 동의는 필수사항입니다.')
+    }
 	};
 
 
@@ -475,116 +476,113 @@ const Join = () => {
 	};
 
   return (
-    <Wrapper>
-      <div className='title'>회원가입</div>
-      <div className="detail">
-        <UlDiv>
-          <li className="profile">
-            <div className="image">
-              <img className="basic_image" src={imgBase64 || monkey}/>
-            </div>
-            <div className="btn_list">
-                <label htmlFor='image' className='upload_btn profile_btn'>
-                  <input id='image' type='file' accept='image/*' className='input_hidden' onChange={handleChangeUpload}/>
-                  이미지 업로드
-                </label>
-                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>이미지 제거</div>
+    <> 
+      {personalInformModal ? <PersonalInformModal setPersonalInformModal={setPersonalInformModal} setPiCheck={setPiCheck}></PersonalInformModal> : <div></div> }
+      <Wrapper>
+        <div className='title'>회원가입</div>
+        <div className="detail">
+          <UlDiv>
+            <li className="id info_area">
+              <div className='tt'>아아디</div>
+              <div className='text'>
+                <input type='text' onChange={handleChangeId} placeholder='이메일을 입력해주세요'/>
               </div>
-          </li>
-          <li className="id info_area">
-            <div className='tt'>아아디</div>
-            <div className='text'>
-              <input type='text' onChange={handleChangeId} placeholder='이메일을 입력해주세요'/>
-            </div>
-            <div className='s_btn' onClick={handleClickSendSecurityNum}>인증번호<br/>받기</div>
-            {inputId === '' ? 
-              (<span className='error_message'>이메일을 작성해주세요 </span>) 
-              : (checkEmail ? <span >유효한 이메일 입니다</span> : <span className='error_message'>유효하지 않은 이메일 입니다</span>)
-            }
-          </li>
-          <li className="security_num info_area">
-            <div className='tt'>인증번호</div>
-            <div className='text'>
-              <input type='text' onChange={handleChangeSecurityNum} />
-            </div>
-            {
-              inputSecurityNum !== '' ? <div className='hidden'></div>
-              : <span className='error_message'>인증번호를 입력하세요</span>
-            }
-          </li>
-          <li className="nick info_area">
-            <div className='tt'>닉네임</div>
-            <div className='text'>
-              <input type='text' onChange={handleChangeNickName}/>
-            </div>
-            <div className='s_btn' onClick={handleClickNickName}>닉네임<br/>중복확인</div>
-            { isCheckedNickname ? 
-              (checkNickname ? (<span >사용가능한 닉네임입니다 </span>) : (<span className='error_message'>중복된 닉네임입니다 </span>))
-            : (<span className='error_message'>닉네임 중복확인을 진행해주세요</span>) }
-          </li>
-          <li className="spot info_area">
-            <div className='tt'>장소</div>
-            <div className='text'>
-              <select name="city" onChange={handleChangeCity}>
-                <option value="">시</option>
-                {
-                  SelectList.map((el, idx) => (
-                    <option key={idx} value={el}>{el}</option>
-                  ))
-                }
-              </select>
-            </div>
-            <div className='text text_right'>
-              <select name="district" onChange={handleChangeDistrict}>
-                <option value="">구</option>
-                {
-                  searchList[0][selectCity] ? 
-                  searchList[0][selectCity].map((el, idx) => (
-                    <option key={idx} value={el}>{el}</option>
-                  )) : <></>
-                }
-              </select>
-            </div>
-            {selectDistrict === '' ? <span className='error_message'>나의 지역을 선택해주세요.</span> : <div className='hidden'></div> }
-          </li>
-          <li className="password info_area">
-            <div className='tt'>비밀번호</div>
-            <div className='text'>
-              <input
-                className="password"
-                type="password"
-                placeholder="비밀번호를 입력해주세요."
-                onChange={handleChangeNewPassword}
-              />
-              <img className='icon' src={checkNewPassword ? check_icon : error_icon}/>
-            </div>
-            {checkNewPassword ?<span>사용가능한 비밀번호 입니다.</span>
-             : <span className='error_message'>비밀번호는 영문, 숫자, 특수문자를 모두 포함해 6~12자 입니다.</span> }
-            <div className='text_right'>
-              <input
-                className="password"
-                type="password"
-                placeholder="비밀번호를 확인해주세요."
-                onChange={handleChangeRePassword}
-              />
-              <img className='icon' src={checkReNewPassword ? check_icon : error_icon}/>
-            </div>
-          </li>
-        </UlDiv>
-      </div>
-      <div
-        className="btn"
-        onClick={handleClickSubmit}
-      >
-        <p
-          style={{
-            textAlign: "center",
-          }}
+              <div className='s_btn' onClick={handleClickSendSecurityNum}>인증번호<br/>받기</div>
+              {inputId === '' ? 
+                (<span className='error_message'>이메일을 작성해주세요 </span>) 
+                : (checkEmail ? <span >유효한 이메일 입니다</span> : <span className='error_message'>유효하지 않은 이메일 입니다</span>)
+              }
+            </li>
+            <li className="security_num info_area">
+              <div className='tt'>인증번호</div>
+              <div className='text'>
+                <input type='text' onChange={handleChangeSecurityNum} />
+              </div>
+              {
+                inputSecurityNum !== '' ? <div className='hidden'></div>
+                : <span className='error_message'>인증번호를 입력하세요</span>
+              }
+            </li>
+            <li className="nick info_area">
+              <div className='tt'>닉네임</div>
+              <div className='text'>
+                <input type='text' onChange={handleChangeNickName}/>
+              </div>
+              <div className='s_btn' onClick={handleClickNickName}>닉네임<br/>중복확인</div>
+              { isCheckedNickname ? 
+                (checkNickname ? (<span >사용가능한 닉네임입니다 </span>) : (<span className='error_message'>중복된 닉네임입니다 </span>))
+              : (<span className='error_message'>닉네임 중복확인을 진행해주세요</span>) }
+            </li>
+            <li className="spot info_area">
+              <div className='tt'>장소</div>
+              <div className='text'>
+                <select name="city" onChange={handleChangeCity}>
+                  <option value="">시</option>
+                  {
+                    SelectList.map((el, idx) => (
+                      <option key={idx} value={el}>{el}</option>
+                    ))
+                  }
+                </select>
+              </div>
+              <div className='text text_right'>
+                <select name="district" onChange={handleChangeDistrict}>
+                  <option value="">구</option>
+                  {
+                    searchList[0][selectCity] ? 
+                    searchList[0][selectCity].map((el, idx) => (
+                      <option key={idx} value={el}>{el}</option>
+                    )) : <></>
+                  }
+                </select>
+              </div>
+              {selectDistrict === '' ? <span className='error_message'>나의 지역을 선택해주세요.</span> : <div className='hidden'></div> }
+            </li>
+            <li className="password info_area">
+              <div className='tt'>비밀번호</div>
+              <div className='text'>
+                <input
+                  className="password"
+                  type="password"
+                  placeholder="비밀번호를 입력해주세요."
+                  onChange={handleChangeNewPassword}
+                />
+                <img className='icon' src={checkNewPassword ? check_icon : error_icon}/>
+              </div>
+              {checkNewPassword ?<span>사용가능한 비밀번호 입니다.</span>
+              : <span className='error_message'>비밀번호는 영문, 숫자, 특수문자를 모두 포함해 6~12자 입니다.</span> }
+              <div className='text_right'>
+                <input
+                  className="password"
+                  type="password"
+                  placeholder="비밀번호를 확인해주세요."
+                  onChange={handleChangeRePassword}
+                />
+                <img className='icon' src={checkReNewPassword ? check_icon : error_icon}/>
+              </div>
+            </li>
+            <li className="pi_inform info_area">
+              <div className='line'></div>
+              <input id='check_pi_inform' type='checkbox' checked={piCheck} onClick={()=>{setPiCheck(!piCheck)}}/> 
+              <span id='check_pi_inform' onClick={()=>{setPiCheck(!piCheck)}}>&nbsp;&nbsp; 바나나마켓 개인정보처리방침에 동의(필수)</span>
+              <img className='icon' src={next_icon} onClick={() => {setPersonalInformModal(true)}}/>
+            </li>
+          </UlDiv>
+        </div>
+        <div
+          className="btn"
+          onClick={handleClickSubmit}
         >
-          가입하기
-        </p>
-      </div>
-    </Wrapper>
+          <p
+            style={{
+              textAlign: "center",
+            }}
+          >
+            가입하기
+          </p>
+        </div>
+      </Wrapper>
+    </>
   );
 };
 

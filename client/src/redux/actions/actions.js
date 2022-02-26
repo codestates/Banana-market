@@ -31,17 +31,18 @@ export const setUserInfoRegion = (payload) => ({
 });
 
 export const setUserInfoProfileImgNull = (payload) => ({
-  type: SET_USER_INFO_PROFILE_IMG_NULL
-
+  type: SET_USER_INFO_PROFILE_IMG_NULL,
 });
 
 // ---------------postListReducer-----------------
-export const SHOW_POSTLIST = 'SHOW_POSTLIST';
+export const SHOW_POSTDATA = 'SHOW_POSTDATA';
 export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
+export const POSTLIST_RESET = 'POSTLIST_RESET';
+export const CATEGORY_LIST = 'CATEGORY_LIST';
 
-export const showPostList = (payload) => {
+export const showPostData = (payload) => {
   return {
-    type: SHOW_POSTLIST,
+    type: SHOW_POSTDATA,
     payload,
   };
 };
@@ -49,6 +50,19 @@ export const showPostList = (payload) => {
 export const showMorePostList = (payload) => {
   return {
     type: SHOW_MORE_POSTLIST,
+    payload,
+  };
+};
+export const categoryList = (payload) => {
+  return {
+    type: CATEGORY_LIST,
+    payload,
+  };
+};
+
+export const postListReset = (payload) => {
+  return {
+    type: POSTLIST_RESET,
     payload,
   };
 };
@@ -77,6 +91,16 @@ export const ADD_TO_CHATLIST = 'ADD_TO_CHATLIST';
 export const addToChatList = (payload) => {
   return {
     type: ADD_TO_CHATLIST,
+    payload,
+  };
+};
+
+// --------------categoryReducer----------------
+export const CATEGORY_DATA = 'CATEGORY_DATA';
+
+export const categoryData = (payload) => {
+  return {
+    type: CATEGORY_DATA,
     payload,
   };
 };

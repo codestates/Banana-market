@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { showPostList, showPostDetail } from '../redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const DetailDiv = styled.div`
   max-width: 1200px;
   height: 745px;
   /* background-color: powderblue; */
-  margin: 50px auto;
+  margin: 70px auto 0 auto;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
@@ -43,6 +44,58 @@ const DetailDiv = styled.div`
       width: 90%;
       height: 40px;
       line-height: 40px;
+    }
+  }
+
+  .user_btn {
+    width: 440px;
+    height: 45px;
+    box-sizing: border-box;
+    margin: 40px auto 0 auto;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 45px;
+    @media screen and (max-width: 767px) {
+      margin: 30px auto 0 auto;
+      width: 90%;
+      height: 40px;
+      line-height: 40px;
+    }
+    div {
+      float: left;
+    }
+    .edit_btn {
+      width: 200px;
+      height: 45px;
+      background-color: #95c710;
+      box-sizing: border-box;
+      border-radius: 50px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 45px;
+      @media screen and (max-width: 767px) {
+        width: 45%;
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+    .delete_btn {
+      width: 200px;
+      height: 45px;
+      float: right;
+      background-color: rgba(0, 0, 0, 0.15);
+      box-sizing: border-box;
+      border-radius: 50px;
+      color: white;
+      cursor: pointer;
+      text-align: center;
+      line-height: 45px;
+      @media screen and (max-width: 767px) {
+        width: 45%;
+        height: 40px;
+        line-height: 40px;
+      }
     }
   }
 `;
@@ -204,11 +257,38 @@ const UlDiv = styled.ul`
 
 const PostDetail = ({ chatListDetail, handleClick }) => {
   const history = useHistory();
+  // const [postid, setPostid] = useState(0);
   const postDetail = useSelector((state) => state.postDetailReducer);
+  const dispatch = useDispatch();
   const { post, postWriter } = postDetail;
-  const basicProfileImage =
-    postWriter.profile_image ||
-    'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645707095761.png';
+  const basicProfileImage = postWriter.profile_image || null;
+
+  let articleNum = useParams();
+  // console.log(articleid);
+
+  const showPostDetail = (articleid) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
+      .then((detailData) => {
+        // console.log(detailData);
+        // setPostid(articleid);
+        dispatch({
+          type: 'SHOW_POST',
+          payload: detailData.data.data.post,
+        });
+        dispatch({
+          type: 'SHOW_WRITER',
+          payload: detailData.data.data.postWriter,
+        });
+        console.log(postDetail);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  showPostDetail(articleNum.id);
+
   return (
     <DetailDiv>
       <div className="detail">
@@ -242,15 +322,22 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
           <li className="map"></li>
         </UlDiv>
       </div>
-      <div
-        className="btn"
-        onClick={() => {
-          // handleClick();
-          history.push('/chat');
-        }}
-      >
-        참여하기
-      </div>
+      {postWriter.isMyPost === true ? (
+        <div className="user_btn">
+          <div className="edit_btn">수정하기</div>
+          <div className="delete_btn">삭제하기</div>
+        </div>
+      ) : (
+        <div
+          className="btn"
+          onClick={() => {
+            // handleClick();
+            history.push('/chat');
+          }}
+        >
+          참여하기
+        </div>
+      )}
     </DetailDiv>
   );
 };

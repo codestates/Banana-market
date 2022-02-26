@@ -115,7 +115,7 @@ function App(props) {
         <Route path="/posting">
           <Posting></Posting>
         </Route>
-        <Route path="/view">
+        <Route path="/view/:id">
           <PostingView></PostingView>
         </Route>
         <Route path="/list">

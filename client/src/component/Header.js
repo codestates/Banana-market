@@ -11,14 +11,13 @@ import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
 
-import person_icon from "../icon/person_icon.svg";
-import logo_svg from "../icon/logo.svg";
-import logo from "../icon/logo.png";
-import login from "../icon/login.png";
-import chat_icon from "../icon/chat_icon.png";
-import menu_icon from "../icon/menu_icon.png";
-import search_icon from "../icon/search_icon.svg";
-
+import person_icon from '../icon/person_icon.svg';
+import logo_svg from '../icon/logo.svg';
+import logo from '../icon/logo.png';
+import login from '../icon/login.png';
+import chat_icon from '../icon/chat_icon.png';
+import menu_icon from '../icon/menu_icon.png';
+import search_icon from '../icon/search_icon.svg';
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -61,7 +60,7 @@ const Wrapper = styled.div`
     padding: 12px;
     /* border: 1px solid black; */
     float: left;
-    .logo_icon{
+    .logo_icon {
       margin-top: 5px;
       height: 22px;
     }
@@ -79,7 +78,7 @@ const Wrapper = styled.div`
         height: 22px;
         /* background-color: white; */
       }
-      .icon_img.login_img{
+      .icon_img.login_img {
         height: 19px;
         margin-top: 1px;
       }
@@ -191,10 +190,10 @@ const Wrapper = styled.div`
         .icon_img {
           height: 26px;
         }
-        .icon_img.login_img{
-        height: 22px;
-        margin-top: 2px;
-      }
+        .icon_img.login_img {
+          height: 22px;
+          margin-top: 2px;
+        }
       }
     }
   }
@@ -202,14 +201,13 @@ const Wrapper = styled.div`
 
 const Header = ({ handleResponseSuccess }) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
-  let dispatch = useDispatch();
-  const history = useHistory();
-
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
   let [menuModal, setMenuModal] = useState(false);
-
+  const history = useHistory();
+  const state = useSelector((state) => state.postListReducer);
+  const dispatch = useDispatch();
   return (
     <>
       {searchBox ? (
@@ -247,34 +245,70 @@ const Header = ({ handleResponseSuccess }) => {
       )}
       <div className="header">
         <Wrapper>
+          {/* <Link to="/list"> */}
+          {/* <div
+            className="logo"
+            onClick={() => {
+              dispatch(postListReset());
+              history.push('/list');
+            }}
+          >
+            <img src={logo} className="logo_icon" />
+          </div> */}
+          {/* </Link> */}
           <Link to="/list">
             <div className="logo">
               <img src={logo_svg} className="logo_icon logo_svg" />
             </div>
           </Link>
 
-          <div className='search_box1'>
-            <div className='search'  onClick={() => {setSearchBox(true);}}>
+          <div className="search_box1">
+            <div
+              className="search"
+              onClick={() => {
+                setSearchBox(true);
+              }}
+            >
               <img src={search_icon} className="search_icon" />
               <span>검색어 입력</span>
             </div>
           </div>
-          <div className='menu_wrapper'>
-            { setLoginState?  <div></div>
-              : <div className='icon login_icon'>
-                <img src={person_icon} className="icon_img login_img" onClick={() => {setLoginModal(true)}} />
-              </div> }
-            <Link to='/chat'>
-              <div className='icon chat_icon'>
+          <div className="menu_wrapper">
+            {setLoginState ? (
+              <div></div>
+            ) : (
+              <div className="icon login_icon">
+                <img
+                  src={person_icon}
+                  className="icon_img login_img"
+                  onClick={() => {
+                    setLoginModal(true);
+                  }}
+                />
+              </div>
+            )}
+            <Link to="/chat">
+              <div className="icon chat_icon">
                 <img src={chat_icon} className="icon_img" />
               </div>
             </Link>
-            <div className='icon menu_icon'>
-              <img src={menu_icon} className="icon_img"  onClick={() => {setMenuModal(true);}}/>
+            <div className="icon menu_icon">
+              <img
+                src={menu_icon}
+                className="icon_img"
+                onClick={() => {
+                  setMenuModal(true);
+                }}
+              />
             </div>
           </div>
-          <div className='search_box2'>
-            <div className='search'   onClick={() => {setSearchBox(true);}}>
+          <div className="search_box2">
+            <div
+              className="search"
+              onClick={() => {
+                setSearchBox(true);
+              }}
+            >
               <img src={search_icon} className="search_icon" />
               <span>검색어 입력</span>
             </div>

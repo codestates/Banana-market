@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { showPostList, showPostDetail } from '../redux/actions/actions';
+import {
+  showPostList,
+  showPostDetail,
+  postListReset,
+} from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -238,31 +242,107 @@ const ListDiv = styled.div`
   }
 `;
 
-const List = () => {
-  const history = useHistory();
+const ExitModalDiv = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  /* width: 330px;
+  height: 710px; */
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  background-color: rgb(0, 0, 0, 0.6);
+  .exit_modal {
+    width: 250px;
+    height: 180px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    .exit_title {
+      text-align: center;
+      width: 220px;
+      margin: 30px auto 15px auto;
+      font-weight: 600;
+    }
+    .exit_info {
+      width: 200px;
+      margin: 0 auto;
+      font-size: 11px;
+      margin: 0 auto 25px auto;
+      text-align: center;
+      line-height: 1.5;
+      color: #4c4c4c;
+    }
+
+    .exit_btn {
+      width: 210px;
+      height: 30px;
+      margin: 0 auto;
+      > div {
+        float: left;
+      }
+      .cancel {
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #f4f4f4;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .ok {
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #c4c4c4;
+        font-size: 13px;
+        float: right;
+        cursor: pointer;
+      }
+    }
+  }
+`;
+
+const List = ({ handleFilterCategory }) => {
   const [postid, setPostid] = useState(0);
+  const history = useHistory();
+  const postDetail = useSelector((state) => state.postDetailReducer);
+  const setLoginState = useSelector((state) => state.setLoginReducer);
   const list = useSelector((state) => state.postListReducer);
   const dispatch = useDispatch();
 
-  const showPostDetail = (articleid) => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
-      .then((detailData) => {
-        console.log(detailData);
-        setPostid(articleid);
-        dispatch({
-          type: 'SHOW_POST',
-          payload: detailData.data.data.post,
-        });
-        dispatch({
-          type: 'SHOW_WRITER',
-          payload: detailData.data.data.postWriter,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const categoryData = [
+    '정육/계란',
+    '과일',
+    '우유/유제품',
+    '채소',
+    '수산/건어물',
+    '베이커리',
+    '간식/떡/빙과',
+    '김치/반찬',
+    '기타',
+  ];
+  // const [category, setCategory] = useState(categoryData);
+  // const [isFiltered, setIsFiltered] = useState(false);
+  // const [currentUsername, setCurrentUsername] = useState('전체');
+
+  // const handleFilterCategory = (event) => {
+  //   const filtered = list.filter(
+  //     (category) => category.id === list.category_id
+  //   );
+  //   setIsFiltered(true);
+  //   setCategory(filtered);
+  //   console.log(category);
+  // };
 
   return (
     <>
@@ -274,9 +354,25 @@ const List = () => {
           </ul>
         </div>
         <div className="selectBox">
-          <select className="category">
+          <select
+            className="category"
+            onChange={handleFilterCategory}
+            // onClick={() => setList([])}
+          >
             <option value="전체">전체</option>
-            <option value="정육/계란">정육/계란</option>
+            {categoryData.map((category, idx) => {
+              return (
+                <option
+                  value={category}
+                  key={idx}
+
+                  // const onSelect = useCallback((category) => setCategoryData(category), []);
+                >
+                  {category}
+                </option>
+              );
+            })}
+            {/* <option value="정육/계란">정육/계란</option>
             <option value="과일">과일</option>
             <option value="우유/유제품">우유/유제품</option>
             <option value="채소">채소</option>
@@ -284,7 +380,7 @@ const List = () => {
             <option value="베이커리">베이커리</option>
             <option value="간식/떡/빙과">간식/떡/빙과</option>
             <option value="김치/반찬">김치/반찬</option>
-            <option value="기타">기타</option>
+            <option value="기타">기타</option> */}
           </select>
           <select className="sort">
             <option value="최신순">최신순</option>
@@ -299,8 +395,11 @@ const List = () => {
               key={idx}
               className="list_detail"
               onClick={() => {
-                showPostDetail(el.id);
-                history.push('/view');
+                history.push(
+                  setLoginState
+                    ? `/view/${el.id}`
+                    : alert('로그인 후 이용 가능합니다.')
+                );
               }}
             >
               <ul className="in_grid">
@@ -309,7 +408,9 @@ const List = () => {
                 </li>
                 <li className="inf">
                   <ul>
-                    <li className="title">{el.title}</li>
+                    <li className="title">
+                      [{el.tradeType}] {el.title}
+                    </li>
                     <li className="location">{el.market}</li>
                     <li className="date">
                       {el.date} &#124; {el.time}
@@ -327,5 +428,29 @@ const List = () => {
     </>
   );
 };
-
+function LoginModal() {
+  const history = useHistory();
+  return (
+    <ExitModalDiv>
+      <div className="exit_modal">
+        <div className="exit_title">로그인 후 이용 가능합니다.</div>
+        <div className="exit_info">
+          채팅방을 나가시는 경우, 해당 거래 참여가 <br></br>취소되고 대화 내용이
+          모두 삭제됩니다.
+        </div>
+        <div className="exit_btn">
+          <div
+            className="cancel"
+            onClick={() => {
+              history.push('/');
+            }}
+          >
+            취소하기
+          </div>
+          <div className="ok">로그인하기</div>
+        </div>
+      </div>
+    </ExitModalDiv>
+  );
+}
 export default List;

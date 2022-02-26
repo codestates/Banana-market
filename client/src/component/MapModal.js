@@ -1,8 +1,9 @@
 import React, { useState, useEffect} from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import github_icon from "../icon/github_icon.png";
+import search_icon from "../icon/search_icon.svg";
 import axios from "axios";
 import guCodeList from '../resource/guCodeList'
 
@@ -72,6 +73,15 @@ const MapModalWrapper = styled.div`
             width:36px;
             height: 40px;
             outline: 0;
+            > img.search_icon {
+              width: 16px;
+              height: 16px;
+              svg#Layer_1{
+                .cls-1, .cls-2 {
+                  stroke: #90bd19;
+                }
+              }
+            }
           }
         }
         >div#markList{
@@ -276,6 +286,8 @@ const MapModalWrapper = styled.div`
   .infowindow.red {
     border : 2px solid red;
   }
+
+  /* #90bd19; */
   @media only screen and (max-width: 768px){
       position: absolute;
       top: -100px;
@@ -408,13 +420,15 @@ const MapModalWrapper = styled.div`
 `;
 
 const MapModal = ({ setMapModal, setLocationInfo, locationInfo }) => {
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  let dispatch = useDispatch();
   // useState로 Input 값 받기
   let[inputWord, setInputWord] = useState('');
   let[searchWord, setSearchWord] = useState('');
   let[searching, setSearching] = useState(0);
-  let defaultLocation = ['서대문구', guCodeList[1]['서대문구'][0], guCodeList[1]['서대문구'][1]]; // 서대문구 위치에 사용자 프로필의 구를 써준다.
+  let defaultLocation = [setUserInfo.region||'서대문구' , guCodeList[1][setUserInfo.region||'서대문구'][0], guCodeList[1][setUserInfo.region||'서대문구'][1]]; // 서대문구 위치에 사용자 프로필의 구를 써준다.
   let[location, setLocation] = useState(defaultLocation[0]); //지도위치에 따라 변화하는 구, default : 내 프로필 구
-  let[defaultCoordinate, setDefaultCoordinate] = useState([defaultLocation[2], defaultLocation[1], '서대문구']);
+  let[defaultCoordinate, setDefaultCoordinate] = useState([defaultLocation[2], defaultLocation[1], setUserInfo.region||'서대문구']);
   let[doroAddress, setDoroAddress] = useState('');
   let[jibunAddress, setJibunAddress] = useState('');
   let[markerName, setMarkerName] = useState('');
@@ -499,7 +513,8 @@ const MapModal = ({ setMapModal, setLocationInfo, locationInfo }) => {
   // 함수6: 장소 선택하는 함수
   const handleClickChoiceLocationInfo = (e) => {
     let idx = e.target.getAttribute('value');
-    setLocationInfo([searchResult[idx]['place_name'],[searchResult[idx]['road_address_name']]]);
+    setLocationInfo([searchResult[idx]['place_name'],searchResult[idx]['road_address_name'] || searchResult[idx]['address_name'], searchResult[idx]['place_url']]);
+    console.log(locationInfo)
   }
 
 
@@ -700,12 +715,14 @@ const MapModal = ({ setMapModal, setLocationInfo, locationInfo }) => {
           <div id='map_list'> 
             <div className='search_box'>
               <input className='input' type='text' onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>
-              <div className='search_btn' onClick={handleClickSearch}> 검색 </div>
+              <div className='search_btn' onClick={handleClickSearch}> 
+                <img src={search_icon} className="icon search_icon" onClick={handleClickSearch}/> 
+              </div>
             </div>
             <div id='markList'>
               <div className='line'></div>
               <div className='location_box'>
-                <div className='present_location'>검색 위치 &nbsp;  > &nbsp; {location}</div>
+                <div className='present_location'>검색 위치 &nbsp; &#9656; &nbsp; {location}</div>
                 <div className='setting_btn' onClick={handleClickResetLocation} >내 동네로 이동</div>
               </div>
               { (searchResult.length === 0) ?

@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import List from '../component/List';
 import axios from 'axios';
 import styled from 'styled-components';
 import { Oval } from 'react-loader-spinner';
 import { useSelector, useDispatch } from 'react-redux';
-import { showPostList, setLogin } from '../redux/actions/actions';
+import {
+  showPostData,
+  showMorePostList,
+  categoryList,
+  postListReset,
+} from '../redux/actions/actions';
 // import { useInView } from "react-intersection-observer";
 
 const LoadingDiv = styled.div`
@@ -18,49 +23,56 @@ const LoadingDiv = styled.div`
 `;
 
 const PostList = () => {
-  // const showPost = async () => {
-  //   await axios
-  //     .get('http://localhost:3001/articles/lists')
-  //     .then((chatData) => {
-  //       console.log(chatData);
-  //       dispatch(showPostList(chatData.data.data.articleList));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   showPost();
-  // }, []);
-  // console.log(state);
-
-  // const [list, setList] = useState([]);
-
-  const [target, setTarget] = useState('');
   const [isLoding, setIsLoding] = useState(false);
-  const [pageNumber, setPageNumber] = useState(0);
   const state = useSelector((state) => state.postListReducer);
   const dispatch = useDispatch();
+  const [pageNumber, setPageNumber] = useState(state.length / 10);
+  const [categoryData, setCategoryData] = useState('');
+  const [list, setList] = useState([]);
 
-  const postList = async (pageNumber) => {
-    // pageNumber = state.length / 8;
+  // const onSelect = useCallback((category) => setCategoryData(category), []);
+
+  const handleFilterCategory = (event) => {
+    if (event.target.value === '전체') {
+      dispatch(postListReset());
+      setCategoryData('');
+      setPageNumber(0);
+      postList('', 0);
+    } else {
+      dispatch(postListReset());
+      setCategoryData(event.target.value);
+      console.log(categoryData);
+      console.log(event.target.value);
+      setPageNumber(0);
+      postList(event.target.value, 0);
+    }
+  };
+
+  const postList = async (categoryData, pageNumber) => {
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/articles/lists/`, {
+      .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
         params: {
+          category: categoryData,
           page: pageNumber,
+          // search: search,
+          // sort: sort,
+          // isHost: isHost,
         },
       })
-
-      .then((chatData) => {
-        // console.log(chatData);
+      .then((listData) => {
+        console.log(listData);
         setIsLoding(true);
-        setTimeout(() => {
+        if (listData.data.data.articleList.length === 0) {
+          // setTimeout(() => {
+          //   setIsLoding(false);
+          // }, 500);
+          setIsLoding(false);
+        } else {
           dispatch({
             type: 'SHOW_MORE_POSTLIST',
-            payload: chatData.data.data.articleList,
+            payload: listData.data.data.articleList,
           });
-        }, 1000);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -68,7 +80,7 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    postList(pageNumber);
+    postList(categoryData, pageNumber);
   }, [pageNumber]);
 
   const loadMore = () => {
@@ -76,17 +88,13 @@ const PostList = () => {
   };
 
   const pageEnd = useRef();
-  // let num = 1;
+
   useEffect(() => {
     if (isLoding) {
       const observer = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
-            // num++;
             loadMore();
-            // if (num >= 6) {
-            //   observer.unobserve(pageEnd.current);
-            // }
           }
         },
         { threshold: 0 }
@@ -95,46 +103,17 @@ const PostList = () => {
     }
   }, [isLoding]);
 
-  // const chatList = async ([entry], observer) => {
-  //   if (entry.isIntersecting && !isLoding && list.length >= 8) {
-  //     observer.unobserve(entry.target);
-  //     setIsLoding(true);
-  //     await axios
-  //       .get("http://localhost:3001/articles/lists")
-  //       .then((chatData) => {
-  //         // setList([...list, ...chatData.data.data.articleList]);
-  //         setTimeout(() => {
-  //           setIsLoding(false);
-  //           // setList((list) =>
-  //           //   list.concat(chatData.data.data.articleList.slice(0, 8))
-  //           // );
-  //           setList([...list, ...chatData.data.data.articleList.slice(0, 8)]);
-  //         }, 1000);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-
-  //     observer.observer(entry.target);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   let observer;
-  //   if (target) {
-  //     observer = new IntersectionObserver(chatList, {
-  //       threshold: 0,
-  //     });
-  //     observer.observe(target);
-  //   }
-  //   return () => observer && observer.disconnect();
-  // }, [target]);
-
   return (
     <div className="section">
-      <List></List>
+      <List
+        categoryData={categoryData}
+        // onSelect={onSelect}
+        handleFilterCategory={handleFilterCategory}
+        // list={list}
+        // setList={setList}
+      ></List>
       <div ref={pageEnd}></div>
-      {isLoding ? <Loading></Loading> : null}
+      {isLoding ? <Loading></Loading> : '더 이상 불러올 게시글이 없습니다.'}
     </div>
   );
 };
@@ -145,4 +124,5 @@ function Loading() {
     </LoadingDiv>
   );
 }
+
 export default PostList;

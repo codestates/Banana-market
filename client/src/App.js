@@ -23,6 +23,7 @@ import PostingView from './pages/PostingView';
 import PostList from './pages/PostList';
 import SignUp from './pages/SignUp';
 import Logout from './pages/Logout';
+import CheckPersonalInform from './pages/CheckPersonalInform';
 
 function App(props) {
   const history = useHistory();
@@ -41,6 +42,7 @@ function App(props) {
       })
       .catch((err) => {
         dispatch(setLogout());
+        dispatch({ type: 'SET_USER_INFO_NULL' });
       });
   };
 
@@ -79,12 +81,12 @@ function App(props) {
         withCredentials: true,
       })
       .then((data) => {
+        dispatch(setLogout());
         dispatch(setUserInfoNull());
         console.log('로그아웃되었습니다');
         history.push({
           pathname: '/',
         });
-        dispatch(setLogout());
       })
       .catch((err) => {
         console.log(err);
@@ -124,6 +126,9 @@ function App(props) {
         </Route>
         <Route path="/nullpage">
           <Logout></Logout>
+        </Route>
+        <Route path="/piprocess">
+          <CheckPersonalInform></CheckPersonalInform>
         </Route>
       </Switch>
       <Footer></Footer>

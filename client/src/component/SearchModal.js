@@ -2,7 +2,7 @@ import React, { useState, useRef} from "react";
 import styled from "styled-components";
 import '../App.css'; //이거 써줘야 css적용됨.
 
-import search_icon from "../icon/search_icon.png";
+import search_icon from "../icon/search_icon.svg";
 import close from "../icon/close.png";
 import back_icon from "../icon/back_icon.png";
 import { ReactDOM } from 'react-dom';

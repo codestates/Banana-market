@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../App.css'; //이거 써줘야 css적용됨.
-import { useHistory } from 'react-router-dom';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setLogin, setLogout } from '../redux/actions/actions';
+
 import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
 
+import person_icon from '../icon/person_icon.svg';
+import logo_svg from '../icon/logo.svg';
 import logo from '../icon/logo.png';
 import login from '../icon/login.png';
 import chat_icon from '../icon/chat_icon.png';
 import menu_icon from '../icon/menu_icon.png';
-import search_icon from '../icon/search_icon.png';
-import { useSelector, useDispatch } from 'react-redux';
-import { postListReset } from '../redux/actions/actions';
+import search_icon from '../icon/search_icon.svg';
+
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
 
@@ -56,7 +61,8 @@ const Wrapper = styled.div`
     /* border: 1px solid black; */
     float: left;
     .logo_icon {
-      height: 26px;
+      margin-top: 5px;
+      height: 22px;
     }
   }
   .menu_wrapper {
@@ -90,7 +96,8 @@ const Wrapper = styled.div`
       height: 36px;
       margin: auto;
       border-radius: 100px;
-      background-color: #f8f9fa;
+      border: 1px solid #f7f7f6;
+      background-color: #f7f7f7;
       padding: 8px 15px;
       .search_icon {
         width: 20px;
@@ -111,18 +118,26 @@ const Wrapper = styled.div`
   }
   // 태블릿 : 1200px ~ 768px :: 768px 이상 적용되는 css
   @media only screen and (min-width: ${BREAK_POINT_TABLET}px) {
+    .logo {
+      padding: 12px 14px 12px 0;
+      .logo_icon {
+        margin-top: 5px;
+        height: 28px;
+      }
+    }
     .search_box1 {
-      width: calc(100vw - 333px);
+      width: calc(100vw - 400px);
       height: 50px;
       float: left;
-      padding: 10px 40px 0 40px;
+      padding: 10px 10px 0 60px;
       /* background-color:red; */
       .search {
         width: 100%;
-        height: 36px;
+        height: 40px;
         margin: auto;
         border-radius: 100px;
-        background-color: #f8f9fa;
+        border: 1px solid #f7f7f6;
+        background-color: #f7f7f7;
         padding: 8px 15px;
         .search_icon {
           width: 20px;
@@ -146,16 +161,17 @@ const Wrapper = styled.div`
     padding: 0;
     /* background-color: purple; */
 
-    .logo {
+    /* .logo {
       padding: 12px 14px 12px 0;
       .logo_icon {
-        height: 36px;
+        margin-top: 5px;
+        height: 28px;
       }
-    }
+    } */
     .search_box1 {
       width: 833px;
       height: 60px;
-      padding: 12px 40px 0 40px;
+      padding: 12px 20px 0px 80px;
       .search {
         width: 100%;
         height: 40px;
@@ -184,6 +200,10 @@ const Wrapper = styled.div`
 `;
 
 const Header = ({ handleResponseSuccess }) => {
+  let setLoginState = useSelector((state) => state.setLoginReducer);
+  let dispatch = useDispatch();
+  const history = useHistory();
+
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
@@ -229,7 +249,7 @@ const Header = ({ handleResponseSuccess }) => {
       <div className="header">
         <Wrapper>
           {/* <Link to="/list"> */}
-          <div
+          {/* <div
             className="logo"
             onClick={() => {
               dispatch(postListReset());
@@ -237,8 +257,13 @@ const Header = ({ handleResponseSuccess }) => {
             }}
           >
             <img src={logo} className="logo_icon" />
-          </div>
+          </div> */}
           {/* </Link> */}
+          <Link to="/list">
+            <div className="logo">
+              <img src={logo_svg} className="logo_icon logo_svg" />
+            </div>
+          </Link>
 
           <div className="search_box1">
             <div
@@ -252,15 +277,19 @@ const Header = ({ handleResponseSuccess }) => {
             </div>
           </div>
           <div className="menu_wrapper">
-            <div className="icon login_icon">
-              <img
-                src={login}
-                className="icon_img login_img"
-                onClick={() => {
-                  setLoginModal(true);
-                }}
-              />
-            </div>
+            {setLoginState ? (
+              <div></div>
+            ) : (
+              <div className="icon login_icon">
+                <img
+                  src={person_icon}
+                  className="icon_img login_img"
+                  onClick={() => {
+                    setLoginModal(true);
+                  }}
+                />
+              </div>
+            )}
             <Link to="/chat">
               <div className="icon chat_icon">
                 <img src={chat_icon} className="icon_img" />

@@ -43,7 +43,6 @@ module.exports = async (req, res) => {
           return res
             .status(201)
             .send({ data: userInfo.dataValues, message: 'ok' });
-          // .redirect(302, "/posts/list")
         })
         .catch((err) => {
           console.log(err);

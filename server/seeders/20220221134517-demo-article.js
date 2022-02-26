@@ -25,6 +25,32 @@ module.exports = {
       '까르푸',
       '코스트코',
     ];
+
+    const address = [
+      '서울특별시 강남구 역삼로 310',
+      '서울특별시 동대문구 천호대로 133',
+      '서울특별시 중구 한강대로 405',
+      '서울특별시 서초구 반포1동 서초중앙로 238',
+      '서울특별시 종로구 창경궁로 88',
+      '서울특별시 서초구 청계산로 197',
+      '서울특별시 노원구 월계동 333-1',
+      '서울특별시 중랑구 면목동 168-2번지',
+      '서울특별시 서초구 양재대로 159',
+    ];
+    const url = [
+      'http://kko.to/HYl5_XMxP',
+      'http://kko.to/qmsYDAUha',
+      'http://kko.to/iKKiZyV3_',
+      'http://kko.to/wGsoORrqV',
+      'http://kko.to/w6UtStiIV',
+      'http://kko.to/w3xjeBbC1',
+      'http://kko.to/nEbNEITzW',
+      'http://kko.to/qokMkkx8W',
+      'http://kko.to/qokMkkx8W',
+    ];
+
+    const region = [23, 6, 2, 22, 1, 22, 11, 7, 22];
+
     const times = [
       '오전 06~09',
       '오전 09~12',
@@ -58,7 +84,7 @@ module.exports = {
         content: '',
         category_id: i,
         market: markets[i],
-        region_id: i,
+        region_id: region[i],
         date: `2022-03-0${i + 1}`,
         // date : '2022-03-0' + i+1,
         time: times[i],
@@ -68,32 +94,36 @@ module.exports = {
         status: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+        address: address[i],
+        url: url[i],
       };
       articles.push(obj);
     }
 
     for (let market of markets) {
       for (let i = 0; i < 9; i++) {
-          let obj = {
-            title: `${market} -- ${categories[i]} -- ${times[i]}`,
-            image_key: 'jointPurchaseDefaultImage.jpeg',
-            image_location:
-              'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
-            content: '',
-            category_id: `${i+1}`,
-            market: `${market}`,
-            region_id: `${i+1}`,
-            date: `2022-03-0${i + 1}`,
-            // date : '2022-03-0' + i+1,
-            time: `${times[i]}`,
-            total_mate: 3,
-            current_mate: 1,
-            trade_type: '공구',
-            status: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-          articles.push(obj);
+        let obj = {
+          title: `${market} -- ${categories[i]} -- ${times[i]}`,
+          image_key: 'jointPurchaseDefaultImage.jpeg',
+          image_location:
+            'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
+          content: '',
+          category_id: `${i + 1}`,
+          market: `${market}`,
+          region_id: region[i],
+          date: `2022-03-0${i + 1}`,
+          // date : '2022-03-0' + i+1,
+          time: `{times[i]}`,
+          total_mate: 3,
+          current_mate: 1,
+          address: address[i],
+          trade_type: '공구',
+          status: true,
+          url: url[i],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        articles.push(obj);
       }
     }
     return queryInterface.bulkInsert('Articles', articles, {});

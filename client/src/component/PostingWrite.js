@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import Chat from '../pages/Chat';
@@ -8,6 +8,7 @@ import '../App.css'; //이거 써줘야 css적용됨.
 import MapModal from './MapModal';
 import market from "../icon/market.png";
 import give from "../icon/give.png";
+import axios from 'axios';
 
 const MapModalWrapper = styled.div`
   position: fixed;
@@ -78,7 +79,7 @@ const UlDiv = styled.ul`
   }
   >li.radio_box {
     display: block;
-    width: 155px;
+    width: 185px;
     margin : 20px auto 0 auto;
     input[type='radio']{
       appearance: none;
@@ -239,23 +240,12 @@ const UlDiv = styled.ul`
 `;
 
 const PostingWrite = () => {
+  const history = useHistory();
+  
   // useState로 Modal창 On(true)/Off(false)
   let [mapModal, setMapModal] = useState(false);
   let [locationInfo, setLocationInfo] = useState(['','']);
   let locationInfoText = `${locationInfo[0]}, ${locationInfo[1]}`;
-  
-  // textarea 박스크기 늘이기
-  let[textareaHeight, setTextareaHeight] = useState(40);
-  const handleChangeHeight = (e) => {
-    if(textareaHeight <= e.target.scrollHeight){
-      let newHeight =  e.target.scrollHeight;
-      setTextareaHeight(newHeight);
-      console.log('늘어날때', e.target.scrollHeight)
-    } else { 
-      setTextareaHeight(textareaHeight-10);
-      console.log('줄어들때', e.target.scrollHeight)
-    }
-  }
 
   // SelectBox 내용
   const CategoryList = [ '정육/계란', '과일','우유/유제품', '채소','수산/건어물',  '베이커리', '간식/떡/방과', '김치/반찬', '기타'];
@@ -281,29 +271,40 @@ const PostingWrite = () => {
   }
 
   // useState로 Input 값 받기
-  let[selectRadioBox, setSelectRadioBox] = useState('공구');
+  let[selectRadioBox, setSelectRadioBox] = useState('jointPurchase');
   let[selectCategory, setSelectCategory] = useState('');
   let[inputTitle, setInputTitle] = useState('');
-  let[inputLocation, setInputLocation] = useState('');
   let[date, setDate] = useState(minDate);
   let[selectTime, setSelectTime] = useState(0);
   let[selectPeopleNum, setSelectPeopleNum] = useState(0);
   let[inputText, setInputText] = useState('');
-  let [imageFile, setImageFile] = useState({selectedFile: null});
+  let [imageFile, setImageFile] = useState(null);
   let [thumbnail, setThumbnail] = useState(null);
 
+  // textarea 박스크기 늘이기
+  let[textareaHeight, setTextareaHeight] = useState(40);
+  const handleChangeHeight = (e) => {
+    if(textareaHeight <= e.target.scrollHeight){
+      let newHeight =  e.target.scrollHeight;
+      setTextareaHeight(newHeight);
+      setInputText(e.target.value);
+      // console.log('늘어날때', e.target.scrollHeight)
+    } else { 
+      setTextareaHeight(textareaHeight-10);
+      setInputText(e.target.value);
+      // console.log('줄어들때', e.target.scrollHeight)
+    }
+  }
+
   // Input 값 받는 함수
-  const handleChangeRadioBox = (e) => {
-    setSelectRadioBox(e.target.value);
+  const handleClickRadioBox = (e) => {
+    setSelectRadioBox(e.target.value)
   }
   const handleChangeCategory = (e) => {
     setSelectCategory(e.target.value);
   }
   const handleChangeTitle = (e) => {
     setInputTitle(e.target.value);
-  }
-  const handleChangeLocation = (e) => {
-    setInputLocation(e.target.value);
   }
   const handleChangeDate = (e) => {
     setDate(e.target.value);
@@ -314,29 +315,72 @@ const PostingWrite = () => {
   const handleChangeNum = (e) => {
     setSelectPeopleNum(e.target.value);
 	};
-  const handleChangeText = (e) => {
-    setInputText(e.target.value);
-	};
-  const handleClickSubmit = (e) => {
+    
+  const handleClickSubmit = async (e) => {
     // axios 로 내용 전송
     // selectCategory!=='' && inputTitle!=='' && inputLocation!=='' && selectTime!==0 && selectPeopleNum !==0 && inputText!==''
     // -> false : alert(내용을 모두 입력해주세요)
     // -> true : title, text 공백아님을 확인하기. -> 내용 전송, /list로 이동 
-    console.log(
-      selectRadioBox,
-      selectCategory,
-      inputTitle,
-      inputLocation,
-      date,
-      selectTime,
-      selectPeopleNum,
-      inputText
-    )
-	};
+    e.preventDefault();
+    e.persist();
+
+    let formData = new FormData();
+    let dataSet = JSON.stringify({
+      title: inputTitle,
+      content:inputText,
+      category: selectCategory || '기타',
+      market: locationInfo[0],
+      url: locationInfo[2],
+      date: date,
+      time: selectTime, 
+      tradeType: selectRadioBox,
+      totalMate: selectPeopleNum,
+      region: locationInfo[1].split(' ')[1],
+      address:locationInfo[1],
+    });
+    console.log(dataSet)
+    formData.append('data', dataSet);
+    formData.append('image', imageFile);
+
+    await axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/articles`,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: formData,
+    }).then((res) => {
+      history.push('/list')
+      alert('글이 성공적으로 작성되었습니다.')
+    }).catch((err) => {
+      if(String(err).includes('422')) alert('글을 모두 작성해주세요.')
+      else alert('서버에러');
+    });
+    // console.log(
+    //   imageFile,
+    //   selectRadioBox,
+    //   selectCategory,
+    //   inputTitle,
+    //   //locationInfo, 
+    //   locationInfo[0], locationInfo[1], locationInfo[1].split(' ')[1],
+    //   date,
+    //   selectTime,
+    //   selectPeopleNum,
+    //   inputText
+    // )
+  };
+
+    
+	
   //이미지 업로드 버튼 실행함수
   const handleChangeUpload = (e) => {
-    setImageFile({selectedFile : e.target.files[0]});
     if (e.target.files[0]) {
+      // const uploadFile = e.target.files[0]
+      // const formData = new FormData();
+      // formData.append('profileImage', uploadFile);
+      // setImageFile(formData);
+      const uploadFile = e.target.files[0];
+      setImageFile(uploadFile);
       // console.log('2', thumbnail)
       let reader = new FileReader();
       // 1. 파일을 읽어 버퍼에 저장합니다. 파일 상태 업데이트
@@ -354,7 +398,7 @@ const PostingWrite = () => {
   //이미지 삭제버튼 실행함수
   const handleClickDeleteImg = (e) => {
     setThumbnail(null);
-    setImageFile({selectedFile: null});
+    setImageFile(null);
   }
 
   return (
@@ -367,17 +411,17 @@ const PostingWrite = () => {
           <UlDiv newHeightPx={textareaHeight}>
             <li className="radio_box writing_area">
               <label htmlFor='buy'>
-                <input id='buy' type="radio" name="about" value="공구"  defaultChecked onClick={handleChangeRadioBox}/> 
+                <input id='buy' type="radio" name="about" value="jointPurchase"  defaultChecked onClick={handleClickRadioBox}/> 
                 &nbsp;&nbsp;공구
               </label>
               <label className='label_right' htmlFor='share'>
-                <input id='share' type="radio" name="about" value="나눔" onClick={handleChangeRadioBox}/> 
+                <input id='share' type="radio" name="about" value="share" onClick={handleClickRadioBox}/> 
                 &nbsp;&nbsp;나눔
               </label>
             </li>
             <li className="image_box">
               <div className="image">
-                { imageFile.selectedFile ? <img className="basic_image" src={thumbnail} />
+                { imageFile ? <img className="basic_image" src={thumbnail} />
                 : <img className="basic_image" src={selectRadioBox === '공구' ? market : give}/>
                 }
               </div>
@@ -406,7 +450,7 @@ const PostingWrite = () => {
             </li>
             <li className="location_box writing_area">
               <div className='text'>
-                <input type='text' readOnly value={locationInfoText} placeholder='장소를 선택하세요' onChange={handleChangeLocation} />
+                <input type='text' readOnly value={locationInfoText} placeholder='장소를 선택하세요' />
               </div>
               <div className='s_btn' onClick={(e)=> {setMapModal(!mapModal)}}>지도에서<br/>찾기</div>
             </li>
@@ -440,7 +484,7 @@ const PostingWrite = () => {
             </li>
             <li className="text_box writing_area">
               <div className='text'>
-                <textarea placeholder='내용을 입력하세요'onChange={handleChangeText, handleChangeHeight} ></textarea>
+                <textarea placeholder='내용을 입력하세요'onChange={handleChangeHeight} ></textarea>
               </div>
             </li>
           </UlDiv>

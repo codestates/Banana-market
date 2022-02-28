@@ -6,8 +6,32 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   showPostList,
   showPostDetail,
-  postListReset,
+  searchPostListReset,
 } from '../redux/actions/actions';
+
+const Notice = styled.div`
+
+  max-width: 1200px;
+  margin: 30px auto 50px auto;
+  border: 1px solid #fcfce1;
+  border-radius: 10px;
+  background: #fffff4;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #757575;
+  > span {
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 1200px) {
+    margin: 30px 22px 15px 22px;
+  }
+
+  @media screen and (max-width: 767px) {
+    margin: 75px 22px 10px 22px;
+  }
+`; 
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -94,7 +118,7 @@ const SelectBtn = styled.div`
 
 const ListDiv = styled.div`
   max-width: 1200px;
-  min-height: 690px;
+  /* min-height: 690px; */
   /* background-color: aquamarine; */
   margin: 55px auto 80px;
 
@@ -312,10 +336,11 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const List = ({ handleFilterCategory }) => {
+const SearchList = () => {
   const history = useHistory();
   const setLoginState = useSelector((state) => state.setLoginReducer);
-  const list = useSelector((state) => state.postListReducer);
+  const setSearchInfo = useSelector((state) => state.setSearchInfoReducer);
+  const list = useSelector((state) => state.setSearchListReducer);
   const categoryData = [
     '정육/계란',
     '과일',
@@ -330,34 +355,16 @@ const List = ({ handleFilterCategory }) => {
 
   return (
     <>
+      <Notice className='show_search_word_box'>
+        "<span>{setSearchInfo.searchWord}</span>" &nbsp;검색결과는 
+        "<span>{setSearchInfo.searchCount}</span>"건 입니다.
+      </Notice>
       <SelectBtn>
         <div className="location">
           <ul className="grid">
             <li className="location_img"></li>
             <li className="location_info">일산동구</li>
           </ul>
-        </div>
-        <div className="selectBox">
-          <select
-            className="category"
-            onChange={handleFilterCategory}
-          >
-            <option value="전체">전체</option>
-            {categoryData.map((category, idx) => {
-              return (
-                <option
-                  value={category}
-                  key={idx}
-                >
-                  {category}
-                </option>
-              );
-            })}
-          </select>
-          <select className="sort">
-            <option value="최신순">최신순</option>
-            <option value="기한순/계란">기한순</option>
-          </select>
         </div>
       </SelectBtn>
       <ListDiv>
@@ -400,4 +407,4 @@ const List = ({ handleFilterCategory }) => {
     </>
   );
 };
-export default List;
+export default SearchList;

@@ -7,19 +7,21 @@ const postDetailReducer = (state = initiaPostDetail, action) => {
       let post = action.payload;
       return Object.assign({}, state, {
         post: {
-          id: post.id,
-          title: post.title,
-          image: post.image,
-          content: post.content,
+          address: post.address,
           category: post.category,
+          content: post.content,
+          currentMate: post.currentMate,
+          date: post.date,
+          id: post.id,
+          image: post.image,
           market: post.market,
           region: post.region,
-          date: post.date,
-          time: post.time,
-          totalMate: post.totalMate,
-          currentMate: post.currentMate,
           status: post.status,
+          time: post.time,
+          title: post.title,
+          totalMate: post.totalMate,
           tradeType: post.tradeType,
+          url: post.url,
         },
       });
 

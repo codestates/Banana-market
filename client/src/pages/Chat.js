@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ChatList from "../component/ChatList";
 import ChatRoom from "../component/ChatRoom";
-import { axios } from "axios";
+import axios from "axios";
 
 const ChatDiv = styled.div`
   max-width: 1200px;
@@ -38,7 +38,28 @@ const ChatListDiv = styled.div`
   }
 `;
 
+
 const Chat = () => {
+
+  const chatListData = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/rooms`)
+      .then((chatData) => {
+        console.log(chatData);
+        // dispatch({
+        //   type: 'SHOW_CHATLIST',
+        //   payload: chatData.data.data.roomList,
+        // });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    chatListData();
+  }, []);
+
   const fakelist = [
     {
       id: 1,

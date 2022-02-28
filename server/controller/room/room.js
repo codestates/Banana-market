@@ -38,7 +38,9 @@ module.exports = async (req, res) => {
     }],
     order : [
       [Chat, 'createdAt', 'DESC']
-    ]
+    ],
+    raw: true,
+    nest: true,
   }).catch((err) => {
     console.log(err)
     res.status(500).send({ message: 'Internal server error' })
@@ -47,12 +49,12 @@ module.exports = async (req, res) => {
   // 채팅 리스트별 최신 메세지 1개
   const chatListLatestMessage = await Promise.all(
     articleChatList.rows.map((article) => {
-      const chats = article.Chats[0].toJSON();
+      const chats = article.Chats
       const room = {
-        image : article.dataValues.image,
+        image : article.image,
         title : article.title,
         ...chats,
-        articleId : article.dataValues.articleId
+        articleId : article.articleId
       }
       return room
     })

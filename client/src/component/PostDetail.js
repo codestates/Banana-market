@@ -5,9 +5,10 @@ import { showPostList, showPostDetail } from '../redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
+const { kakao } = window;
+
 const DetailDiv = styled.div`
   max-width: 1200px;
-  height: 745px;
   /* background-color: powderblue; */
   margin: 70px auto 0 auto;
   @media screen and (max-width: 767px) {
@@ -16,7 +17,6 @@ const DetailDiv = styled.div`
   }
   .detail {
     width: 440px;
-    height: 660px;
     border: 1px solid #c4c4c4;
     box-sizing: border-box;
     margin: 0 auto;
@@ -24,7 +24,6 @@ const DetailDiv = styled.div`
     border-radius: 10px;
     @media screen and (max-width: 767px) {
       width: 90%;
-      height: 675px;
     }
     /* padding-top: 20px; */
   }
@@ -102,7 +101,6 @@ const DetailDiv = styled.div`
 
 const UlDiv = styled.ul`
   width: 380px;
-  height: 595px;
   /* background-color: rebeccapurple; */
   margin: 30px auto;
   border-radius: 10px;
@@ -198,7 +196,6 @@ const UlDiv = styled.ul`
 
   .content {
     width: 380px;
-    height: 120px;
     /* background-color: salmon; */
     box-sizing: border-box;
     margin-bottom: 20px;
@@ -243,10 +240,12 @@ const UlDiv = styled.ul`
   }
   .map {
     width: 380px;
-    height: 205px;
-    border: 1px solid #c4c4c4;
-    border-radius: 8px;
-    box-sizing: border-box;
+    .map_image{
+      height: 300px;
+      border: 1px solid #c4c4c4;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
     @media screen and (max-width: 767px) {
       width: 90%;
       margin: 0 auto;
@@ -280,14 +279,43 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
           type: 'SHOW_WRITER',
           payload: detailData.data.data.postWriter,
         });
-        console.log(postDetail);
+        console.log('detailData', detailData);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  showPostDetail(articleNum.id);
+  useEffect(()=>{
+    showPostDetail(articleNum.id);
+    // 카카오지도 api
+    // 주소-좌표 변환 객체를 생성합니다
+    let geocoder = new kakao.maps.services.Geocoder();
+    // let coords = '';
+    // // 주소로 좌표를 검색합니다
+    geocoder.addressSearch(post.address, function(result, status) {
+      // 정상적으로 검색이 완료됐으면 
+      if (status === kakao.maps.services.Status.OK) {
+        let coords =  new kakao.maps.LatLng(result[0].y, result[0].x);
+        
+        // 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
+        let markers = [{
+          position: coords, 
+          text: post.market // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
+        }];
+    
+        let staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+          staticMapOption = { 
+            center: coords, // 이미지 지도의 중심좌표
+            level: 3, // 이미지 지도의 확대 레벨
+            marker: markers // 이미지 지도에 표시할 마커 
+          };    
+        // 이미지 지도를 생성합니다
+        let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+      }
+    })
+  }, []);    
+
 
   return (
     <DetailDiv>
@@ -312,19 +340,27 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
           <li className="title">
             [{post.tradeType}] {post.title}
           </li>
-          <li className="content">{postDetail.content}</li>
+          <li className="content">
+            <img src={post.image}/>
+            <div>{post.content}</div>
+          </li>
           <li className="date">
             {post.date} &#124; {post.time}
           </li>
           <li className="pepole">
             지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
           </li>
-          <li className="map"></li>
+          <li className="map">
+            <div>장소: {post.market}, ( {post.address} ) </div>
+            <div className='map_image' id='staticMap'></div>
+            <div className='map_btn' onClick={() => window.open(`${post.url}`, '_blank')}>장소 정보 보기</div>  
+          </li>
+            
         </UlDiv>
       </div>
       {postWriter.isMyPost === true ? (
         <div className="user_btn">
-          <div className="edit_btn">수정하기</div>
+          <div className="edit_btn" onClick={()=>{history.push('/edit')}}>수정하기</div>
           <div className="delete_btn">삭제하기</div>
         </div>
       ) : (

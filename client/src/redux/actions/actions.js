@@ -34,6 +34,54 @@ export const setUserInfoProfileImgNull = (payload) => ({
   type: SET_USER_INFO_PROFILE_IMG_NULL,
 });
 
+// ---------------searchInfoReducer-----------------
+export const SET_WORD_FOR_SEARCH = 'SET_WORD_FOR_SEARCH';
+export const SET_RESULT_COUNT_NUM = 'SET_RESULT_COUNT_NUM';
+export const SET_SEARCH_PAGE_NUM = 'SET_SEARCH_PAGE_NUM';
+
+export const setWordForSearch = (payload) => {
+  return {
+    type: SET_WORD_FOR_SEARCH,
+    payload,
+  };
+};
+export const setResultCountNum = (payload) => {
+  return {
+    type: SET_RESULT_COUNT_NUM,
+    payload,
+  };
+};
+export const setSearchPageNum = (payload) => {
+  return {
+    type: SET_SEARCH_PAGE_NUM,
+    payload,
+  };
+};
+
+// ---------------searchListReducer-----------------
+export const SHOW_SEARCH_POSTDATA = 'SHOW_SEARCH_POSTDATA';
+export const SHOW_MORE_SEARCH_POSTLIST = 'SHOW_MORE_SEARCH_POSTLIST';
+export const SEARCH_POSTLIST_RESET = 'SEARCH_POSTLIST_RESET';
+
+export const showSearchPostData = (payload) => {
+  return {
+    type: SHOW_SEARCH_POSTDATA,
+    payload,
+  };
+};
+export const showMoreSearchPostList = (payload) => {
+  return {
+    type: SHOW_MORE_SEARCH_POSTLIST,
+    payload,
+  };
+};
+export const searchPostListReset = (payload) => {
+  return {
+    type: SEARCH_POSTLIST_RESET,
+    payload,
+  };
+};
+
 // ---------------postListReducer-----------------
 export const SHOW_POSTDATA = 'SHOW_POSTDATA';
 export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
@@ -46,7 +94,6 @@ export const showPostData = (payload) => {
     payload,
   };
 };
-
 export const showMorePostList = (payload) => {
   return {
     type: SHOW_MORE_POSTLIST,
@@ -59,7 +106,6 @@ export const categoryList = (payload) => {
     payload,
   };
 };
-
 export const postListReset = (payload) => {
   return {
     type: POSTLIST_RESET,
@@ -77,7 +123,6 @@ export const showPostDetail = (payload) => {
     payload,
   };
 };
-
 export const showMyPostDetail = (payload) => {
   return {
     type: SHOW_WRITER,

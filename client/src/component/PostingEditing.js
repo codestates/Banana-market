@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   postListReset,
 } from '../redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import Chat from '../pages/Chat';
+import { Link } from "react-router-dom";
+import searchList from '../resource/cityList'
 import '../App.css'; //이거 써줘야 css적용됨.
 import MapModal from './MapModal';
-import camera from "../icon/camera.png";
-import check_icon from "../icon/check_icon.svg";
-// import market from "../icon/market.png";
-// import give from "../icon/give.png";
+import bananalogo from "../icon/bananalogo.png";
+import give from "../icon/give.png";
 import axios from 'axios';
 
 const MapModalWrapper = styled.div`
@@ -75,50 +76,41 @@ const UlDiv = styled.ul`
   @media screen and (max-width: 767px) {
     width: 100%;
     margin: 0;
+    >li.radio_box.writing_area {
+      height: 30px;
+      margin : 20px auto 20px auto;
+    }
   }
   >li.radio_box {
-    padding-top: 30px;
-    /* background-color: red; */
-    width: 100%;
-    display: flex;
-    >img{
-      width: 10px;
-      display: block;
-      position: relative;
-      left: 13px;
-      bottom: 7px;
-    }
+    display: block;
+    width: 185px;
+    margin : 20px auto 0 auto;
     input[type='radio']{
       appearance: none;
       display: inline-block;
       width: 16px;
       height: 16px;
-      border-radius: 3px;
-      border: 1px solid #b7b7b7;
+      border: 2px solid black;
     }
     input[type='radio']:checked {
       appearance: none;
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 0px;
-      background-color: #ff4342;
-      & + label {
-        color: #292929;
-      }
+      border: 2px solid black;
+      background-color: blue;
+    }
+    .label_right {
+      margin-left: 30px;
     }
     >label{
-      /* background-color: green; */
       display: inline-block;
-      font-size: 16px;
-      margin-right: 30px;
-      font-weight: 300;
-      color: #a9a9a9;
+      font-size: 20px;
       /* background-color: red; */
     }
   }
   .image_box {
-    padding-top: 30px;
+    width: 285px;
     height: 100px;
     /* background-color: orange; */
     box-sizing: border-box;
@@ -129,39 +121,29 @@ const UlDiv = styled.ul`
       height: 100px;
       border-radius: 10px;
       margin-right: 25px;
-      border: 1.5px solid #dcdfd5;
+      background-color: rgba(255, 250, 176, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      > img.choice_image {
-        opacity: 1;
-        width: 100%;
-      }
       > img.basic_image {
         display: inline-block;
-        opacity: 0.3;
         width: 100%;
+        height: 100%;
       }
     }
-    >div.img_text {
-      font-size: 14px;
-      color:#bcbcbc;
-      font-weight: 400;
-      line-height: 20px;
-      padding-top: 3px;
-    }
     .btn_list {
+      margin-top: 6px;
       float: left;
       width: 160px;
+      height: 88px;
       .profile_btn{
         display: inline-block;
-        margin-right: 8px;
-        width: 48px;
-        font-size: 18px;
-        padding-top: 10px;
+        width: 100%;
+        font-size: 14px;
         height: 36px;
-        border-radius: 100px;
+        border-radius: 10px;
         text-align: center;
-        background-color: #bdbdbd;
-        border: 1px solid #b3b3b3;
+        line-height: 36px;
+        background-color: #95c710;
         color: rgba(255, 255, 255, 0.9);
         font-weight: 600;
         >input.input_hidden{
@@ -170,7 +152,7 @@ const UlDiv = styled.ul`
       }
       .profile_btn.delete_btn{
         border: 1px solid rgba(0, 0, 0, 0.1);
-        color: #bdbdbd;
+        color: rgba(0, 0, 0, 0.6);
         background-color: white;
         margin-top: 18px;
       }
@@ -261,14 +243,24 @@ const UlDiv = styled.ul`
   }
 `;
 
-const PostingWrite = () => {
+const PostingEditing = () => {
   const state = useSelector((state) => state.postListReducer); //리스트 상태값
+  const postDetail = useSelector((state) => state.postDetailReducer);
+  const { post, postWriter } = postDetail;
   const dispatch = useDispatch();
   const history = useHistory();
-  
+
+  console.log(postDetail, post)
+  //post input에 값 적용
+  // if(post.tradeType === 'jointPurchase' || '공구') {
+  //   document.getElementById('buy').checked = true;
+  // } else {
+  //   document.getElementById('share').checked = true;
+  // }
+
   // useState로 Modal창 On(true)/Off(false)
   let [mapModal, setMapModal] = useState(false);
-  let [locationInfo, setLocationInfo] = useState(['','']);
+  let [locationInfo, setLocationInfo] = useState([post.market,'']);
   let locationInfoText = `${locationInfo[0]}, ${locationInfo[1]}`;
 
   // SelectBox 내용
@@ -295,15 +287,15 @@ const PostingWrite = () => {
   }
 
   // useState로 Input 값 받기
-  let[selectRadioBox, setSelectRadioBox] = useState('jointPurchase');
-  let[selectCategory, setSelectCategory] = useState('');
-  let[inputTitle, setInputTitle] = useState('');
-  let[date, setDate] = useState(minDate);
-  let[selectTime, setSelectTime] = useState(0);
-  let[selectPeopleNum, setSelectPeopleNum] = useState(0);
-  let[inputText, setInputText] = useState('');
+  let[selectRadioBox, setSelectRadioBox] = useState(post.tradeType);
+  let[selectCategory, setSelectCategory] = useState(post.category);
+  let[inputTitle, setInputTitle] = useState(post.title);
+  let[date, setDate] = useState(post.date);
+  let[selectTime, setSelectTime] = useState(post.time);
+  let[selectPeopleNum, setSelectPeopleNum] = useState(post.totalMate);
+  let[inputText, setInputText] = useState(post.content);
   let [imageFile, setImageFile] = useState(null);
-  let [thumbnail, setThumbnail] = useState(null);
+  let [thumbnail, setThumbnail] = useState(post.image);
 
   // textarea 박스크기 늘이기
   let[textareaHeight, setTextareaHeight] = useState(40);
@@ -371,8 +363,8 @@ const PostingWrite = () => {
     formData.append('image', imageFile);
 
     await axios({
-      method: 'POST',
-      url: `${process.env.REACT_APP_API_URL}/articles`,
+      method: 'PATCH',
+      url: `${process.env.REACT_APP_API_URL}/articles/${post.id}`,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -427,7 +419,7 @@ const PostingWrite = () => {
   };
   //이미지 삭제버튼 실행함수
   const handleClickDeleteImg = (e) => {
-    setThumbnail(null);
+    setThumbnail(bananalogo);
     setImageFile(null);
   }
 
@@ -439,42 +431,45 @@ const PostingWrite = () => {
       <Wrapper>
         <div className="detail">
           <UlDiv newHeightPx={textareaHeight}>
+            <li className="radio_box writing_area">
+              <label htmlFor='buy'>
+                <input id='buy' type="radio" name="about" value="jointPurchase" 
+                    checked={post.tradeType === 'jointPurchase' || post.tradeType === '공구' ? true : false}
+                onClick={handleClickRadioBox}/> 
+                &nbsp;&nbsp;공구
+              </label>
+              <label className='label_right' htmlFor='share'>
+                <input id='share' type="radio" name="about" value="share" 
+                    checked={post.tradeType === 'share' || post.tradeType === '나눔' ? true : false}
+                onClick={handleClickRadioBox}/> 
+                &nbsp;&nbsp;나눔
+              </label>
+            </li>
             <li className="image_box">
               <div className="image">
-                { imageFile ? <img className="choice_image" src={thumbnail} />
-                : <img className="basic_image" src={camera}/>
-                }
+                <img className="basic_image" src={thumbnail} />
               </div>
-              <div className='img_text'>필요한 사진을 추가해보세요.<br/> 사진은 최대1장 첨부 가능합니다.</div>
               <div className="btn_list">
                 <label htmlFor='image' className='upload_btn profile_btn'>
                   <input id='image' type='file' accept='image/*' className='input_hidden' onChange={handleChangeUpload}/>
-                  +
+                  이미지 업로드
                 </label>
-                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>-</div>
+                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>이미지 제거</div>
               </div>
-            </li>
-            <li className="radio_box writing_area">
-              <img src={check_icon}/>
-              <input id='buy' type="radio" name="about" value="jointPurchase" defaultChecked onClicks={handleClickRadioBox}/> 
-              <label htmlFor='buy'>&nbsp;&nbsp;공구</label>
-              <img src={check_icon} />
-              <input id='share' type="radio" name="about" value="share" onClick={handleClickRadioBox}/> 
-              <label className='label_right' htmlFor='share'>&nbsp;&nbsp;나눔</label>
             </li>
             <li className="category_box writing_area">
                 <select name="category" onChange={handleChangeCategory}>
                   <option value="">카테고리</option>
                   {
                     CategoryList.map((el, idx) => (
-                      <option key={idx} value={el}>{el}</option>
+                      <option key={idx} value={el} selected={post.category === el ? true : false}>{el}</option>
                     ))
                   }
                 </select>
             </li>
             <li className="title_box writing_area">
               <div className='text'>
-                <input type='text' placeholder='제목을 입력하세요' onChange={handleChangeTitle} />
+                <input type='text' placeholder='제목을 입력하세요' onChange={handleChangeTitle} value={inputTitle}/>
               </div>
             </li>
             <li className="location_box writing_area">
@@ -494,7 +489,7 @@ const PostingWrite = () => {
                   <option value="">시간대</option>
                   {
                     TimeList.map((el, idx) => (
-                      <option key={idx} value={el}>{el}</option>
+                      <option key={idx} value={el} selected={post.time === el ? true : false} >{el}</option>
                     ))
                   }
                 </select>
@@ -504,7 +499,7 @@ const PostingWrite = () => {
                   <option value="">총 인원 수</option>
                   {
                     PeopleNumList.map((el, idx) => (
-                      <option key={idx} value={el}>{el}</option>
+                      <option key={idx} value={el} selected={post.totalMate === el ? true : false} >{el}</option>
                     ))
                   }
                 </select>
@@ -513,7 +508,7 @@ const PostingWrite = () => {
             </li>
             <li className="text_box writing_area">
               <div className='text'>
-                <textarea placeholder='내용을 입력하세요'onChange={handleChangeHeight} ></textarea>
+                <textarea placeholder='내용을 입력하세요'onChange={handleChangeHeight} value={inputText} ></textarea>
               </div>
             </li>
           </UlDiv>
@@ -535,4 +530,4 @@ const PostingWrite = () => {
   );
 };
 
-export default PostingWrite;
+export default PostingEditing;

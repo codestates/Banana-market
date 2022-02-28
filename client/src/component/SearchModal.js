@@ -1,8 +1,16 @@
 import React, { useState, useRef} from "react";
 import styled from "styled-components";
 import '../App.css'; //이거 써줘야 css적용됨.
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  searchPostListReset,
+} from '../redux/actions/actions';
 
-import search_icon from "../icon/search_icon.svg";
+import { ReactComponent as CloseIcon } from '../icon/close_icon.svg';
+import { ReactComponent as ArrowIcon } from '../icon/arrow_icon.svg';
+import { ReactComponent as SearchIcon } from '../icon/search_icon.svg';
 import close from "../icon/close.png";
 import back_icon from "../icon/back_icon.png";
 import { ReactDOM } from 'react-dom';
@@ -17,20 +25,46 @@ const Wrapper = styled.div`
 
   .search_box{
     width: 100%;
-    height: 200px;
+    height: 300px;
     padding: 10px 22px 0 22px;
-    background-color: gray;
+    background-color: #f8f9fa;
+    box-shadow: 0px 5px 8px #00000012;
+    border-radius: 10px;
     .search {
       width: 100%;
-      height: 36px;
+      height: 40px;
       margin : auto;
       border-radius: 100px;
-      background-color: #f8f9fa;
-      border: solid 2px #90bd19; 
-      padding: 8px 15px;
+      background-color: white;
+      border: solid 1px #dcdfd5; 
+      padding: 3px 15px ;
+      
       .icon{
-        width: 20px;
+        width: 30px;
         float: left;
+      }
+      .icon.exit_icon{
+        margin-top: 9px;
+      }
+      .icon.delete_icon{
+        background-color: #868E96;
+        opacity: 0.5;
+        border-radius: 100px;
+        height: 18px;
+        width: 18px;
+        position: relative;
+        top: 6px;
+        padding-top: 4px;
+        padding-left: 5px;
+      }
+      .line{
+        position: relative;
+        top: 7px;
+        left: 14px;
+        width:1px;
+        height: 14px;
+        float: left;
+        background-color: #dcdfd5;
       }
       >span{
         padding-left: 15px;
@@ -40,38 +74,58 @@ const Wrapper = styled.div`
       }
       .icon_wrapper{
         float: right;
-        border: 1px solid red;
-        .search_icon{
+        /* border: 1px solid red; */
+        > svg{
+          width: 16px;
           margin-left:30px;
+          padding-top: 6px;
         }
       }
     }
     .word_box {
       margin-top: 10px;
       width : 100%;
-      border: 1px solid red;
+      margin-top: 20px;
+      /* border: 1px solid red; */
+      > div {
+        color: #c2c4c5;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
       .word {
         margin-top: 10px;
         margin-right: 10px;
-        padding: 0 10px;
-        height: 22px;
-        background-color: yellow;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background-color: #ffffe1;
+        border: 1px solid #f7f7d0;
+        color: #ffbf009e;
+        font-weight: 600;
         float: left;
       }
     }
   }
   .input{
     width: calc(100vw - 220px);
+    height: 33px;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    color:#737964;
+    &:focus {
+      outline: 0;
+    }
   }
   
   @media only screen and (min-width: ${BREAK_POINT_TABLET}px){
     .search_box{
-      width: calc(100vw - 333px);
+      width: calc(100vw - 430px);
       float: left;
-      padding: 10px 40px 0 40px;
+      padding: 10px 20px 0 20px;
+      margin-left: 75px;
     }     
     .input {
-      width: calc(100vw - 580px);
+      width: calc(100vw - 630px);
     } 
   }
 
@@ -80,9 +134,9 @@ const Wrapper = styled.div`
     padding: 0;
     /* background-color: purple; */
     .search_box{
-      width:833px;
-      text-align: center;
-      padding: 12px 40px 0 40px;
+      width:753px;
+      padding: 12px 20px 0px 20px;
+      margin-left: 70px;
       .search {
         width: 100%;
         height: 40px;
@@ -91,7 +145,7 @@ const Wrapper = styled.div`
       }
     }
     .input {
-      width: 600px;
+      width: 500px;
     }
   }
 `;
@@ -106,10 +160,14 @@ const ModalBack = styled.div `
 `;
 
 const SearchModal = ({ setSearchBox }) => {
+  const history = useHistory();
+  const setSearchInfo = useSelector((state) => state.setSearchInfoReducer);
+  let dispatch = useDispatch();
   // 모달 밖 영역 클릭 시 모달 창 닫히는 함수 
   const handleClickClose = (e) => {
     setSearchBox(false);
   }
+
   // useState로 Input 값 받기
   let[searchWord, setSearchWord] = useState('');
 
@@ -122,7 +180,25 @@ const SearchModal = ({ setSearchBox }) => {
   const handleClickSearch = (e) => {
     // axios : 검색 요청
     setSearchBox(false);
-    console.log(searchWord);
+    let word = document.getElementById('input').value
+    if ( word === '' ){
+      setSearchBox(false);
+      return;
+    }
+    if (word !== setSearchInfo.searchWord) {
+      // 검색어 바뀔 떄 
+      dispatch(searchPostListReset());
+      dispatch({
+        type: 'SET_SEARCH_PAGE_NUM',
+        payload: 0
+      })
+    }
+    dispatch({
+      type: 'SET_WORD_FOR_SEARCH',
+      payload: searchWord,
+    });
+    toTheTop();
+    history.push(`/searchlist/${word}`);
   }
 
   // Enter 입력 시 검색 실행되는 함수
@@ -132,12 +208,31 @@ const SearchModal = ({ setSearchBox }) => {
       setSearchBox(false);
     }
   }
+  
+  // 스크롤 페이지 상단으로 이동 함수 
+  const toTheTop= () => { 
+    window.scrollTo(0,0); 
+  }
+
   // 검색어 클릭 시 검색 실행되는 함수
   const handleClickSearchWord = (e) => {
+    //axios 로 word 전송
     let word = e.target.innerText;
     setSearchBox(false);
-    console.log( e.target.innerText);
-    //axios 로 word 전송
+    if (e.target.innerText !== setSearchInfo.searchWord) {
+      // 검색어 바뀔 떄 
+      dispatch(searchPostListReset());
+      dispatch({
+        type: 'SET_SEARCH_PAGE_NUM',
+        payload: 0
+      })
+    }
+    dispatch({
+      type: 'SET_WORD_FOR_SEARCH',
+      payload: word,
+    });
+    toTheTop();
+    history.push(`/searchlist/${e.target.innerText}`);
   }
 
   return (
@@ -145,13 +240,16 @@ const SearchModal = ({ setSearchBox }) => {
       <Wrapper>
         <div className='search_box'>
           <div className='search'>
-            <img src={back_icon} className="icon exit_icon" onClick={() => {setSearchBox(false);}} />
+            <ArrowIcon stroke='#868E96' className="icon exit_icon" onClick={() => {setSearchBox(false);}}></ArrowIcon>
             <span>
-              <input className='input' type='text' value={searchWord} onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>
+              <input id='input' className='input' type='text' value={searchWord} onChange={handleChangeSearchWord} onKeyPress={onCheckEnter}/>
             </span>
             <div className='icon_wrapper'>
-              <img src={close} className="icon delete_icon" onClick={(e)=>{setSearchWord('')}} />
-              <img src={search_icon} className="icon search_icon" onClick={handleClickSearch}/>
+              <div  className="icon delete_icon" >
+                <CloseIcon stroke='#868E96'onClick={(e)=>{setSearchWord('')}} ></CloseIcon> 
+              </div>
+              <div className='line'></div>
+              <SearchIcon stroke='#868E96'onClick={handleClickSearch}></SearchIcon>  
             </div>
           </div>
           <div className='word_box'>

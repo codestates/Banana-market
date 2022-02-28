@@ -31,16 +31,13 @@ module.exports = async (req, res) => {
         [Op.or]: articles,
       },
     },
-    include: [
-      {
-        model: Chat,
-        attributes: [
-          ['contents', 'latestMessage'],
-          ['createdAt', 'latestCreatedAt'],
-        ],
-      },
+    include : [{
+      model : Chat,
+      attributes : [['contents', 'latestMessage'], ['createdAt', 'latestCreatedAt']],
+    }],
+    order : [
+      [Chat, 'createdAt', 'DESC']
     ],
-    order: [[Chat, 'createdAt', 'DESC']],
     raw: true,
     nest: true,
   }).catch((err) => {
@@ -51,14 +48,14 @@ module.exports = async (req, res) => {
   // 채팅 리스트별 최신 메세지 1개
   const chatListLatestMessage = await Promise.all(
     articleChatList.rows.map((article) => {
-      const chats = article.Chats;
+      const chats = article.Chats
       const room = {
-        image: article.image,
-        title: article.title,
+        image : article.image,
+        title : article.title,
         ...chats,
-        articleId: article.articleId,
-      };
-      return room;
+        articleId : article.articleId
+      }
+      return room
     })
   );
 

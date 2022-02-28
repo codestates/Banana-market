@@ -1,7 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import {
+  showPostList,
+  showPostDetail,
+  searchPostListReset,
+} from '../redux/actions/actions';
+
+const Notice = styled.div`
+
+  max-width: 1200px;
+  margin: 30px auto 50px auto;
+  border: 1px solid #fcfce1;
+  border-radius: 10px;
+  background: #fffff4;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #757575;
+  > span {
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 1200px) {
+    margin: 30px 22px 15px 22px;
+  }
+
+  @media screen and (max-width: 767px) {
+    margin: 75px 22px 10px 22px;
+  }
+`; 
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -88,7 +118,7 @@ const SelectBtn = styled.div`
 
 const ListDiv = styled.div`
   max-width: 1200px;
-  min-height: 690px;
+  /* min-height: 690px; */
   /* background-color: aquamarine; */
   margin: 55px auto 80px;
 
@@ -123,7 +153,6 @@ const ListDiv = styled.div`
       cursor: pointer;
       background-color: #fff;
       /* margin-bottom: 25px; */
-
       transition: all 0.2s linear;
       &:hover {
         opacity: 0.4;
@@ -188,25 +217,24 @@ const ListDiv = styled.div`
             width: 100%;
             min-height: 19px;
             /* background-color: beige; */
-            font-size: 17px;
-            margin-top: 10px;
+            font-size: 19px;
+            margin-top: 7px;
             font-weight: 500;
             color: #2b2828;
             @media screen and (max-width: 1200px) {
               /* min-width: 300px; */
               font-size: 17px;
-              margin-top: 8px;
             }
 
             @media screen and (max-width: 768px) {
               font-size: 16px;
-              margin-top: 6px;
+              margin-top: 8px;
             }
           }
           .location {
             width: 100%;
-            font-size: 14px;
-            margin-top: 13px;
+            font-size: 15px;
+            margin-top: 10px;
             color: #2b2828;
             @media screen and (max-width: 768px) {
               font-size: 14px;
@@ -214,8 +242,8 @@ const ListDiv = styled.div`
           }
           .date {
             width: 100%;
-            font-size: 12px;
-            margin-top: 20px;
+            font-size: 13px;
+            margin-top: 12px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -224,8 +252,8 @@ const ListDiv = styled.div`
           }
           .pepole {
             width: 100%;
-            font-size: 12px;
-            margin-top: 7px;
+            font-size: 13px;
+            margin-top: 5px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -308,10 +336,11 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const List = ({ handleFilterCategory, handleFilterSort }) => {
+const SearchList = () => {
   const history = useHistory();
   const setLoginState = useSelector((state) => state.setLoginReducer);
-  const list = useSelector((state) => state.postListReducer);
+  const setSearchInfo = useSelector((state) => state.setSearchInfoReducer);
+  const list = useSelector((state) => state.setSearchListReducer);
   const categoryData = [
     '정육/계란',
     '과일',
@@ -326,34 +355,16 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
 
   return (
     <>
+      <Notice className='show_search_word_box'>
+        "<span>{setSearchInfo.searchWord}</span>" &nbsp;검색결과는 
+        "<span>{setSearchInfo.searchCount}</span>"건 입니다.
+      </Notice>
       <SelectBtn>
         <div className="location">
           <ul className="grid">
             <li className="location_img"></li>
             <li className="location_info">일산동구</li>
           </ul>
-        </div>
-        <div className="selectBox">
-          <select
-            className="category"
-            onChange={handleFilterCategory}
-          >
-            <option value="전체">전체</option>
-            {categoryData.map((category, idx) => {
-              return (
-                <option
-                  value={category}
-                  key={idx}
-                >
-                  {category}
-                </option>
-              );
-            })}
-          </select>
-          <select className="sort" onChange={handleFilterSort}>
-            <option value="upload">최신순</option>
-            <option value="due-date">마감임박순</option>
-          </select>
         </div>
       </SelectBtn>
       <ListDiv>
@@ -396,4 +407,4 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
     </>
   );
 };
-export default List;
+export default SearchList;

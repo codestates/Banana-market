@@ -61,5 +61,5 @@ module.exports = async (req, res) => {
 
   const data = { roomList: chatListLatestMessage };
 
-  res.status(200).json({ data, message: 'Ok' });
+  res.status(200).json({data, message : 'Ok'});
 };

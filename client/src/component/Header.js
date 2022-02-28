@@ -11,13 +11,17 @@ import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
 
-import person_icon from '../icon/person_icon.svg';
-import logo_svg from '../icon/logo.svg';
-import logo from '../icon/logo.png';
-import login from '../icon/login.png';
-import chat_icon from '../icon/chat_icon.png';
-import menu_icon from '../icon/menu_icon.png';
-import search_icon from '../icon/search_icon.svg';
+import person_icon from "../icon/person_icon.svg";
+import logo_svg from "../icon/logo.svg";
+import logo from "../icon/logo.png";
+import login from "../icon/login.png";
+import chat_icon from "../icon/chat_icon.png";
+import menu_icon from "../icon/menu_icon.png";
+import { ReactComponent as PersonIcon } from '../icon/person_icon.svg';
+import { ReactComponent as MenuIcon } from '../icon/menu_icon.svg';
+import { ReactComponent as ChatIcon } from '../icon/chat_icon.svg';
+import { ReactComponent as SearchIcon } from '../icon/search_icon.svg';
+
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -60,7 +64,7 @@ const Wrapper = styled.div`
     padding: 12px;
     /* border: 1px solid black; */
     float: left;
-    .logo_icon {
+    .logo_icon{
       margin-top: 5px;
       height: 22px;
     }
@@ -78,7 +82,7 @@ const Wrapper = styled.div`
         height: 22px;
         /* background-color: white; */
       }
-      .icon_img.login_img {
+      .icon_img.login_img{
         height: 19px;
         margin-top: 1px;
       }
@@ -99,15 +103,15 @@ const Wrapper = styled.div`
       border: 1px solid #f7f7f6;
       background-color: #f7f7f7;
       padding: 8px 15px;
-      .search_icon {
-        width: 20px;
+      >svg {
+        width: 16px;
         float: left;
       }
       > span {
         padding-left: 15px;
         float: left;
         line-height: 20px;
-        color: rgba(0, 0, 0, 0.5);
+        color: #9ba2a88c;
       }
     }
   }
@@ -139,15 +143,17 @@ const Wrapper = styled.div`
         border: 1px solid #f7f7f6;
         background-color: #f7f7f7;
         padding: 8px 15px;
-        .search_icon {
-          width: 20px;
+        >svg {
+          padding-top: 3px;
+          width: 16px;
           float: left;
         }
         > span {
+          padding-top: 2px;
           padding-left: 15px;
           float: left;
           line-height: 20px;
-          color: rgba(0, 0, 0, 0.5);
+          color: #9ba2a88c;
         }
       }
     }
@@ -171,7 +177,7 @@ const Wrapper = styled.div`
     .search_box1 {
       width: 833px;
       height: 60px;
-      padding: 12px 20px 0px 80px;
+      padding: 12px 20px 0px 100px;
       .search {
         width: 100%;
         height: 40px;
@@ -190,10 +196,10 @@ const Wrapper = styled.div`
         .icon_img {
           height: 26px;
         }
-        .icon_img.login_img {
-          height: 22px;
-          margin-top: 2px;
-        }
+        .icon_img.login_img{
+        height: 22px;
+        margin-top: 2px;
+      }
       }
     }
   }
@@ -201,13 +207,20 @@ const Wrapper = styled.div`
 
 const Header = ({ handleResponseSuccess }) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
+  let dispatch = useDispatch();
+  const history = useHistory();
+
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
   let [menuModal, setMenuModal] = useState(false);
-  const history = useHistory();
-  const state = useSelector((state) => state.postListReducer);
-  const dispatch = useDispatch();
+
+  // 스크롤 페이지 상단으로 이동 함수 
+  const toTheTop= () => { 
+    window.scrollTo(0,0); 
+  }
+
+
   return (
     <>
       {searchBox ? (
@@ -245,73 +258,36 @@ const Header = ({ handleResponseSuccess }) => {
       )}
       <div className="header">
         <Wrapper>
-          {/* <Link to="/list"> */}
-          {/* <div
-            className="logo"
-            onClick={() => {
-              dispatch(postListReset());
-              history.push('/list');
-            }}
-          >
-            <img src={logo} className="logo_icon" />
-          </div> */}
-          {/* </Link> */}
           <Link to="/list">
-            <div className="logo">
-              {/* onClick={() => dispatch(postListReset())} */}
+            <div className="logo"  onClick={() => {toTheTop(); console.log('상단이동');}}>
               <img src={logo_svg} className="logo_icon logo_svg" />
             </div>
           </Link>
 
-          <div className="search_box1">
-            <div
-              className="search"
-              onClick={() => {
-                setSearchBox(true);
-              }}
-            >
-              <img src={search_icon} className="search_icon" />
-              <span>검색어 입력</span>
+          <div className='search_box1'>
+            <div className='search'  onClick={() => {setSearchBox(true);}}>
+              <SearchIcon stroke='#868E96'></SearchIcon>  
+              <span>검색어를 입력하세요</span>
             </div>
           </div>
           <div className="menu_wrapper">
-            {setLoginState ? (
-              <div></div>
-            ) : (
-              <div className="icon login_icon">
-                <img
-                  src={person_icon}
-                  className="icon_img login_img"
-                  onClick={() => {
-                    setLoginModal(true);
-                  }}
-                />
-              </div>
-            )}
+             { setLoginState?  <div></div>
+              : <div className='icon login_icon'>
+                <PersonIcon className="icon_img login_img" stroke='#4d4c54' stroke-width= '1.5px' onClick={() => {setLoginModal(true)}}></PersonIcon>
+              </div> }
             <Link to={setLoginState ? '/chat' : '/nullpage'}>
               <div className="icon chat_icon">
-                <img src={chat_icon} className="icon_img" />
+                <ChatIcon stroke='#4d4c54'></ChatIcon>
               </div>
             </Link>
-            <div className="icon menu_icon">
-              <img
-                src={menu_icon}
-                className="icon_img"
-                onClick={() => {
-                  setMenuModal(true);
-                }}
-              />
+            <div className='icon menu_icon'>
+              <MenuIcon stroke='#4d4c54' onClick={() => {setMenuModal(true);}}></MenuIcon>
             </div>
           </div>
-          <div className="search_box2">
-            <div
-              className="search"
-              onClick={() => {
-                setSearchBox(true);
-              }}
-            >
-              <img src={search_icon} className="search_icon" />
-              <span>검색어 입력</span>
+          <div className='search_box2'>
+            <div className='search'   onClick={() => {setSearchBox(true);}}>
+              <SearchIcon stroke='#868E96'></SearchIcon>  
+              <span>검색어를 입력하세요</span>
             </div>
           </div>
         </Wrapper>

@@ -4,12 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { Oval } from 'react-loader-spinner';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  showPostData,
-  showMorePostList,
-  categoryList,
-  postListReset,
-} from '../redux/actions/actions';
+import { postListReset } from '../redux/actions/actions';
 // import { useInView } from "react-intersection-observer";
 
 const LoadingDiv = styled.div`
@@ -22,6 +17,14 @@ const LoadingDiv = styled.div`
   margin: 90px auto 90px auto;
 `;
 
+const AlertDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  margin: 75px auto;
+`;
+
 // ----------------------Loading 컴포넌트
 function Loading() {
   return (
@@ -31,29 +34,35 @@ function Loading() {
   );
 }
 
+function EndAlert() {
+  return (
+    <>
+      <AlertDiv>더 이상 불러올 게시글이 없습니다.</AlertDiv>
+    </>
+  );
+}
 // ------------------PostList 컴포넌트
 const PostList = () => {
+  const [isLoding, setIsLoding] = useState(true);
   const [categoryData, setCategoryData] = useState('');
-  const [isLoding, setIsLoding] = useState(false); 
-  const state = useSelector((state) => state.postListReducer); //리스트 상태값
-  const dispatch = useDispatch();
-  const [pageNumber, setPageNumber] =  useState(state.length / 10);
 
+  const [sort, setSort] = useState('');
+  const state = useSelector((state) => state.postListReducer); //리스트 상태값
+  const [pageNumber, setPageNumber] = useState(state.length / 10);
+  const dispatch = useDispatch();
 
   // 페이지 별 리스트 요청 함수  ------ 3
-  const postList = async (categoryData, pageNumber) => {
+  const postList = async (categoryData, pageNumber, sort) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
         params: {
           category: categoryData,
           page: pageNumber,
           // search: search,
-          // sort: sort,
-          // isHost: isHost,
+          sort: sort,
         },
       })
       .then((listData) => {
-        console.log(listData)
         if (listData.data.data.articleList.length === 0) {
           // setTimeout(() => {
           //   setIsLoding(false);
@@ -90,8 +99,8 @@ const PostList = () => {
 
   // useEffect :: < 처음 로딩 될때 || 카테고리 데이터 바뀔때 || 페이지 숫자 바뀔때 > 만 실행되는 리스트 요청 함수 ------ 1
   useEffect(() => {
-    postList(categoryData, pageNumber);
-  }, [categoryData, pageNumber]);
+    postList(categoryData, pageNumber, sort);
+  }, [categoryData, pageNumber, sort]);
 
   // 카테고리 바꿀 시 요청 함수(List 컴포넌트에서 사용)  ------ 0 -> 1
   const handleFilterCategory = (event) => {
@@ -106,16 +115,33 @@ const PostList = () => {
     }
   };
 
+  // 정렬 카테고리 바꿀 시 요청 함수(List 컴포넌트에서 사용)  ------ 0 -> 1
+  const handleFilterSort = (event) => {
+    if (event.target.value === 'due-date') {
+      dispatch(postListReset());
+      setCategoryData('');
+      setSort('due-date');
+      setPageNumber(0);
+    } else if (event.target.value === 'upload') {
+      dispatch(postListReset());
+      setCategoryData('');
+      setPageNumber(0);
+      setSort('');
+    }
+  };
+
   return (
     <div className="section">
       <List
         categoryData={categoryData}
         handleFilterCategory={handleFilterCategory}
+        handleFilterSort={handleFilterSort}
       ></List>
       <div ref={pageEnd}></div>
-      {isLoding ? <Loading></Loading> : '더 이상 불러올 게시글이 없습니다.'}
+      {isLoding ? <Loading></Loading> : <EndAlert></EndAlert>}
     </div>
   );
 };
 
 export default PostList;
+

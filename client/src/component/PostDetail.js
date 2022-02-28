@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router-dom';
-import { showPostList, showPostDetail } from '../redux/actions/actions';
+import { postListDelete } from '../redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
@@ -10,7 +10,10 @@ const { kakao } = window;
 const DetailDiv = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
-  margin: 70px auto 0 auto;
+  margin: 70px auto 70px auto;
+  @media screen and (max-width: 1200px) {
+    margin: 70px auto 60px auto;
+  }
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
@@ -269,8 +272,6 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
       .then((detailData) => {
-        // console.log(detailData);
-        // setPostid(articleid);
         dispatch({
           type: 'SHOW_POST',
           payload: detailData.data.data.post,
@@ -279,13 +280,31 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
           type: 'SHOW_WRITER',
           payload: detailData.data.data.postWriter,
         });
-        console.log('detailData', detailData);
+        console.log(detailData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    showPostDetail(articleNum.id);
+  }, []);
+
+  const postDelete = (articleid) => {
+    axios
+      .delete(`${process.env.REACT_APP_API_URL}/articles/${articleid}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        // dispatch(postListDelete());
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  
   useEffect(()=>{
     showPostDetail(articleNum.id);
     // 카카오지도 api
@@ -315,6 +334,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
       }
     })
   }, []);    
+
 
 
   return (
@@ -361,7 +381,15 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
       {postWriter.isMyPost === true ? (
         <div className="user_btn">
           <div className="edit_btn" onClick={()=>{history.push('/edit')}}>수정하기</div>
-          <div className="delete_btn">삭제하기</div>
+          <div
+            className="delete_btn"
+            onClick={() => {
+              postDelete(post.id);
+              history.push('/list');
+            }}
+          >
+            삭제하기
+          </div>
         </div>
       ) : (
         <div

@@ -83,32 +83,26 @@ export const searchPostListReset = (payload) => {
 };
 
 // ---------------postListReducer-----------------
-export const SHOW_POSTDATA = 'SHOW_POSTDATA';
 export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
 export const POSTLIST_RESET = 'POSTLIST_RESET';
-export const CATEGORY_LIST = 'CATEGORY_LIST';
+export const REMOVE_FROM_LIST = 'REMOVE_FROM_LIST';
 
-export const showPostData = (payload) => {
-  return {
-    type: SHOW_POSTDATA,
-    payload,
-  };
-};
 export const showMorePostList = (payload) => {
   return {
     type: SHOW_MORE_POSTLIST,
     payload,
   };
 };
-export const categoryList = (payload) => {
-  return {
-    type: CATEGORY_LIST,
-    payload,
-  };
-};
+
 export const postListReset = (payload) => {
   return {
     type: POSTLIST_RESET,
+    payload,
+  };
+};
+export const postListDelete = (payload) => {
+  return {
+    type: REMOVE_FROM_LIST,
     payload,
   };
 };
@@ -132,10 +126,18 @@ export const showMyPostDetail = (payload) => {
 
 // --------------chatListReducer--------------------
 export const ADD_TO_CHATLIST = 'ADD_TO_CHATLIST';
+export const SHOW_CHATLIST = 'SHOW_CHATLIST';
 
 export const addToChatList = (payload) => {
   return {
     type: ADD_TO_CHATLIST,
+    payload,
+  };
+};
+
+export const ShowChatList = (payload) => {
+  return {
+    type: SHOW_CHATLIST,
     payload,
   };
 };
@@ -146,6 +148,25 @@ export const CATEGORY_DATA = 'CATEGORY_DATA';
 export const categoryData = (payload) => {
   return {
     type: CATEGORY_DATA,
+    payload,
+  };
+};
+
+// --------------myPostListReducer----------------
+
+export const MY_POST_LIST = 'MY_POST_LIST';
+export const MY_POSTLIST_RESET = 'MY_POSTLIST_RESET';
+
+export const myPostListData = (payload) => {
+  return {
+    type: MY_POST_LIST,
+    payload,
+  };
+};
+
+export const myPostListReset = (payload) => {
+  return {
+    type: MY_POSTLIST_RESET,
     payload,
   };
 };

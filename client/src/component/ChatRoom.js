@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import SetModal from "./SetModal";
 import { useMediaQuery } from "react-responsive";
+import io from "socket.io-client"
 
 const ChatRoomDiv = styled.div`
   /* min-width: 800px; */
@@ -143,6 +144,14 @@ const ChatRoomWrap = styled.div`
     display: none;
   }
 `;
+
+const endpoint = 'http://localhost:3001'
+const chatroom = `${endpoint}/chatroom`
+
+// socket 연결
+const socket = io(chatroom, {
+  withCredentials: true
+})
 
 const ChatRoom = ({ onClick, display1, setChatRoom, curChatRoom }) => {
   const history = useHistory();

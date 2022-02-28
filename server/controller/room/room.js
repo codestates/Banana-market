@@ -3,7 +3,6 @@ const { Op } = require('sequelize');
 const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
-  
   const accessTokenData = checkAccessToken(req);
   if (!accessTokenData) {
     return res.status(401).send({ message: 'Not authorized' });
@@ -13,24 +12,24 @@ module.exports = async (req, res) => {
 
   // 유저가 참여중인 article 목록
   const joinList = await UserArticles.findAll({
-    where : {
-      user_id : id
+    where: {
+      user_id: id,
     },
-    attributes : [['article_id', 'articleId']]
+    attributes: [['article_id', 'articleId']],
   }).catch((err) => {
-    console.log(err)
-    res.status(500).send({ message: 'Internal server error' })
-  })
+    console.log(err);
+    res.status(500).send({ message: 'Internal server error' });
+  });
 
-  const articles = await joinList.map(ua => ua.dataValues.articleId)
+  const articles = await joinList.map((ua) => ua.dataValues.articleId);
 
   // 내가 참여하고 있는 모든 채팅방과 모든 메세지
   const articleChatList = await Article.findAndCountAll({
-    attributes : [['image_location', 'image'], 'title', ['id', 'articleId']],
-    where : {
-      id : {
-        [Op.or]: articles
-      }
+    attributes: [['image_location', 'image'], 'title', ['id', 'articleId']],
+    where: {
+      id: {
+        [Op.or]: articles,
+      },
     },
     include : [{
       model : Chat,
@@ -42,9 +41,9 @@ module.exports = async (req, res) => {
     raw: true,
     nest: true,
   }).catch((err) => {
-    console.log(err)
-    res.status(500).send({ message: 'Internal server error' })
-  })
+    console.log(err);
+    res.status(500).send({ message: 'Internal server error' });
+  });
 
   // 채팅 리스트별 최신 메세지 1개
   const chatListLatestMessage = await Promise.all(
@@ -58,9 +57,9 @@ module.exports = async (req, res) => {
       }
       return room
     })
-  )
+  );
 
-  const data = { roomList : chatListLatestMessage }
+  const data = { roomList: chatListLatestMessage };
 
   res.status(200).json({data, message : 'Ok'});
 };

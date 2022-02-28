@@ -19,6 +19,8 @@ export const initialStateSearchList = [];
 
 export const initialList = [];
 
+export const initialChatList = [];
+
 export const initiaPostDetail = {
   post: {
     address: null,

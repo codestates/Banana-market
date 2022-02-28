@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  showPostList,
-  showPostDetail,
-  postListReset,
-} from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -129,6 +123,7 @@ const ListDiv = styled.div`
       cursor: pointer;
       background-color: #fff;
       /* margin-bottom: 25px; */
+
       transition: all 0.2s linear;
       &:hover {
         opacity: 0.4;
@@ -193,24 +188,25 @@ const ListDiv = styled.div`
             width: 100%;
             min-height: 19px;
             /* background-color: beige; */
-            font-size: 19px;
-            margin-top: 7px;
+            font-size: 17px;
+            margin-top: 10px;
             font-weight: 500;
             color: #2b2828;
             @media screen and (max-width: 1200px) {
               /* min-width: 300px; */
               font-size: 17px;
+              margin-top: 8px;
             }
 
             @media screen and (max-width: 768px) {
               font-size: 16px;
-              margin-top: 8px;
+              margin-top: 6px;
             }
           }
           .location {
             width: 100%;
-            font-size: 15px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 13px;
             color: #2b2828;
             @media screen and (max-width: 768px) {
               font-size: 14px;
@@ -218,8 +214,8 @@ const ListDiv = styled.div`
           }
           .date {
             width: 100%;
-            font-size: 13px;
-            margin-top: 12px;
+            font-size: 12px;
+            margin-top: 20px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -228,8 +224,8 @@ const ListDiv = styled.div`
           }
           .pepole {
             width: 100%;
-            font-size: 13px;
-            margin-top: 5px;
+            font-size: 12px;
+            margin-top: 7px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -312,7 +308,7 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const List = ({ handleFilterCategory }) => {
+const List = ({ handleFilterCategory, handleFilterSort }) => {
   const history = useHistory();
   const setLoginState = useSelector((state) => state.setLoginReducer);
   const list = useSelector((state) => state.postListReducer);
@@ -354,9 +350,9 @@ const List = ({ handleFilterCategory }) => {
               );
             })}
           </select>
-          <select className="sort">
-            <option value="최신순">최신순</option>
-            <option value="기한순/계란">기한순</option>
+          <select className="sort" onChange={handleFilterSort}>
+            <option value="upload">최신순</option>
+            <option value="due-date">마감임박순</option>
           </select>
         </div>
       </SelectBtn>

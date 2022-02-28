@@ -37,6 +37,7 @@ const postDetailReducer = (state = initiaPostDetail, action) => {
           totalTrade: postWriter.totalTrade,
         },
       });
+
     default:
       return state;
   }

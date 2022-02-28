@@ -6,7 +6,7 @@ import '../App.css'; //이거 써줘야 css적용됨.
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setLogin, setLogout } from '../redux/actions/actions';
-
+import { postListReset } from '../redux/actions/actions';
 import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
@@ -270,14 +270,14 @@ const Header = ({ handleResponseSuccess }) => {
               <span>검색어를 입력하세요</span>
             </div>
           </div>
-          <div className='menu_wrapper'>
-            { setLoginState?  <div></div>
+          <div className="menu_wrapper">
+             { setLoginState?  <div></div>
               : <div className='icon login_icon'>
                 <PersonIcon className="icon_img login_img" stroke='#4d4c54' stroke-width= '1.5px' onClick={() => {setLoginModal(true)}}></PersonIcon>
               </div> }
-            <Link to='/chat'>
-              <div className='icon chat_icon'>
-                <ChatIcon stroke='#4d4c54'></ChatIcon>  
+            <Link to={setLoginState ? '/chat' : '/nullpage'}>
+              <div className="icon chat_icon">
+                <ChatIcon stroke='#4d4c54'></ChatIcon>
               </div>
             </Link>
             <div className='icon menu_icon'>

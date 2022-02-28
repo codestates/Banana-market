@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-// import { useMediaQuery } from "react-responsive";
-// import ChatRoom from "../component/ChatRoom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
@@ -74,8 +74,9 @@ const ChatListDiv = styled.div`
             }
             .content {
               width: 67%;
-              font-size: 13px;
-              margin-top: 10px;
+              font-size: 12px;
+              margin-top: 15px;
+              color: #555;
             }
             .created_At {
               font-size: 11px;
@@ -116,48 +117,79 @@ const ChatRoomDiv = styled.div`
   }
 `;
 
-const ChatList = ({ display, onClick2, chatList, handleCardClick }) => {
+const ChatList = ({ display, onClick2 }) => {
   const history = useHistory();
   const [chatRoom, setChatRoom] = useState(false);
+  // const [chatListData, setchatListData] = useState([]);
+  const chatListData = useSelector((state) => state.chatListReducer);
+  // console.log(chatListData);
+  const dispatch = useDispatch();
+
+  function getToday() {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ('0' + (1 + date.getMonth())).slice(-2);
+    let day = ('0' + date.getDate()).slice(-2);
+    return year + '-' + month + '-' + day;
+  }
+  let today = getToday();
+
+  function isToday(date) {
+    if (date === null) {
+      return '';
+    }
+    let resultDate = String(date).split('T')[0];
+    let resultTime = String(date).split('T')[1].split('.')[0];
+    // let resultTime = String(date).split('T')[1].split('.')[0];
+    // console.log(resultDate);
+    console.log(resultTime);
+    if (resultDate === today) {
+      return resultTime;
+    } else {
+      return resultDate;
+    }
+  }
 
   return (
     <>
       <ChatListDiv display={display}>
         <p>채팅 리스트</p>
         <div className="chatList_div">
-          {chatList.length === 0 ? (
-            <p style={{ textAlign: "center", lineHeight: "645px" }}>
+          {/* {chatListData.length === 0 ? (
+            <p style={{ textAlign: 'center', lineHeight: '645px' }}>
               "채팅 목록이 비었습니다"
             </p>
-          ) : (
-            <ul className="grid">
-              {chatList.map((el) => (
-                <li
-                  // onClick={() => {
-                  //   setChatRoom(true);
-                  // }}
-                  onClick={() => {
-                    handleCardClick(el.id);
-                    onClick2();
-                  }}
-                  // onClick={onClick2}
-                >
-                  <ul className="in_grid">
-                    <li className="profile_img">
-                      <img src={el.image}></img>
-                    </li>
-                    <li className="chat_info">
-                      <ul>
-                        <li className="chat_title">{el.title}</li>
-                        <li className="content">{el.content}</li>
-                        <li className="created_At">{el.createdAt}</li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          )}
+          ) : ( */}
+          <ul className="grid">
+            {chatListData.map((el, idx) => (
+              <li
+                key={idx}
+                // onClick={() => {
+                //   setChatRoom(true);
+                // }}
+                onClick={() => {
+                  onClick2();
+                }}
+                // onClick={onClick2}
+              >
+                <ul className="in_grid">
+                  <li className="profile_img">
+                    <img src={el.image}></img>
+                  </li>
+                  <li className="chat_info">
+                    <ul>
+                      <li className="chat_title">{el.title}</li>
+                      <li className="content">{el.latestMessage}</li>
+                      <li className="created_At">
+                        {isToday(el.latestCreatedAt)}
+                        {/* {String(el.latestCreatedAt).split('T')[0]} */}
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            ))}
+          </ul>
         </div>
       </ChatListDiv>
       {/* {chatRoom === true ? (

@@ -6,7 +6,7 @@ import '../App.css'; //이거 써줘야 css적용됨.
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setLogin, setLogout } from '../redux/actions/actions';
-
+import { postListReset } from '../redux/actions/actions';
 import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
@@ -258,6 +258,7 @@ const Header = ({ handleResponseSuccess }) => {
           {/* </Link> */}
           <Link to="/list">
             <div className="logo">
+              {/* onClick={() => dispatch(postListReset())} */}
               <img src={logo_svg} className="logo_icon logo_svg" />
             </div>
           </Link>
@@ -287,7 +288,7 @@ const Header = ({ handleResponseSuccess }) => {
                 />
               </div>
             )}
-            <Link to="/chat">
+            <Link to={setLoginState ? '/chat' : '/nullpage'}>
               <div className="icon chat_icon">
                 <img src={chat_icon} className="icon_img" />
               </div>

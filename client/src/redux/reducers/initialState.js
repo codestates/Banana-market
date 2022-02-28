@@ -13,6 +13,8 @@ export const initialStateUserInfo = {
 
 export const initialList = [];
 
+export const initialChatList = [];
+
 export const initiaPostDetail = {
   post: {
     id: null,

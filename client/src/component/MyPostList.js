@@ -1,28 +1,27 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-
-
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 const Wrapper = styled.div`
-  >div.title{
+  > div.title {
     max-width: 1200px;
-    font-size : 24px;
-    margin: 60px auto 15px auto;
-    background-color: red;
+    font-size: 20px;
+    margin: 80px auto 15px auto;
+    /* background-color: red; */
     @media screen and (max-width: 1200px) {
-    margin: 50px 15px 15px 15px;
+      margin: 50px 15px 15px 15px;
     }
 
     @media screen and (max-width: 767px) {
-    margin: 75px 10px 10px 10px;
-    height: 30px;
+      margin: 75px 10px 10px 10px;
+      height: 30px;
     }
   }
 `;
 const CheckBtn = styled.div`
   max-width: 1200px;
   height: 35px;
-  margin: 0px auto 55px auto;
+  margin: 0px auto 40px auto;
   /* background-color: sienna; */
   @media screen and (max-width: 1200px) {
     margin: 0px 15px 15px 15px;
@@ -47,24 +46,29 @@ const CheckBtn = styled.div`
       min-width: 120px;
       height: 30px;
     }
-    >label{
+    > label {
       display: inline-block;
-      font-size: 20px;
-      background-color: red;
-      >input[type='checkbox']{
+      font-size: 17px;
+      /* background-color: red; */
+      > input[type='checkbox'] {
         appearance: none;
         display: inline-block;
         width: 16px;
         height: 16px;
-        border: 2px solid black;
+        border: 1px solid #cbcbcb;
+        cursor: pointer;
       }
-      >input[type='checkbox']:checked {
+      > input[type='checkbox']:checked {
         appearance: none;
         display: inline-block;
         width: 16px;
         height: 16px;
-        border: 2px solid black;
-        background-color: blue;
+        border: 1px solid #cbcbcb;
+        background-color: #ddd;
+      }
+      div {
+        float: right;
+        margin-left: 15px;
       }
     }
   }
@@ -147,6 +151,11 @@ const ListDiv = styled.div`
           @media screen and (max-width: 768px) {
             min-height: 110px;
           }
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+          }
         }
 
         .inf {
@@ -167,24 +176,25 @@ const ListDiv = styled.div`
             width: 100%;
             min-height: 19px;
             /* background-color: beige; */
-            font-size: 19px;
-            margin-top: 7px;
+            font-size: 17px;
+            margin-top: 10px;
             font-weight: 500;
             color: #2b2828;
             @media screen and (max-width: 1200px) {
               /* min-width: 300px; */
               font-size: 17px;
+              margin-top: 8px;
             }
 
             @media screen and (max-width: 768px) {
               font-size: 16px;
-              margin-top: 8px;
+              margin-top: 6px;
             }
           }
           .location {
             width: 100%;
-            font-size: 15px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 13px;
             color: #2b2828;
             @media screen and (max-width: 768px) {
               font-size: 14px;
@@ -192,8 +202,8 @@ const ListDiv = styled.div`
           }
           .date {
             width: 100%;
-            font-size: 13px;
-            margin-top: 12px;
+            font-size: 12px;
+            margin-top: 20px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -202,8 +212,8 @@ const ListDiv = styled.div`
           }
           .pepole {
             width: 100%;
-            font-size: 13px;
-            margin-top: 5px;
+            font-size: 12px;
+            margin-top: 7px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -216,30 +226,18 @@ const ListDiv = styled.div`
   }
 `;
 
-const List = () => {
+const List = ({ handleChangeCheckBox }) => {
   const history = useHistory();
-  const fakelist = [1, 2, 3, 4, 1, 2, 3, 4, 6, 7];
-  const [list, setList] = useState(fakelist);
-
-  // useState로 Input 값 받기
-  let[isChecked, setIsChecked] = useState(false);
-
-  // Input 값 받는 함수
-  const handleChangeCheckBox = (e) => {
-    setIsChecked(!isChecked);
-    //isChecked가 true이면 : axios 내가 쓴 글만 요청
-    //isChecked가 false이면 : axios 내가 참여한 모든 공구 요청
-  }
-
+  const list = useSelector((state) => state.myPostListReducer);
 
   return (
     <Wrapper>
-      <div className='title'>내가 참여한 공구</div>
+      <div className="title">내가 참여한 공구</div>
       <CheckBtn>
         <div className="Check_wrapper">
           <label htmlFor="ownPost" onClick={handleChangeCheckBox}>
-            <input type="checkbox" id="ownPost"/> 
-            &nbsp;&nbsp;내가 쓴 글만 보기
+            <input type="checkbox" id="ownPost" />
+            <div>내가 쓴 글만 보기</div>
           </label>
         </div>
       </CheckBtn>
@@ -247,19 +245,33 @@ const List = () => {
         <ul>
           {list.map((el, idx) => (
             <li
+              key={idx}
               className="list_detail"
               onClick={() => {
-                history.push("/view");
+                history.push(`/view/${el.id}`);
               }}
             >
               <ul className="in_grid">
-                <li className="img"></li>
+                <li className="img">
+                  <img src={el.image}></img>
+                </li>
                 <li className="inf">
                   <ul>
-                    <li className="title">[공구] 사과 공구 같이하실 분</li>
-                    <li className="location">하나마트</li>
-                    <li className="date">2월 28월 (월) &#124; 오후</li>
-                    <li className="pepole">지금 2명 &#124; 전체 3명</li>
+                    <li className="title">
+                      [
+                      {el.tradeType === 'jointPurchase' ||
+                      el.tradeType === '공구'
+                        ? '공구'
+                        : '나눔'}
+                      ] {el.title}
+                    </li>
+                    <li className="location">{el.market}</li>
+                    <li className="date">
+                      {el.date} &#124; {el.time}
+                    </li>
+                    <li className="pepole">
+                      지금 {el.currentMate}명 &#124; 전체 {el.totalMate}명
+                    </li>
                   </ul>
                 </li>
               </ul>

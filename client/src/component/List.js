@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  showPostList,
-  showPostDetail,
-  postListReset,
-} from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -129,6 +123,7 @@ const ListDiv = styled.div`
       cursor: pointer;
       background-color: #fff;
       /* margin-bottom: 25px; */
+
       transition: all 0.2s linear;
       &:hover {
         opacity: 0.4;
@@ -193,24 +188,25 @@ const ListDiv = styled.div`
             width: 100%;
             min-height: 19px;
             /* background-color: beige; */
-            font-size: 19px;
-            margin-top: 7px;
+            font-size: 17px;
+            margin-top: 10px;
             font-weight: 500;
             color: #2b2828;
             @media screen and (max-width: 1200px) {
               /* min-width: 300px; */
               font-size: 17px;
+              margin-top: 8px;
             }
 
             @media screen and (max-width: 768px) {
               font-size: 16px;
-              margin-top: 8px;
+              margin-top: 6px;
             }
           }
           .location {
             width: 100%;
-            font-size: 15px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 13px;
             color: #2b2828;
             @media screen and (max-width: 768px) {
               font-size: 14px;
@@ -218,8 +214,8 @@ const ListDiv = styled.div`
           }
           .date {
             width: 100%;
-            font-size: 13px;
-            margin-top: 12px;
+            font-size: 12px;
+            margin-top: 20px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -228,8 +224,8 @@ const ListDiv = styled.div`
           }
           .pepole {
             width: 100%;
-            font-size: 13px;
-            margin-top: 5px;
+            font-size: 12px;
+            margin-top: 7px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -312,14 +308,10 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const List = ({ handleFilterCategory }) => {
-  const [postid, setPostid] = useState(0);
+const List = ({ handleFilterCategory, handleFilterSort }) => {
   const history = useHistory();
-  const postDetail = useSelector((state) => state.postDetailReducer);
   const setLoginState = useSelector((state) => state.setLoginReducer);
   const list = useSelector((state) => state.postListReducer);
-  const dispatch = useDispatch();
-
   const categoryData = [
     '정육/계란',
     '과일',
@@ -331,18 +323,6 @@ const List = ({ handleFilterCategory }) => {
     '김치/반찬',
     '기타',
   ];
-  // const [category, setCategory] = useState(categoryData);
-  // const [isFiltered, setIsFiltered] = useState(false);
-  // const [currentUsername, setCurrentUsername] = useState('전체');
-
-  // const handleFilterCategory = (event) => {
-  //   const filtered = list.filter(
-  //     (category) => category.id === list.category_id
-  //   );
-  //   setIsFiltered(true);
-  //   setCategory(filtered);
-  //   console.log(category);
-  // };
 
   return (
     <>
@@ -354,37 +334,19 @@ const List = ({ handleFilterCategory }) => {
           </ul>
         </div>
         <div className="selectBox">
-          <select
-            className="category"
-            onChange={handleFilterCategory}
-            // onClick={() => setList([])}
-          >
+          <select className="category" onChange={handleFilterCategory}>
             <option value="전체">전체</option>
             {categoryData.map((category, idx) => {
               return (
-                <option
-                  value={category}
-                  key={idx}
-
-                  // const onSelect = useCallback((category) => setCategoryData(category), []);
-                >
+                <option value={category} key={idx}>
                   {category}
                 </option>
               );
             })}
-            {/* <option value="정육/계란">정육/계란</option>
-            <option value="과일">과일</option>
-            <option value="우유/유제품">우유/유제품</option>
-            <option value="채소">채소</option>
-            <option value="수산/건어물">수산/건어물</option>
-            <option value="베이커리">베이커리</option>
-            <option value="간식/떡/빙과">간식/떡/빙과</option>
-            <option value="김치/반찬">김치/반찬</option>
-            <option value="기타">기타</option> */}
           </select>
-          <select className="sort">
-            <option value="최신순">최신순</option>
-            <option value="기한순/계란">기한순</option>
+          <select className="sort" onChange={handleFilterSort}>
+            <option value="upload">최신순</option>
+            <option value="due-date">마감임박순</option>
           </select>
         </div>
       </SelectBtn>
@@ -409,7 +371,12 @@ const List = ({ handleFilterCategory }) => {
                 <li className="inf">
                   <ul>
                     <li className="title">
-                      [{el.tradeType}] {el.title}
+                      [
+                      {el.tradeType === 'jointPurchase' ||
+                      el.tradeType === '공구'
+                        ? '공구'
+                        : '나눔'}
+                      ] {el.title}
                     </li>
                     <li className="location">{el.market}</li>
                     <li className="date">
@@ -428,29 +395,4 @@ const List = ({ handleFilterCategory }) => {
     </>
   );
 };
-function LoginModal() {
-  const history = useHistory();
-  return (
-    <ExitModalDiv>
-      <div className="exit_modal">
-        <div className="exit_title">로그인 후 이용 가능합니다.</div>
-        <div className="exit_info">
-          채팅방을 나가시는 경우, 해당 거래 참여가 <br></br>취소되고 대화 내용이
-          모두 삭제됩니다.
-        </div>
-        <div className="exit_btn">
-          <div
-            className="cancel"
-            onClick={() => {
-              history.push('/');
-            }}
-          >
-            취소하기
-          </div>
-          <div className="ok">로그인하기</div>
-        </div>
-      </div>
-    </ExitModalDiv>
-  );
-}
 export default List;

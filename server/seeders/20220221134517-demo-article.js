@@ -113,7 +113,7 @@ module.exports = {
           region_id: region[i],
           date: `2022-03-0${i + 1}`,
           // date : '2022-03-0' + i+1,
-          time: `{times[i]}`,
+          time: `${times[i]}`,
           total_mate: 3,
           current_mate: 1,
           address: address[i],

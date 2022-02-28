@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'; 
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { setLogin, setLogout } from '../redux/actions/actions';
-
-import logo_svg from "../icon/logo.svg";
-import shopping_cart from "../icon/shopping_cart.svg";
-import logo from "../icon/logo.png";
-import close from "../icon/close.png";
-import person_icon from "../icon/person_icon.svg";
-import shopping_icon from "../icon/shopping_icon.png";
-import pen_icon from "../icon/pen_icon.png";
-import next_icon from "../icon/next_icon.png";
+import { myPostListReset } from '../redux/actions/actions';
+import logo_svg from '../icon/logo.svg';
+import shopping_cart from '../icon/shopping_cart.svg';
+import logo from '../icon/logo.png';
+import close from '../icon/close.png';
+import person_icon from '../icon/person_icon.svg';
+import shopping_icon from '../icon/shopping_icon.png';
+import pen_icon from '../icon/pen_icon.png';
+import next_icon from '../icon/next_icon.png';
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -46,19 +46,19 @@ const ModalWrapper = styled.div`
     margin-top: 10px;
     position: relative;
     line-height: 30px;
-    >p{
+    > p {
       font-size: 22px;
-      >span{
+      > span {
         font-weight: 600;
       }
     }
   }
   .menulist {
     padding: 20px 30px;
-    >li.line {
+    > li.line {
       width: 100%;
       height: 1px;
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0, 0, 0, 0.1);
       margin-bottom: 50px;
     }
   }
@@ -79,7 +79,7 @@ const ModalWrapper = styled.div`
       opacity: 0.6;
     }
     .arrow {
-      margin-top:24px;
+      margin-top: 24px;
       height: 16px;
       float: right;
       opacity: 0.9;
@@ -166,13 +166,14 @@ const ModalBack = styled.div`
   /* background-color: red; */
 `;
 
-const MenuModal = ({ setMenuModal, setLoginModal}) => {
-  let setLoginState = useSelector((state) => state.setLoginReducer); 
+const MenuModal = ({ setMenuModal, setLoginModal }) => {
+  let setLoginState = useSelector((state) => state.setLoginReducer);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  const dispatch = useDispatch();
   // 모달 밖 영역 클릭 시 모달 창 닫히는 함수
   const handleClickClose = (e) => {
     setMenuModal(false);
-    console.log("누름");
+    console.log('누름');
   };
 
   return (
@@ -196,8 +197,12 @@ const MenuModal = ({ setMenuModal, setLoginModal}) => {
             </div>
           </HeaderBox>
           <div className="announcement">
-            {setLoginState ? <p><span>{setUserInfo.nickName}</span>님, 환영합니다.</p>
-            : <span
+            {setLoginState ? (
+              <p>
+                <span>{setUserInfo.nickName}</span>님, 환영합니다.
+              </p>
+            ) : (
+              <span
                 onClick={() => {
                   setMenuModal(false);
                   setLoginModal(true);
@@ -205,11 +210,11 @@ const MenuModal = ({ setMenuModal, setLoginModal}) => {
               >
                 로그인 후 이용해주세요
               </span>
-            }
+            )}
           </div>
           <ul className="menulist">
-            <li className='line'></li>
-            <Link to={setLoginState ? "/mypage" : "/nullpage"} >
+            <li className="line"></li>
+            <Link to={setLoginState ? '/mypage' : '/nullpage'}>
               <li
                 className="menu"
                 onClick={() => {
@@ -233,13 +238,14 @@ const MenuModal = ({ setMenuModal, setLoginModal}) => {
                 <img src={next_icon} className="icon_img arrow" />
               </li>
             </Link>
-            <Link
-              to="/mylist"
-              onClick={() => {
-                setMenuModal(false);
-              }}
-            >
-              <li className="menu">
+            <Link to={setLoginState ? '/mylist' : '/nullpage'}>
+              <li
+                className="menu"
+                onClick={() => {
+                  setMenuModal(false);
+                  dispatch(myPostListReset());
+                }}
+              >
                 <img src={shopping_cart} className="icon_img icon shopping" />
                 <span>공구 내역</span>
                 <img src={next_icon} className="icon_img arrow" />

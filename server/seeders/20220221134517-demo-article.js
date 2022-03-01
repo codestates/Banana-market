@@ -37,6 +37,17 @@ module.exports = {
       '서울특별시 중랑구 면목동 168-2번지',
       '서울특별시 서초구 양재대로 159',
     ];
+    const url = [
+      'http://kko.to/HYl5_XMxP',
+      'http://kko.to/qmsYDAUha',
+      'http://kko.to/iKKiZyV3_',
+      'http://kko.to/wGsoORrqV',
+      'http://kko.to/w6UtStiIV',
+      'http://kko.to/w3xjeBbC1',
+      'http://kko.to/nEbNEITzW',
+      'http://kko.to/qokMkkx8W',
+      'http://kko.to/qokMkkx8W',
+    ];
 
     const region = [23, 6, 2, 22, 1, 22, 11, 7, 22];
 
@@ -84,6 +95,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         address: address[i],
+        url: url[i],
       };
       articles.push(obj);
     }
@@ -101,12 +113,13 @@ module.exports = {
           region_id: region[i],
           date: `2022-03-0${i + 1}`,
           // date : '2022-03-0' + i+1,
-          time: `{times[i]}`,
+          time: `${times[i]}`,
           total_mate: 3,
           current_mate: 1,
           address: address[i],
           trade_type: '공구',
           status: true,
+          url: url[i],
           createdAt: new Date(),
           updatedAt: new Date(),
         };

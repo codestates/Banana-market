@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+  <g 
+        fill= 'none'
+        stroke= 'current'
+        stroke-linecap= 'round'
+        stroke-miterlimit= '10'>
+    
+  <circle stroke-width= 'current' cx="9.67" cy="4.87" r="3.87"/>
+  <path stroke-linecap= 'round' stroke-width= 'current' d="M1.35,19.6V17.89a6.46,6.46,0,0,1,6.46-6.46h4.42a6.46,6.46,0,0,1,6.46,6.46V19.6" transform="translate(-0.35 -0.13)"/>
+  </g>
+</svg>

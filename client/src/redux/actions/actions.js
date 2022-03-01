@@ -31,24 +31,78 @@ export const setUserInfoRegion = (payload) => ({
 });
 
 export const setUserInfoProfileImgNull = (payload) => ({
-  type: SET_USER_INFO_PROFILE_IMG_NULL
-
+  type: SET_USER_INFO_PROFILE_IMG_NULL,
 });
 
-// ---------------postListReducer-----------------
-export const SHOW_POSTLIST = 'SHOW_POSTLIST';
-export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
+// ---------------searchInfoReducer-----------------
+export const SET_WORD_FOR_SEARCH = 'SET_WORD_FOR_SEARCH';
+export const SET_RESULT_COUNT_NUM = 'SET_RESULT_COUNT_NUM';
+export const SET_SEARCH_PAGE_NUM = 'SET_SEARCH_PAGE_NUM';
 
-export const showPostList = (payload) => {
+export const setWordForSearch = (payload) => {
   return {
-    type: SHOW_POSTLIST,
+    type: SET_WORD_FOR_SEARCH,
+    payload,
+  };
+};
+export const setResultCountNum = (payload) => {
+  return {
+    type: SET_RESULT_COUNT_NUM,
+    payload,
+  };
+};
+export const setSearchPageNum = (payload) => {
+  return {
+    type: SET_SEARCH_PAGE_NUM,
     payload,
   };
 };
 
+// ---------------searchListReducer-----------------
+export const SHOW_SEARCH_POSTDATA = 'SHOW_SEARCH_POSTDATA';
+export const SHOW_MORE_SEARCH_POSTLIST = 'SHOW_MORE_SEARCH_POSTLIST';
+export const SEARCH_POSTLIST_RESET = 'SEARCH_POSTLIST_RESET';
+
+export const showSearchPostData = (payload) => {
+  return {
+    type: SHOW_SEARCH_POSTDATA,
+    payload,
+  };
+};
+export const showMoreSearchPostList = (payload) => {
+  return {
+    type: SHOW_MORE_SEARCH_POSTLIST,
+    payload,
+  };
+};
+export const searchPostListReset = (payload) => {
+  return {
+    type: SEARCH_POSTLIST_RESET,
+    payload,
+  };
+};
+
+// ---------------postListReducer-----------------
+export const SHOW_MORE_POSTLIST = 'SHOW_MORE_POSTLIST';
+export const POSTLIST_RESET = 'POSTLIST_RESET';
+export const REMOVE_FROM_LIST = 'REMOVE_FROM_LIST';
+
 export const showMorePostList = (payload) => {
   return {
     type: SHOW_MORE_POSTLIST,
+    payload,
+  };
+};
+
+export const postListReset = (payload) => {
+  return {
+    type: POSTLIST_RESET,
+    payload,
+  };
+};
+export const postListDelete = (payload) => {
+  return {
+    type: REMOVE_FROM_LIST,
     payload,
   };
 };
@@ -63,7 +117,6 @@ export const showPostDetail = (payload) => {
     payload,
   };
 };
-
 export const showMyPostDetail = (payload) => {
   return {
     type: SHOW_WRITER,
@@ -73,10 +126,47 @@ export const showMyPostDetail = (payload) => {
 
 // --------------chatListReducer--------------------
 export const ADD_TO_CHATLIST = 'ADD_TO_CHATLIST';
+export const SHOW_CHATLIST = 'SHOW_CHATLIST';
 
 export const addToChatList = (payload) => {
   return {
     type: ADD_TO_CHATLIST,
+    payload,
+  };
+};
+
+export const ShowChatList = (payload) => {
+  return {
+    type: SHOW_CHATLIST,
+    payload,
+  };
+};
+
+// --------------categoryReducer----------------
+export const CATEGORY_DATA = 'CATEGORY_DATA';
+
+export const categoryData = (payload) => {
+  return {
+    type: CATEGORY_DATA,
+    payload,
+  };
+};
+
+// --------------myPostListReducer----------------
+
+export const MY_POST_LIST = 'MY_POST_LIST';
+export const MY_POSTLIST_RESET = 'MY_POSTLIST_RESET';
+
+export const myPostListData = (payload) => {
+  return {
+    type: MY_POST_LIST,
+    payload,
+  };
+};
+
+export const myPostListReset = (payload) => {
+  return {
+    type: MY_POSTLIST_RESET,
     payload,
   };
 };

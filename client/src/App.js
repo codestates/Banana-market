@@ -21,8 +21,11 @@ import MyPage from './pages/MyPage';
 import Posting from './pages/Posting';
 import PostingView from './pages/PostingView';
 import PostList from './pages/PostList';
+import SearchPostList from './pages/SearchPostList';
 import SignUp from './pages/SignUp';
 import Logout from './pages/Logout';
+import CheckPersonalInform from './pages/CheckPersonalInform';
+import EditPosting from './pages/EditPosting';
 
 function App(props) {
   const history = useHistory();
@@ -114,17 +117,26 @@ function App(props) {
         <Route path="/posting">
           <Posting></Posting>
         </Route>
-        <Route path="/view">
+        <Route path="/view/:id">
           <PostingView></PostingView>
+        </Route>
+        <Route path="/edit">
+          <EditPosting></EditPosting>
         </Route>
         <Route path="/list">
           <PostList></PostList>
+        </Route>
+        <Route path="/searchlist/:id">
+          <SearchPostList></SearchPostList>
         </Route>
         <Route path="/signup">
           <SignUp></SignUp>
         </Route>
         <Route path="/nullpage">
           <Logout></Logout>
+        </Route>
+        <Route path="/piprocess">
+          <CheckPersonalInform></CheckPersonalInform>
         </Route>
       </Switch>
       <Footer></Footer>

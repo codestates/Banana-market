@@ -1,4 +1,10 @@
+/* font-family: 'NanumBarunGothicExtraLight';
+font-family: 'NanumBarunGothicLight';
+font-family: 'NanumBarunGothic';
+font-family: 'NanumBarunGothicBold'; */
+
 * {
+  font-family: 'NanumBarunGothic';
   box-sizing: border-box;
   padding: 0px;
   margin: 0px;

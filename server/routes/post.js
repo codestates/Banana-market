@@ -10,7 +10,6 @@ router.get('/users/location', controller.getUserLocation);
 router.get('/:articleid', controller.getPostDetail);
 router.patch('/:articleid', controller.updatePost);
 router.delete('/:articleid', controller.deletePost);
-router.post('/image', controller.uploadPostImage);
 router.patch('/close/:articleid', controller.postStatus);
 // router.get("/lists/?category&search&page", controller.postList);
 

@@ -332,44 +332,92 @@ const Profile = ({ handleChangeAuth }) => {
   };
 
   //이미지 업로드 버튼 실행함수
-  const handleChangeUpload = (e) => {
-    const uploadFile = e.target.files[0];
-    const formData = new FormData();
-    formData.append('profileImage', uploadFile);
-    const config = {
-      Headers: {
-        'content-type': 'multipart/form-data',
-      },
-      withCredentials: true,
-    };
-    console.log('formData', formData);
-    if (formData) {
-      axios
-        .put(
-          `${process.env.REACT_APP_API_URL}/users/profile-image`,
-          formData,
-          config
-        )
-        .then((res) => {
-          axios
-            .get(`${process.env.REACT_APP_API_URL}/users/info`, {
-              withCredentials: true,
-            })
-            .then((res) => {
-              dispatch({
-                type: 'SET_UPDATE_USER_INFO',
-                payload: res.data.data,
-              });
-            })
-            .catch((err) => {
-              dispatch(setLogout());
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  let image = '';
+  const handleChangeUpload = async (e) => {
+    // console.log('Event', e);
+    const files = e.target.files;
+    // console.log(files);
+
+    if (!files.length) return;
+
+    createImage(files[0]);
+
+    const signedURL = await axios.get(
+      'https://g07adh91t2.execute-api.ap-northeast-2.amazonaws.com/default/profile-image-upload-with-s3',
+      { withCredentials: false }
+    );
+    // console.log('signedURL', signedURL);
+    console.log('Image', image);
+    let binary = atob(image.split(',')[1]);
+    let array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
     }
+    // let array = [];
+    // array.push(files);
+    let blobData = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+
+    // const result = await axios.put(signedURL, );
+    const result = await fetch(signedURL.data.uploadURL, {
+      method: 'PUT',
+      body: blobData,
+    });
+
+    console.log('Result: ', result);
+    // const formData = new FormData();
+    // formData.append('profileImage', uploadFile);
+    // const config = {
+    //   Headers: {
+    //     'content-type': 'multipart/form-data',
+    //   },
+    //   withCredentials: true,
+    // };
+    // console.log('formData', formData);
+    // if (formData) {
+    //   axios
+    //     .put(
+    //       `${process.env.REACT_APP_API_URL}/users/profile-image`,
+    //       formData,
+    //       config
+    //     )
+    //     .then((res) => {
+    //       axios
+    //         .get(`${process.env.REACT_APP_API_URL}/users/info`, {
+    //           withCredentials: true,
+    //         })
+    //         .then((res) => {
+    //           dispatch({
+    //             type: 'SET_UPDATE_USER_INFO',
+    //             payload: res.data.data,
+    //           });
+    //         })
+    //         .catch((err) => {
+    //           dispatch(setLogout());
+    //         });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
   };
+
+  function createImage(file) {
+    // var image = new Image()
+    const MAX_IMAGE_SIZE = 1000000;
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      console.log('length: ', e.target.result.includes('data:image/jpeg'));
+      if (!e.target.result.includes('data:image/jpeg')) {
+        return alert('Wrong file type - JPG only.');
+      }
+      if (e.target.result.length > MAX_IMAGE_SIZE) {
+        return alert('Image is loo large.');
+      }
+      image = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   //이미지 삭제버튼 실행함수
   const handleClickDeleteImg = (e) => {
     axios

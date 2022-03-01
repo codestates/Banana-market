@@ -159,6 +159,64 @@ const ChatRoom = ({ onClick, display1, setChatRoom, curChatRoom }) => {
   const isSmallScreen = useMediaQuery({
     query: "(max-width: 768px)",
   });
+
+  // 5번 아티클 6번 유저 
+  const [roomId, setRoomId] = useState(3);      // 채팅하는 공구 게시글
+  const [userId, setUserId] = useState(4);        // 
+  const [message, setMessage] = useState('4번 유저가 3번 아티클에서 보냄');
+  const [messages, setMessages] = useState([]);
+  const [testLeave, setTestLeave] = useState(true)
+
+  // useEffect(() => {
+  //   console.log("소켓 좀 보자", socket)
+  //   // 채팅방 참여하기
+  //   socket.emit('join', { userId, roomId }, (error) => {
+  //     if(error) console.log(error)
+  //   })
+  // }, [roomId])
+
+  // 메세지 작성 handler
+  const sendMessage = (event) => {
+    // event.preventDefault();
+    if(message) {
+      socket.emit('sendMessage', ({ userId, roomId, message, created: Date.now() }), () => {
+        setMessage('')
+      });
+    }
+  }
+  
+  // 작성한 메세지 보여주기
+  useEffect(() => {
+    socket.on('message', ({ message, created }) => {
+      setMessages(messages => [ ...messages, message ]);
+      console.log("보낸 메세지 날짜 확인", message, created)
+    });
+    console.log("메세지들", messages)
+  }, [message]);
+  
+  // 메세지 작성 실행
+  useEffect(() => {
+    if (message) {
+      sendMessage();
+    }
+  }, [message])
+
+  // 채팅방 나가기 handler
+  // const leaveRoom = (event) => {
+  //   // event.preventDefault();
+  //   socket.emit('leave', ({ userId, roomId }), (error) => {
+  //     if(error) console.log(error)
+  //   })
+  //   console.log(`${roomId}방을 나갔습니다`)
+  // }
+
+  // // 채팅방 나가기 실행
+  // useEffect(() => {
+  //   if (testLeave) {
+  //     leaveRoom();
+  //   }
+  // }, [testLeave])
+
   return (
     <>
       {curChatRoom ? (

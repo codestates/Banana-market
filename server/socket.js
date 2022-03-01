@@ -35,7 +35,7 @@ module.exports = io => {
           attributes: [['current_mate', 'current'], ['total_mate', 'total'], 'status'],
           raw: true
         }).catch(error => callback(error))
-        console.log("현재 아티클 인원??", articleData)
+        console.log("참가 전 아티클 인원??", articleData)
   
         // A-e. 모집 인원 남아 있고, status가 true인 게시글일 경우
         if (articleData.current < articleData.total && articleData.status === 1) {
@@ -53,15 +53,22 @@ module.exports = io => {
               is_host : false 
             }).catch(error => callback(error))
   
+            // const articleAfter = await Article.findByPk(roomId).catch(error => callback(error))
             const articleAfter = await Article.findOne({
               where: {
                 id: roomId
               }
-            }).catch(error => callback(error))
+            })
   
+            // console.log("왜 ? ? ?? ? ? ? ? ? ?  ?? ? ? ", roomId)
+            // console.log("왜 ? ? ?? ? ? ? ? ? ?  ?? ? ? ", articleAfter)
+
+            // if (!articleAfter) return;
             await articleAfter.update({
               current_mate: articleAfter.current_mate + 1
-            }).catch(error => callback(error))
+            })
+            .then(data => console.log("   참가 후   커런트 올라감??  ", data.current_mate))
+            .catch(error => callback(error))
   
             if (articleAfter.current_mate === articleAfter.total_mate) {
               await articleAfter.update({
@@ -74,11 +81,12 @@ module.exports = io => {
           // A-f. 참여중이라면? -> 그냥 참여만 시켜줘..
           socket.join(roomId)
           console.log(" 참여중인 룸 ?? : ", socket.rooms)  
+        } else {
+          //  A-g. 모집 인원 안남았거나, 방 status가 false인 경우
+          console.log(" 🤷 방이 다 찼어,,,")
+          console.log(" 못 들어가고 참여중인 룸 ?? : ", socket.rooms)  
         }
 
-        //  A-g. 모집 인원 안남았거나, 방 status가 false인 경우
-        console.log(" 🤷 방이 다 찼어,,,")
-        console.log(" 못 들어가고 참여중인 룸 ?? : ", socket.rooms)  
         // 참여중인 모든 유저 정보(id) 전달 (본인 포함) -> -> -> 필요할지..?
         chatroom.to(roomId).emit("usersInRoom", { users : getUsersInRoom })
       }
@@ -86,36 +94,57 @@ module.exports = io => {
 
     // B. 채팅방에서 나가기
     socket.on('leave', async({ userId, roomId }) => {
-      socket.leave(roomId)
-      console.log(`😳 서버 ${roomId}방을 나갔습니다`)
-
-      // userArticles 테이블에서 해당 article의 user 레코드 지우기 및 Articles current -1
-      await UserArticles.destroy({
-        where : {
-          user_id : userId,
-          article_id : roomId
+      
+      // B-a. 해당 유저가 참여한 아티클인지 확인
+      const checkJoin = await UserArticles.findOne({
+        where: {
+          user_id: userId,
+          article_id: roomId
         }
-      })
+      }).catch(e => console.log(e))
+      console.log("참여한 사람 맞아?", checkJoin)
 
-      const articleData = await Article.findByPk(roomId, {
-        attributes: [['current_mate', 'current'], ['total_mate', 'total'], 'status'],
-        raw: true
-      }).catch(error => callback(error))
+      // B-b. 참여한 유저 맞으면 room에서 내보내기 
+      if (checkJoin) {
+        socket.leave(roomId)
+        console.log(`😳 서버 ${roomId}번 방을 나갔습니다`)
+        
+        // B-b. userArticles 테이블에서 해당 article의 user 레코드 지우기
+        await checkJoin.destroy()
+        
+        // B-b. Article
+        const articleData = await Article.findOne({
+          where: {
+            id: roomId
+          },
+          attributes: ['id', 'current_mate', 'total_mate', 'status'],
+        }).catch(error => callback(error))
+        console.log("삭제하기 전 커런트??", articleData.get({plain:true}))
 
-      if (articleData.current === articleData.total) {
-        await articleData.update({
-          status: true,
-          current_mate: articleData.current -1
-        })
+
+        // B-c. 현재 인원과 모집 인원이 같았으면, current -1, status -> true
+        if (articleData.current_mate === articleData.total_mate) {
+          await articleData.update({
+            status: true,
+            current_mate: articleData.current_mate -1
+          })
+        } else {
+          // B-c. 모집 인원이 남은 상태였으면 current만 -1
+          await articleData.update({
+            current_mate: articleData.current_mate -1
+          })
+        }
+
+      } else {
+        console.log(" ? ? 참여한 사람 아닌데 ? ? ? ")
       }
-      await articleData.update({
-        current_mate: articleData.current -1
-      })
     })
 
     // C. 메세지 작성 -> 작성자, 게시글, 메세지 받아서 채팅 db에 저장
     socket.on('sendMessage', async ({ userId, roomId, message, created }, callback) => {
-      console.log(" 📨 ", userId, roomId, message, created)
+      console.log(" 📨 ", "유저:", userId, ", 룸: ", roomId, message, ", 날짜:", created)
+
+      console.log(" 참여중인 룸 ?? : ", socket.rooms)       
 
       await Chat.create({
         user_id : userId,

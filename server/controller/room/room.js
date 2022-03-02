@@ -33,7 +33,9 @@ module.exports = async (req, res) => {
     order : [
       [Chat, 'createdAt', 'DESC']
      ]
-   })
+   }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
 
   //  console.log(JSON.stringify(articleChatList, null, 2))
 
@@ -60,8 +62,11 @@ module.exports = async (req, res) => {
         return room;
       }
     })
-   )
-   const filteredChatList = chatListLatestMessage.filter(chat => chat !== undefined)
+   ).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
+  
+   const filteredChatList = chatListLatestMessage.filter(chat => chat !== undefined)   
 
    const data = { roomList : filteredChatList }
 

@@ -60,6 +60,14 @@ module.exports = {
         allowNull: false,
         defaultValue: true,
       },
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

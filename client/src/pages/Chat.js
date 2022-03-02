@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ChatList from '../component/ChatList';
 import ChatRoom from '../component/ChatRoom';
 import { useSelector, useDispatch } from 'react-redux';
+import { ResetChatList } from '../redux/actions/actions';
 import axios from 'axios';
 
 const ChatDiv = styled.div`
@@ -22,28 +23,12 @@ const ChatDiv = styled.div`
     margin: 53px auto 0 auto;
   }
 `;
-const ChatListDiv = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  height: 710px;
-  position: absolute;
-  z-index: 1;
-  background-color: rosybrown;
-  @media screen and (max-width: 1200px) {
-    /* margin: 80px auto 30px auto; */
-    width: 95%;
-  }
-  @media screen and (max-width: 768px) {
-    /* margin: 80px auto 30px auto; */
-    width: 100%;
-  }
-`;
 
 const Chat = () => {
   const [display, setDisplay] = useState('none');
   const [display1, setDisplay1] = useState('block');
-  const [list, setList] = useState([]);
-  const listData = useSelector((state) => state.chatListReducer);
+
+  const [chatRoomId, setChatRoomId] = useState('');
   const dispatch = useDispatch();
 
   const chatListData = () => {
@@ -66,26 +51,31 @@ const Chat = () => {
 
   useEffect(() => {
     chatListData();
+    return () => {
+      dispatch(ResetChatList());
+    };
   }, []);
 
-  const onClick = () => {
-    display === 'none' ? setDisplay('block') : setDisplay('none');
-    display1 === 'block' ? setDisplay1('none') : setDisplay1('block');
-  };
-  const onClick2 = () => {
-    display === 'block' ? setDisplay('none') : setDisplay('none');
-    display1 === 'none' ? setDisplay1('block') : setDisplay1('block');
-  };
+  // const onClick = () => {
+  //   display === 'none' ? setDisplay('block') : setDisplay('none');
+  //   display1 === 'block' ? setDisplay1('none') : setDisplay1('block');
+  // };
+  // const onClick2 = () => {
+  //   display === 'block' ? setDisplay('none') : setDisplay('none');
+  //   display1 === 'none' ? setDisplay1('block') : setDisplay1('block');
+  // };
 
   return (
     <div className="section2">
       <ChatDiv>
-        <ChatList display={display} onClick2={onClick2}></ChatList>
-        <ChatRoom display1={display1} onClick={onClick}></ChatRoom>
-        {/* <ChatListDiv>
-          <ChatList></ChatList>
-        </ChatListDiv> */}
-        {/* <ChatList></ChatList> */}
+        <ChatList
+          chatRoomId={chatRoomId}
+          setChatRoomId={setChatRoomId}
+        ></ChatList>
+        <ChatRoom
+          chatRoomId={chatRoomId}
+          setChatRoomId={setChatRoomId}
+        ></ChatRoom>
       </ChatDiv>
     </div>
   );

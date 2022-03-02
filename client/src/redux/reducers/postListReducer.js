@@ -11,17 +11,9 @@ const postListReducer = (state = initialList, action) => {
       let data = action.payload;
       return [...state, ...data];
 
-    case REMOVE_FROM_LIST:
-
     case POSTLIST_RESET:
       let result = [];
       return result;
-
-    //TODO
-    // let found = state.cartItems.findIndex(el => el.itemId !== action.payload.itemId)
-    // return Object.assign({}, state, {
-    //   cartItems: state.cartItems.filter(el => el.itemId !== action.payload.itemId)
-    // })
 
     default:
       return state;

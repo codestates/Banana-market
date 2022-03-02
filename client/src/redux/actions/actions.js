@@ -124,24 +124,6 @@ export const showMyPostDetail = (payload) => {
   };
 };
 
-// --------------chatListReducer--------------------
-export const ADD_TO_CHATLIST = 'ADD_TO_CHATLIST';
-export const SHOW_CHATLIST = 'SHOW_CHATLIST';
-
-export const addToChatList = (payload) => {
-  return {
-    type: ADD_TO_CHATLIST,
-    payload,
-  };
-};
-
-export const ShowChatList = (payload) => {
-  return {
-    type: SHOW_CHATLIST,
-    payload,
-  };
-};
-
 // --------------categoryReducer----------------
 export const CATEGORY_DATA = 'CATEGORY_DATA';
 
@@ -167,6 +149,50 @@ export const myPostListData = (payload) => {
 export const myPostListReset = (payload) => {
   return {
     type: MY_POSTLIST_RESET,
+    payload,
+  };
+};
+
+// --------------chatListReducer--------------------
+export const RESET_CHATLIST = 'RESET_CHATLIST';
+export const SHOW_CHATLIST = 'SHOW_CHATLIST';
+
+export const ResetChatList = (payload) => {
+  return {
+    type: RESET_CHATLIST,
+    payload,
+  };
+};
+
+export const ShowChatList = (payload) => {
+  return {
+    type: SHOW_CHATLIST,
+    payload,
+  };
+};
+
+// --------------chatRoomListReducer--------------------
+export const SHOW_CHATROOMLIST = 'SHOW_CHATROOMLIST';
+export const SHOW_CHATROOMLIST_TITLE = 'SHOW_CHATROOMLIST_TITLE';
+export const SHOW_CHATROOMLIST_CONTENTS = 'SHOW_CHATROOMLIST_CONTENTS';
+
+export const ShowChatRoomList = (payload) => {
+  return {
+    type: SHOW_CHATROOMLIST,
+    payload,
+  };
+};
+
+export const showChatRoomTitle = (payload) => {
+  return {
+    type: SHOW_CHATROOMLIST_TITLE,
+    payload,
+  };
+};
+
+export const showChatRoomContents = (payload) => {
+  return {
+    type: SHOW_CHATROOMLIST_CONTENTS,
     payload,
   };
 };

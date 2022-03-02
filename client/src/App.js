@@ -26,6 +26,7 @@ import SignUp from './pages/SignUp';
 import Logout from './pages/Logout';
 import CheckPersonalInform from './pages/CheckPersonalInform';
 import EditPosting from './pages/EditPosting';
+import ChatRoom from './component/ChatRoom';
 
 function App(props) {
   const history = useHistory();
@@ -106,6 +107,9 @@ function App(props) {
           <Test></Test>
         </Route>
         <Route path="/chat">
+          <Chat></Chat>
+        </Route>
+        <Route path="/chat/:id">
           <Chat></Chat>
         </Route>
         <Route path="/mylist">

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import SetModal from "./SetModal";
-import { useMediaQuery } from "react-responsive";
-import io from "socket.io-client"
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHistory, useParams, Route } from 'react-router-dom';
+import SetModal from './SetModal';
+import { useMediaQuery } from 'react-responsive';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+import io from 'socket.io-client';
 
 const ChatRoomDiv = styled.div`
   /* min-width: 800px; */
@@ -57,12 +59,13 @@ const ChatRoomDiv = styled.div`
   }
   .chat_room {
     height: 590px;
-    background-color: #fff;
     overflow-y: scroll;
+
     @media screen and (max-width: 768px) {
       height: 632px;
     }
   }
+
   .chat_room {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -108,6 +111,67 @@ const ChatRoomDiv = styled.div`
     }
   }
 `;
+
+const ChatContent = styled.div`
+  display: grid;
+  grid-template-columns: auto;
+  grid-gap: 15px;
+  padding: 20px;
+
+  .contentDiv {
+    width: 330px;
+    /* border: 1px solid #ddd; */
+
+    .in_grid {
+      display: grid;
+      grid-template-columns: 40px auto;
+      grid-gap: 15px;
+      .profileImage {
+        height: 40px;
+        /* background-color: palegoldenrod; */
+        border-radius: 50px;
+        /* img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
+        } */
+      }
+      .user_info {
+        border-radius: 10px;
+
+        .name {
+          font-size: 15px;
+        }
+
+        .content_detail {
+          display: flex;
+          align-items: flex-end;
+          margin-top: 10px;
+          div {
+            float: left;
+          }
+          .contents {
+            font-size: 15px;
+            max-width: 250px;
+            height: 100%;
+            box-sizing: border-box;
+            /* background-color: cornsilk; */
+            p {
+              padding: 10px;
+              min-width: 20px;
+            }
+          }
+          .createdAt {
+            font-size: 12px;
+            color: #9d9c9c;
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+  }
+`;
+
 const SetDiv = styled.div`
   max-width: 1200px;
   width: 100%;
@@ -145,34 +209,190 @@ const ChatRoomWrap = styled.div`
   }
 `;
 
-const endpoint = 'http://localhost:3001'
-const chatroom = `${endpoint}/chatroom`
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
 
 // socket 연결
 const socket = io(chatroom, {
-  withCredentials: true
-})
+  withCredentials: true,
+});
 
-const ChatRoom = ({ onClick, display1, setChatRoom, curChatRoom }) => {
-  const history = useHistory();
+const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
   const [secessionModal, setSecessionModal] = useState(false);
-  const isSmallScreen = useMediaQuery({
-    query: "(max-width: 768px)",
-  });
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  let userId = setUserInfo.userId;
+  // const chatRoomData = useSelector((state) => state.chatRoomReducer);
+  // const { title, messageList } = chatRoomData;
+  // console.log(chatRoomData);
+  // console.log(messageList);
+  const [title, setTitle] = useState('');
+  const [myMessage, setMyMessage] = useState('');
+  const [message, setMessage] = useState([
+    {
+      profileImage: null,
+      name: null,
+      createdAt: null,
+      content: null,
+    },
+  ]); // 채팅내용
+  const dispatch = useDispatch();
+
+  let articleNum = useParams();
+
+  const chatContent = (chatRoomId) => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/rooms/messages/${chatRoomId}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setTitle(res.data.data.title);
+        setMessage([...res.data.data.messageList]);
+      })
+      .catch((err) => {
+        console.log(chatRoomId);
+        console.log(err);
+      });
+  };
+
+  //채팅내용 불러오기
+  useEffect(() => {
+    if (chatRoomId !== '') {
+      chatContent(chatRoomId);
+    }
+    // console.log('articleNum', articleNum)
+  }, [chatRoomId]);
+
+  // 채팅방 참여하기
+  useEffect(() => {
+    socket.emit('join', { userId, chatRoomId }, (error) => {
+      if (error) console.log(error);
+    });
+  }, [chatRoomId]);
+
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', ({ myMessage }) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // // 메세지 작성 handler
+  const sendMessage = (event) => {
+    event.preventDefault();
+    socket.emit('sendMessage', {
+      userId,
+      chatRoomId,
+      myMessage,
+      created: Date.now(),
+    });
+    setMessage('');
+  };
+
+  const handleChangeMessage = (e) => {
+    setMyMessage(e.target.value);
+  };
+
+  function getToday() {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ('0' + (1 + date.getMonth())).slice(-2);
+    let day = ('0' + date.getDate()).slice(-2);
+    return year + '-' + month + '-' + day;
+  }
+  let today = getToday();
+
+  function isToday(date) {
+    if (date === null || date === '') {
+      return '';
+    } else {
+      let resultDate = String(date).split('T')[0];
+      let resultTime = String(date).split('T')[1].split('.')[0];
+      if (resultDate === today) {
+        return resultTime;
+      } else {
+        return resultDate;
+      }
+    }
+  }
+  // // ----메세지 보내기
+  // const onMessageSubmit = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', ({ message }) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // const [roomId, setRoomId] = useState(11); // 채팅하는 공구 게시글
+  // const [userId, setUserId] = useState(7); // 유저
+  // const [message, setMessage] = useState('새로운 메세지로 바꿔보자'); // 작성한 메세지
+  // const [messages, setMessages] = useState([]); // 메세지 모음
+  // const [testLeave, setTestLeave] = useState(false); // 퇴장
+
+  // // 메세지 작성 handler
+  // const sendMessage = (event) => {
+  //   // event.preventDefault();
+  //   if (message) {
+  //     socket.emit(
+  //       'sendMessage',
+  //       { userId, roomId, message, created: Date.now() },
+  //       () => {
+  //         setMessage('');
+  //       }
+  //     );
+  //   }
+  // };
+
+  // // 작성한 메세지 보여주기
+  // useEffect(() => {
+  //   socket.on('message', ({ message, created }) => {
+  //     setMessages((messages) => [...messages, message]);
+  //     console.log('보낸 메세지 날짜 확인', message, created);
+  //   });
+  //   console.log('메세지들', messages);
+  // }, [message]);
+
+  // // 채팅방 나가기 handler
+  // const leaveRoom = (event) => {
+  //   // event.preventDefault();
+  //   socket.emit('leave', { userId, roomId }, (error) => {
+  //     if (error) console.log(error);
+  //   });
+  //   console.log(`${roomId}방을 나갔습니다`);
+  // };
+
+  // // 메세지 작성 실행
+  // useEffect(() => {
+  //   if (message) {
+  //     sendMessage();
+  //     setMessage('');
+  //   }
+  // }, [message]);
+
+  // // 채팅방 나가기 실행
+  // useEffect(() => {
+  //   if (testLeave) {
+  //     leaveRoom();
+  //   }
+  // }, [testLeave]);
+
   return (
-    <>
-      {curChatRoom ? (
-        <ChatRoomDiv display1={display1}>
+    <Route path={'/chat/' + chatRoomId}>
+      <ChatRoomDiv>
+        <form>
+          {/* onSubmit={sendMessage} */}
           <div className="chat_title">
             <BackBtn
               className="back_btn"
               // onClick={() => {
               //   setChatRoom(false);
               // }}
-              onClick={onClick}
             ></BackBtn>
             <div className="title">
-              <p>{curChatRoom.title}</p>
+              <p>{title}</p>
             </div>
             <div
               className="set_btn"
@@ -187,26 +407,57 @@ const ChatRoom = ({ onClick, display1, setChatRoom, curChatRoom }) => {
             ) : null} */}
             </div>
           </div>
-          <div className="chat_room"></div>
+          <div className="chat_room">
+            <ChatContent>
+              {message.length !== 0 ? (
+                message.map((el, idx) => (
+                  <li className="contentDiv" key={idx}>
+                    <ul className="in_grid">
+                      <li className="profileImage">
+                        <img src={el.profileImage}></img>
+                      </li>
+                      <li className="user_info">
+                        <ul>
+                          <li className="name">{el.name}</li>
+                          <li className="content_detail">
+                            <div className="contents">
+                              <p>{el.contents}</p>
+                            </div>
+                            <div className="createdAt">
+                              {isToday(el.createdAt)}
+                            </div>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                ))
+              ) : (
+                <div> 채팅을 시작해주세요. </div>
+              )}
+            </ChatContent>
+          </div>
           <div className="chat_content">
             <input
               type="text"
               className="message"
               placeholder="메세지를 입력해주세요."
+              onChange={handleChangeMessage}
+              // value={message || ''}
             ></input>
             <div className="message_btn"></div>
           </div>
-        </ChatRoomDiv>
-      ) : (
-        <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>
-      )}
+        </form>
+      </ChatRoomDiv>
+
+      {/* <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap> */}
 
       {secessionModal === true ? (
         <SetDiv>
           <SetModal setSecessionModal={setSecessionModal}></SetModal>
         </SetDiv>
       ) : null}
-    </>
+    </Route>
   );
 };
 

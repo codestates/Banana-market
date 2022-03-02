@@ -82,8 +82,6 @@ module.exports = async (req, res) => {
       messageList : chats
     }
     return userChat
-  }).catch((err) => {
-    res.status(500).send({message : 'Internal server error'})
   })
 
   // console.log("   --- - - - -- - -  flat 변경", userChat)

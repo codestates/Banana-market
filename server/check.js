@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 console.log({
+  HTTP_PORT: process.env.HTTP_PORT,
   host: process.env.DATABASE_HOST,
   password: process.env.DATABASE_PASSWORD,
   port: process.env.DATABASE_PORT,

@@ -21,9 +21,12 @@ import MyPage from './pages/MyPage';
 import Posting from './pages/Posting';
 import PostingView from './pages/PostingView';
 import PostList from './pages/PostList';
+import SearchPostList from './pages/SearchPostList';
 import SignUp from './pages/SignUp';
 import Logout from './pages/Logout';
 import CheckPersonalInform from './pages/CheckPersonalInform';
+import EditPosting from './pages/EditPosting';
+import AdminPage from './pages/AdminPage';
 
 function App(props) {
   const history = useHistory();
@@ -36,7 +39,14 @@ function App(props) {
       .get(`${process.env.REACT_APP_API_URL}/users/info`, {
         withCredentials: true,
       })
-      .then((res) => {
+      .then(async (res) => {
+        const profileImageKey = res.data.data.profileImage;
+        if (!profileImageKey) {
+          res.data.data.profileImage =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=100&h=100&f=webp&q=90';
+        } else {
+          res.data.data.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`;
+        }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
       })
@@ -106,6 +116,9 @@ function App(props) {
         <Route path="/chat">
           <Chat></Chat>
         </Route>
+        <Route path="/chat/:id">
+          <Chat></Chat>
+        </Route>
         <Route path="/mylist">
           <MyList></MyList>
         </Route>
@@ -115,11 +128,17 @@ function App(props) {
         <Route path="/posting">
           <Posting></Posting>
         </Route>
-        <Route path="/view">
+        <Route path="/view/:id">
           <PostingView></PostingView>
+        </Route>
+        <Route path="/edit">
+          <EditPosting></EditPosting>
         </Route>
         <Route path="/list">
           <PostList></PostList>
+        </Route>
+        <Route path="/searchlist/:id">
+          <SearchPostList></SearchPostList>
         </Route>
         <Route path="/signup">
           <SignUp></SignUp>
@@ -129,6 +148,9 @@ function App(props) {
         </Route>
         <Route path="/piprocess">
           <CheckPersonalInform></CheckPersonalInform>
+        </Route>
+        <Route path="/admin">
+          <AdminPage></AdminPage>
         </Route>
       </Switch>
       <Footer></Footer>

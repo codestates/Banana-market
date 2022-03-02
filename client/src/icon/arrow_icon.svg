@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 16">
+  <g
+        fill=' none'
+        stroke='current'
+        stroke-linecap=' round'
+        stroke-width=' 1.8px'
+        stroke-miterlimit=' 10'
+        stroke-linejoin=' round'>
+  <line  stroke-linecap=' round' x1="1" y1="6" x2="17" y2="6"/>
+  <polyline stroke-linecap=' round' points="5.92 10.84 1 5.92 5.92 1"/>
+  </g>
+</svg>

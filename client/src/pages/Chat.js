@@ -1,8 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import ChatList from "../component/ChatList";
-import ChatRoom from "../component/ChatRoom";
-import { axios } from "axios";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import ChatList from '../component/ChatList';
+import ChatRoom from '../component/ChatRoom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ResetChatList } from '../redux/actions/actions';
+import axios from 'axios';
+// socket 연결
+import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
 
 const ChatDiv = styled.div`
   max-width: 1200px;
@@ -21,84 +30,70 @@ const ChatDiv = styled.div`
     margin: 53px auto 0 auto;
   }
 `;
-const ChatListDiv = styled.div`
-  max-width: 1200px;
-  width: 100%;
-  height: 710px;
-  position: absolute;
-  z-index: 1;
-  background-color: rosybrown;
-  @media screen and (max-width: 1200px) {
-    /* margin: 80px auto 30px auto; */
-    width: 95%;
-  }
-  @media screen and (max-width: 768px) {
-    /* margin: 80px auto 30px auto; */
-    width: 100%;
-  }
-`;
 
 const Chat = () => {
-  const fakelist = [
-    {
-      id: 1,
-      image:
-        "https://yts.lt/assets/images/movies/deadpool_2016/small-cover.jpg",
-      title: "[ 공구 ] 사과 공구 같이하실 분",
-      content: "몇시에 뵐까요 ?",
-      createdAt: "2022-02-16",
-    },
-    {
-      id: 2,
-      image:
-        "https://yts.lt/assets/images/movies/furious_seven_2015/small-cover.jpg",
-      title: "[ 나눔 ] 사과 나눔합니다",
-      content: "안녕하세요 !",
-      createdAt: "2022-02-17",
-    },
-  ];
-  const [list, setList] = useState([]);
-  const [curChatRoom, setCurChatRoom] = useState(list[0]);
+  const [display, setDisplay] = useState('none');
+  const [display1, setDisplay1] = useState('block');
 
-  const [display, setDisplay] = useState("none");
-  const [display1, setDisplay1] = useState("block");
+  const [chatRoomId, setChatRoomId] = useState('');
+  const [title, setTitle] = useState('');
+  const dispatch = useDispatch();
 
-  const onClick = () => {
-    display === "none" ? setDisplay("block") : setDisplay("none");
-    display1 === "block" ? setDisplay1("none") : setDisplay1("block");
+  const chatListData = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/rooms`, {
+        withCredentials: true,
+      })
+      .then((chatData) => {
+        // console.log(chatData.data.data.roomList);
+        //? ---채팅방 이미지---
+        let { roomList } = chatData.data.data;
+        roomList = roomList.map((elem) => {
+          const postImageKey = elem.image;
+          elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=60&h=60&f=webp&q=90`;
+          return elem;
+        });
+
+        dispatch({
+          type: 'SHOW_CHATLIST',
+          payload: chatData.data.data.roomList,
+        });
+        // console.log(listData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  const onClick2 = () => {
-    display === "block" ? setDisplay("none") : setDisplay("none");
-    display1 === "none" ? setDisplay1("block") : setDisplay1("block");
-  };
-  const handleCardClick = (listId) => {
-    let title = list.filter((el) => {
-      if (el.id === listId) {
-        return el;
-      }
-      return false;
-    });
-    setCurChatRoom(...title);
-  };
+
+  useEffect(() => {
+    chatListData();
+    return () => {
+      dispatch(ResetChatList());
+    };
+  }, []);
+
+  // const onClick = () => {
+  //   display === 'none' ? setDisplay('block') : setDisplay('none');
+  //   display1 === 'block' ? setDisplay1('none') : setDisplay1('block');
+  // };
+  // const onClick2 = () => {
+  //   display === 'block' ? setDisplay('none') : setDisplay('none');
+  //   display1 === 'none' ? setDisplay1('block') : setDisplay1('block');
+  // };
 
   return (
     <div className="section2">
       <ChatDiv>
         <ChatList
-          display={display}
-          onClick2={onClick2}
-          chatList={list}
-          handleCardClick={handleCardClick}
+          chatRoomId={chatRoomId}
+          setChatRoomId={setChatRoomId}
+          setTitle={setTitle}
         ></ChatList>
         <ChatRoom
-          display1={display1}
-          onClick={onClick}
-          curChatRoom={curChatRoom}
+          chatRoomId={chatRoomId}
+          setChatRoomId={setChatRoomId}
+          title={title}
         ></ChatRoom>
-        {/* <ChatListDiv>
-          <ChatList></ChatList>
-        </ChatListDiv> */}
-        {/* <ChatList></ChatList> */}
       </ChatDiv>
     </div>
   );

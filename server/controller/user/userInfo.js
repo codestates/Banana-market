@@ -20,21 +20,14 @@ module.exports = async (req, res) => {
   }
   const { city } = userData.dataValues.Region.dataValues;
   const totalTrade = userData.Articles.length;
-  const {
-    name,
-    email,
-    profile_image_location,
-    block,
-    type,
-    createdAt,
-    updatedAt,
-  } = userData;
+  const { name, email, profile_image_key, block, type, createdAt, updatedAt } =
+    userData;
 
   const userInfo = {
     userId: id,
     name,
     email,
-    profileImage: profile_image_location,
+    profileImage: profile_image_key,
     block,
     type,
     createdAt,

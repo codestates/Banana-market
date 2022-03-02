@@ -1,8 +1,8 @@
 const { User, Article, UserArticles, Category } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 const deleteImage = require('../../modules/multerDeleteImg');
-const uploadImage = require('../../modules/multerUploadImg');
-const articleImage = uploadImage.single('image');
+// const uploadImage = require('../../modules/multerUploadImg');
+// const articleImage = uploadImage.single('image');
 
 module.exports = async (req, res) => {
   // 게시물 수정
@@ -34,22 +34,40 @@ module.exports = async (req, res) => {
     where: { id: articleId },
   });
 
+  console.log('Original', originalData);
+
   const articleInfo = req.body;
-  const { title, content, category, market, tradeType, date, time, totalMate } =
-    articleInfo;
-  let location = 'jointPurchaseDefaultImage.jpeg';
-  let key =
-    'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';
+  const {
+    title,
+    content,
+    category,
+    market,
+    tradeType,
+    date,
+    time,
+    totalMate,
+    imageKey,
+    address,
+    url,
+    region,
+  } = articleInfo;
+  // let location = 'jointPurchaseDefaultImage.jpeg';
+  // let key =
+  //   'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';
+
   if (tradeType) {
     articleInfo['trade_type'] = tradeType;
-    if (tradeType === 'share') {
-      (location =
-        'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/shareDefaultImage.jpeg'),
-        (key = 'shareDefaultImage.jpeg');
-    }
     delete articleInfo.tradeType;
-    articleInfo.image_key = key;
-    articleInfo.image_location = location;
+    if (!imageKey) {
+      if (tradeType === 'share') {
+        imageKey = 'shareDefaultImage.jpeg';
+      } else {
+        imageKey = 'jointPurchaseDefaultImage.jpeg';
+      }
+    }
+
+    // delete articleInfo.tradeType;
+    // articleInfo.image_location = location;
   }
 
   if (totalMate) {
@@ -76,51 +94,51 @@ module.exports = async (req, res) => {
       });
   }
 
-  Article.update(articleInfo, {
-    where: { id: articleId },
-  }).catch((err) => {
-    console.log(err);
-    return res.status(500).send({ message: 'Internal server error' });
-  });
+  // Article.update(articleInfo, {
+  //   where: { id: articleId },
+  // }).catch((err) => {
+  //   console.log(err);
+  //   return res.status(500).send({ message: 'Internal server error' });
+  // });
 
   // 이미지 수정
-  articleImage(req, res, function (err) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({ message: 'Fail upload' });
-    }
-    if (!req.file) {
-      // 수정할 이미지가 없음
-      return;
-    }
-    // 이미 이미지가 있으면 삭제 후 업로드
-    const imageKey = originalData.dataValues.image_key;
+  // articleImage(req, res, function (err) {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(500).send({ message: 'Fail upload' });
+  //   }
+  //   if (!req.file) {
+  //     // 수정할 이미지가 없음
+  //     return;
+  //   }
+  // 이미 이미지가 있으면 삭제 후 업로드
+  const originalImageKey = originalData.dataValues.image_key;
+
+  if (
+    originalImageKey !== 'jointPurchaseDefaultImage.jpeg' &&
+    originalImageKey !== 'shareDefaultImage.jpeg'
+  ) {
     const params = {
       Bucket: 'banana-mk-image',
-      Key: imageKey,
+      Key: originalImageKey,
     };
-
-    if (
-      imageKey !== 'jointPurchaseDefaultImage.jpeg' &&
-      imageKey !== 'shareDefaultImage.jpeg'
-    ) {
+    try {
       deleteImage(params);
-    }
-
-    location = req.file.transforms[0].location;
-    key = req.file.transforms[0].key;
-
-    Article.update(
-      {
-        image_key: key,
-        image_location: location,
-      },
-      { where: { id: articleId } }
-    ).catch((err) => {
+    } catch (err) {
       console.log(err);
-      return res.status(500).send({ message: 'Fail upload' });
-    });
-  });
+      return res.status(500).send({ message: '' });
+    }
+  }
 
-  return res.redirect(302, `/articles/${originalData.id}`);
+  // key = req.file.transforms[0].key;
+  articleInfo['image_key'] = imageKey;
+
+  Article.update(articleInfo, { where: { id: articleId } }).catch((err) => {
+    console.log(err);
+    return res.status(500).send({ message: 'Fail upload' });
+  });
+  // });
+
+  // return res.redirect(302, `/articles/${originalData.id}`);
+  return res.status(200).send({ message: 'ok' });
 };

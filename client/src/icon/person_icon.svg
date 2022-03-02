@@ -1,6 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="41" height="38" viewBox="0 0 41 38">
-    <g fill="none" fill-rule="evenodd" stroke="#444" stroke-linejoin="round" stroke-width="3">
-        <path stroke-linecap="round" d="M36.454 35.02C35.682 27.148 29.051 21 20.979 21 12.903 21 6.27 27.149 5.5 35.02"/>
-        <path d="M29.16 12.47c0 4.724-3.694 8.552-8.25 8.552s-8.25-3.828-8.25-8.553c0-4.724 3.694-8.552 8.25-8.552s8.25 3.828 8.25 8.552z"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+  <g 
+        fill= 'none'
+        stroke= 'current'
+        stroke-linecap= 'round'
+        stroke-miterlimit= '10'>
+    
+  <circle stroke-width= 'current' cx="9.67" cy="4.87" r="3.87"/>
+  <path stroke-linecap= 'round' stroke-width= 'current' d="M1.35,19.6V17.89a6.46,6.46,0,0,1,6.46-6.46h4.42a6.46,6.46,0,0,1,6.46,6.46V19.6" transform="translate(-0.35 -0.13)"/>
+  </g>
 </svg>

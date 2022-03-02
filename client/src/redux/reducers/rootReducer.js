@@ -5,12 +5,22 @@ import setLoginReducer from './setLoginReducer'; //리듀서 가져오기
 import setUserInfoReducer from './setUserInfoReducer';
 import postListReducer from './postListReducer';
 import postDetailReducer from './postDetailReducer';
+import setSearchListReducer from './setSearchListReducer';
+import setSearchInfoReducer from './setSearchInfoReducer';
+import myPostListReducer from './myPostListReducer';
+import chatListReducer from './chatListReducer';
+import chatRoomReducer from './chatRoomReducer';
 
 const rootReducer = combineReducers({
   setLoginReducer,
   setUserInfoReducer,
   postListReducer,
   postDetailReducer,
+  setSearchListReducer,
+  setSearchInfoReducer,
+  myPostListReducer,
+  chatListReducer,
+  chatRoomReducer,
 });
 
 export default rootReducer;

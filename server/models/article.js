@@ -42,12 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       image_key: {
         type: DataTypes.STRING,
       },
-      image_location: {
-        type: DataTypes.STRING,
-      },
-      image_location: {
-        type: DataTypes.STRING,
-      },
       content: {
         type: DataTypes.STRING,
       },

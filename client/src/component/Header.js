@@ -3,10 +3,10 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../App.css'; //이거 써줘야 css적용됨.
-
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLogin, setLogout } from '../redux/actions/actions';
-
+import { postListReset } from '../redux/actions/actions';
 import SearchModal from './SearchModal';
 import LoginModal from './LoginModal';
 import MenuModal from './MenuModal';
@@ -17,7 +17,10 @@ import logo from "../icon/logo.png";
 import login from "../icon/login.png";
 import chat_icon from "../icon/chat_icon.png";
 import menu_icon from "../icon/menu_icon.png";
-import search_icon from "../icon/search_icon.svg";
+import { ReactComponent as PersonIcon } from '../icon/person_icon.svg';
+import { ReactComponent as MenuIcon } from '../icon/menu_icon.svg';
+import { ReactComponent as ChatIcon } from '../icon/chat_icon.svg';
+import { ReactComponent as SearchIcon } from '../icon/search_icon.svg';
 
 
 const BREAK_POINT_TABLET = 768;
@@ -100,15 +103,15 @@ const Wrapper = styled.div`
       border: 1px solid #f7f7f6;
       background-color: #f7f7f7;
       padding: 8px 15px;
-      .search_icon {
-        width: 20px;
+      >svg {
+        width: 16px;
         float: left;
       }
       > span {
         padding-left: 15px;
         float: left;
         line-height: 20px;
-        color: rgba(0, 0, 0, 0.5);
+        color: #9ba2a88c;
       }
     }
   }
@@ -140,15 +143,17 @@ const Wrapper = styled.div`
         border: 1px solid #f7f7f6;
         background-color: #f7f7f7;
         padding: 8px 15px;
-        .search_icon {
-          width: 20px;
+        >svg {
+          padding-top: 3px;
+          width: 16px;
           float: left;
         }
         > span {
+          padding-top: 2px;
           padding-left: 15px;
           float: left;
           line-height: 20px;
-          color: rgba(0, 0, 0, 0.5);
+          color: #9ba2a88c;
         }
       }
     }
@@ -172,7 +177,7 @@ const Wrapper = styled.div`
     .search_box1 {
       width: 833px;
       height: 60px;
-      padding: 12px 20px 0px 80px;
+      padding: 12px 20px 0px 100px;
       .search {
         width: 100%;
         height: 40px;
@@ -200,15 +205,42 @@ const Wrapper = styled.div`
   }
 `;
 
-const Header = ({ handleResponseSuccess }) => {
+const Header = ({ handleResponseSuccess}) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
   let dispatch = useDispatch();
   const history = useHistory();
+
+  // PostList > PostList 리로딩 - 로고 눌렀을때 list 요청함수
+  const postList = async (pageNumber) => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
+        params: {
+          category: '',
+          page: pageNumber,
+          sort: '',
+        },
+      })
+      .then((listData) => {
+        dispatch({
+          type: 'SHOW_MORE_POSTLIST',
+          payload: listData.data.data.articleList,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
   let [loginModal, setLoginModal] = useState(false);
   let [menuModal, setMenuModal] = useState(false);
+
+  // 스크롤 페이지 상단으로 이동 함수 
+  const toTheTop= () => { 
+    window.scrollTo(0,0); 
+  }
+
 
   return (
     <>
@@ -248,35 +280,40 @@ const Header = ({ handleResponseSuccess }) => {
       <div className="header">
         <Wrapper>
           <Link to="/list">
-            <div className="logo">
+            <div className="logo"  onClick={() => {
+              toTheTop(); 
+              console.log('상단이동');
+              // dispatch(postListReset());
+              // postList(0);
+              }}>
               <img src={logo_svg} className="logo_icon logo_svg" />
             </div>
           </Link>
 
           <div className='search_box1'>
             <div className='search'  onClick={() => {setSearchBox(true);}}>
-              <img src={search_icon} className="search_icon" />
-              <span>검색어 입력</span>
+              <SearchIcon stroke='#868E96'></SearchIcon>  
+              <span>검색어를 입력하세요</span>
             </div>
           </div>
-          <div className='menu_wrapper'>
-            { setLoginState?  <div></div>
+          <div className="menu_wrapper">
+             { setLoginState?  <div></div>
               : <div className='icon login_icon'>
-                <img src={person_icon} className="icon_img login_img" onClick={() => {setLoginModal(true)}} />
+                <PersonIcon className="icon_img login_img" stroke='#4d4c54' stroke-width= '1.5px' onClick={() => {setLoginModal(true)}}></PersonIcon>
               </div> }
-            <Link to='/chat'>
-              <div className='icon chat_icon'>
-                <img src={chat_icon} className="icon_img" />
+            <Link to={setLoginState ? '/chat' : '/nullpage'}>
+              <div className="icon chat_icon">
+                <ChatIcon stroke='#4d4c54'></ChatIcon>
               </div>
             </Link>
             <div className='icon menu_icon'>
-              <img src={menu_icon} className="icon_img"  onClick={() => {setMenuModal(true);}}/>
+              <MenuIcon stroke='#4d4c54' onClick={() => {setMenuModal(true);}}></MenuIcon>
             </div>
           </div>
           <div className='search_box2'>
             <div className='search'   onClick={() => {setSearchBox(true);}}>
-              <img src={search_icon} className="search_icon" />
-              <span>검색어 입력</span>
+              <SearchIcon stroke='#868E96'></SearchIcon>  
+              <span>검색어를 입력하세요</span>
             </div>
           </div>
         </Wrapper>

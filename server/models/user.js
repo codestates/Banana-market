@@ -56,9 +56,6 @@ module.exports = (sequelize, DataTypes) => {
       profile_image_key: {
         type: DataTypes.STRING,
       },
-      profile_image_location: {
-        type: DataTypes.STRING,
-      },
       region_id: {
         type: DataTypes.INTEGER,
         // allowNull: false,

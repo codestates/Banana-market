@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { showPostList, showPostDetail } from '../redux/actions/actions';
 
 const SelectBtn = styled.div`
   max-width: 1200px;
@@ -125,6 +123,7 @@ const ListDiv = styled.div`
       cursor: pointer;
       background-color: #fff;
       /* margin-bottom: 25px; */
+
       transition: all 0.2s linear;
       &:hover {
         opacity: 0.4;
@@ -189,24 +188,25 @@ const ListDiv = styled.div`
             width: 100%;
             min-height: 19px;
             /* background-color: beige; */
-            font-size: 19px;
-            margin-top: 7px;
+            font-size: 17px;
+            margin-top: 10px;
             font-weight: 500;
             color: #2b2828;
             @media screen and (max-width: 1200px) {
               /* min-width: 300px; */
               font-size: 17px;
+              margin-top: 8px;
             }
 
             @media screen and (max-width: 768px) {
               font-size: 16px;
-              margin-top: 8px;
+              margin-top: 6px;
             }
           }
           .location {
             width: 100%;
-            font-size: 15px;
-            margin-top: 10px;
+            font-size: 14px;
+            margin-top: 13px;
             color: #2b2828;
             @media screen and (max-width: 768px) {
               font-size: 14px;
@@ -214,8 +214,8 @@ const ListDiv = styled.div`
           }
           .date {
             width: 100%;
-            font-size: 13px;
-            margin-top: 12px;
+            font-size: 12px;
+            margin-top: 20px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -224,8 +224,8 @@ const ListDiv = styled.div`
           }
           .pepole {
             width: 100%;
-            font-size: 13px;
-            margin-top: 5px;
+            font-size: 12px;
+            margin-top: 7px;
             color: #2b2828;
 
             @media screen and (max-width: 768px) {
@@ -238,31 +238,91 @@ const ListDiv = styled.div`
   }
 `;
 
-const List = () => {
-  const history = useHistory();
-  const [postid, setPostid] = useState(0);
-  const list = useSelector((state) => state.postListReducer);
-  const dispatch = useDispatch();
+const ExitModalDiv = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  /* width: 330px;
+  height: 710px; */
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  background-color: rgb(0, 0, 0, 0.6);
+  .exit_modal {
+    width: 250px;
+    height: 180px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    .exit_title {
+      text-align: center;
+      width: 220px;
+      margin: 30px auto 15px auto;
+      font-weight: 600;
+    }
+    .exit_info {
+      width: 200px;
+      margin: 0 auto;
+      font-size: 11px;
+      margin: 0 auto 25px auto;
+      text-align: center;
+      line-height: 1.5;
+      color: #4c4c4c;
+    }
 
-  const showPostDetail = (articleid) => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
-      .then((detailData) => {
-        console.log(detailData);
-        setPostid(articleid);
-        dispatch({
-          type: 'SHOW_POST',
-          payload: detailData.data.data.post,
-        });
-        dispatch({
-          type: 'SHOW_WRITER',
-          payload: detailData.data.data.postWriter,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+    .exit_btn {
+      width: 210px;
+      height: 30px;
+      margin: 0 auto;
+      > div {
+        float: left;
+      }
+      .cancel {
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #f4f4f4;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .ok {
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: #c4c4c4;
+        font-size: 13px;
+        float: right;
+        cursor: pointer;
+      }
+    }
+  }
+`;
+
+const List = ({ handleFilterCategory, handleFilterSort }) => {
+  const history = useHistory();
+  const setLoginState = useSelector((state) => state.setLoginReducer);
+  const list = useSelector((state) => state.postListReducer);
+  const categoryData = [
+    '정육/계란',
+    '과일',
+    '우유/유제품',
+    '채소',
+    '수산/건어물',
+    '베이커리',
+    '간식/떡/빙과',
+    '김치/반찬',
+    '기타',
+  ];
 
   return (
     <>
@@ -274,33 +334,44 @@ const List = () => {
           </ul>
         </div>
         <div className="selectBox">
-          <select className="category">
+          <select className="category" onChange={handleFilterCategory}>
             <option value="전체">전체</option>
-            <option value="정육/계란">정육/계란</option>
-            <option value="과일">과일</option>
-            <option value="우유/유제품">우유/유제품</option>
-            <option value="채소">채소</option>
-            <option value="수산/건어물">수산/건어물</option>
-            <option value="베이커리">베이커리</option>
-            <option value="간식/떡/빙과">간식/떡/빙과</option>
-            <option value="김치/반찬">김치/반찬</option>
-            <option value="기타">기타</option>
+            {categoryData.map((category, idx) => {
+              return (
+                <option value={category} key={idx}>
+                  {category}
+                </option>
+              );
+            })}
           </select>
-          <select className="sort">
-            <option value="최신순">최신순</option>
-            <option value="기한순/계란">기한순</option>
+          <select className="sort" onChange={handleFilterSort}>
+            <option value="upload">최신순</option>
+            <option value="due-date">마감임박순</option>
           </select>
         </div>
       </SelectBtn>
       <ListDiv>
         <ul>
           {list.map((el, idx) => (
+            // let postImageKey = el.image;
+            //  const postImg = await axios.get(
+            //   `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=115&h=115&f=webp&q=90`,
+            //   {
+            //     withCredentials: false,
+            //   }
+            // );
+
+            // el.image = postImg.config.url;
+
             <li
               key={idx}
               className="list_detail"
               onClick={() => {
-                showPostDetail(el.id);
-                history.push('/view');
+                history.push(
+                  setLoginState
+                    ? `/view/${el.id}`
+                    : alert('로그인 후 이용 가능합니다.')
+                );
               }}
             >
               <ul className="in_grid">
@@ -309,7 +380,14 @@ const List = () => {
                 </li>
                 <li className="inf">
                   <ul>
-                    <li className="title">{el.title}</li>
+                    <li className="title">
+                      [
+                      {el.tradeType === 'jointPurchase' ||
+                      el.tradeType === '공구'
+                        ? '공구'
+                        : '나눔'}
+                      ] {el.title}
+                    </li>
                     <li className="location">{el.market}</li>
                     <li className="date">
                       {el.date} &#124; {el.time}
@@ -327,5 +405,4 @@ const List = () => {
     </>
   );
 };
-
 export default List;

@@ -10,24 +10,39 @@ export const initialStateUserInfo = {
   type: null,
   totalTrade: null,
 };
+export const initialStateSearch = {
+  searchWord: '',
+  searchCount: 0,
+  searchPageNum: 0,
+};
+export const initialStateSearchList = [];
 
 export const initialList = [];
 
+export const initialChatList = [];
+
+export const initialChatRoomList = {
+  messageList: [],
+  title: null,
+};
+
 export const initiaPostDetail = {
   post: {
-    id: null,
-    title: null,
-    image: null,
-    content: null,
+    address: null,
     category: null,
+    content: null,
+    currentMate: null,
+    date: null,
+    id: null,
+    image: null,
     market: null,
     region: null,
-    date: null,
-    time: null,
-    totalMate: null,
-    currentMate: null,
     status: null,
+    time: null,
+    title: null,
+    totalMate: null,
     tradeType: null,
+    url:null,
   },
   postWriter: {
     userId: null,

@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-// import { useMediaQuery } from "react-responsive";
-// import ChatRoom from "../component/ChatRoom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHistory, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+// socket 연결
+import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
 
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
@@ -53,6 +60,7 @@ const ChatListDiv = styled.div`
           padding: 10px;
           margin-top: 3px;
           .profile_img {
+            display: block;
             height: 60px;
             background-color: #ddd;
             border-radius: 10px;
@@ -74,8 +82,9 @@ const ChatListDiv = styled.div`
             }
             .content {
               width: 67%;
-              font-size: 13px;
-              margin-top: 10px;
+              font-size: 12px;
+              margin-top: 15px;
+              color: #555;
             }
             .created_At {
               font-size: 11px;
@@ -116,48 +125,129 @@ const ChatRoomDiv = styled.div`
   }
 `;
 
-const ChatList = ({ display, onClick2, chatList, handleCardClick }) => {
+const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
   const history = useHistory();
-  const [chatRoom, setChatRoom] = useState(false);
+  const chatListData = useSelector((state) => state.chatListReducer);
+  // console.log(chatListData);
+  const dispatch = useDispatch();
+
+  function getToday() {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ('0' + (1 + date.getMonth())).slice(-2);
+    let day = ('0' + date.getDate()).slice(-2);
+    return year + '-' + month + '-' + day;
+  }
+  let today = getToday();
+
+  function isToday(date) {
+    if (date === null || date === '') {
+      return '';
+    } else {
+      let resultDate = String(date).split(' ')[0];
+      let resultTime = String(date).split(' ')[1];
+      if (resultDate === today) {
+        return resultTime;
+      } else {
+        return resultDate;
+      }
+    }
+  }
+
+  // const makePath = (el) => {
+  //   return `/chat/${el.articleId}`
+  // }
+  //  onClick={history.push(`/list/${el.articleId}`)}
+  // onClick={setChatRoomId(el.articleId)}
+  const handleClickChatRoom = (e) => {
+    let num = e.target.getAttribute('data-value');
+    setChatRoomId(num);
+    let title = document.getElementById(num).innerText;
+    setTitle(title);
+    console.log(e.target.getAttribute('data-value'));
+    // console.log(socket) ----------소캣 연결 확인
+  };
+  // 채팅내용 불러오기
+  useEffect(() => {
+    console.log('방 바뀜', chatRoomId, '챗룸');
+    history.push(`/chat/${chatRoomId}`);
+  }, [chatRoomId]);
+
+  // const chatContent = (articleid) => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/rooms/messages/${articleid}`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((chatRoomData) => {
+  //       dispatch({
+  //         type: 'SHOW_CHATROOMLIST_TITLE',
+  //         payload: chatRoomData.data.data.title,
+  //       });
+  //       dispatch({
+  //         type: 'SHOW_CHATROOMLIST_CONTENTS',
+  //         payload: chatRoomData.data.data.messageList,
+  //       });
+  //       console.log(chatRoomData.data.data.title);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   chatContent();
+  // }, []);
 
   return (
     <>
-      <ChatListDiv display={display}>
+      <ChatListDiv>
         <p>채팅 리스트</p>
         <div className="chatList_div">
-          {chatList.length === 0 ? (
-            <p style={{ textAlign: "center", lineHeight: "645px" }}>
+          {/* {chatListData.length === 0 ? (
+            <p style={{ textAlign: 'center', lineHeight: '645px' }}>
               "채팅 목록이 비었습니다"
             </p>
-          ) : (
-            <ul className="grid">
-              {chatList.map((el) => (
-                <li
-                  // onClick={() => {
-                  //   setChatRoom(true);
-                  // }}
-                  onClick={() => {
-                    handleCardClick(el.id);
-                    onClick2();
-                  }}
-                  // onClick={onClick2}
-                >
-                  <ul className="in_grid">
-                    <li className="profile_img">
-                      <img src={el.image}></img>
-                    </li>
-                    <li className="chat_info">
-                      <ul>
-                        <li className="chat_title">{el.title}</li>
-                        <li className="content">{el.content}</li>
-                        <li className="created_At">{el.createdAt}</li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          )}
+          ) : ( */}
+          <ul className="grid">
+            {chatListData.map((el, idx) => (
+              <li
+                key={idx}
+                // onClick={() => {
+                //   setChatRoom(true);
+                // }}
+                // onClick={() => {
+                //   onClick2();
+                // }}
+
+                data-value={el.articleId}
+                onClick={handleClickChatRoom}
+              >
+                <ul className="in_grid" data-value={el.articleId}>
+                  <li className="profile_img" data-value={el.articleId}>
+                    <img src={el.image} data-value={el.articleId}></img>
+                  </li>
+                  <li className="chat_info" data-value={el.articleId}>
+                    <ul>
+                      <li
+                        id={el.articleId}
+                        className="chat_title"
+                        data-value={el.articleId}
+                      >
+                        {el.title}
+                      </li>
+                      <li className="content" data-value={el.articleId}>
+                        {el.latestMessage}
+                      </li>
+                      <li className="created_At" data-value={el.articleId}>
+                        {isToday(el.latestCreatedAt)}
+                        {/* {String(el.latestCreatedAt).split('T')[0]} */}
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            ))}
+          </ul>
         </div>
       </ChatListDiv>
       {/* {chatRoom === true ? (

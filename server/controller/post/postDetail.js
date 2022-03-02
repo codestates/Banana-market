@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
 
     const totalTrade = user.Articles.length;
     user.totalTrade = totalTrade;
-    user.profile_image = user.profile_image_location;
+    user.profile_image = user.profile_image_key;
     user.region = user.Region.city;
 
     delete user.UserArticles;

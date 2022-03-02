@@ -334,71 +334,63 @@ const Profile = ({ handleChangeAuth }) => {
   //이미지 업로드 버튼 실행함수
   let image = '';
   const handleChangeUpload = async (e) => {
-    // console.log('Event', e);
     const files = e.target.files;
-    // console.log(files);
-
     if (!files.length) return;
-
     createImage(files[0]);
-
     const signedURL = await axios.get(
       'https://g07adh91t2.execute-api.ap-northeast-2.amazonaws.com/default/profile-image-upload-with-s3',
       { withCredentials: false }
     );
-    // console.log('signedURL', signedURL);
-    console.log('Image', image);
+    const profileImageKey = signedURL.data.Key;
     let binary = atob(image.split(',')[1]);
     let array = [];
     for (let i = 0; i < binary.length; i++) {
       array.push(binary.charCodeAt(i));
     }
-    // let array = [];
-    // array.push(files);
+
     let blobData = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
 
-    // const result = await axios.put(signedURL, );
     const result = await fetch(signedURL.data.uploadURL, {
       method: 'PUT',
       body: blobData,
     });
 
-    console.log('Result: ', result);
-    // const formData = new FormData();
-    // formData.append('profileImage', uploadFile);
-    // const config = {
-    //   Headers: {
-    //     'content-type': 'multipart/form-data',
-    //   },
-    //   withCredentials: true,
-    // };
-    // console.log('formData', formData);
-    // if (formData) {
-    //   axios
-    //     .put(
-    //       `${process.env.REACT_APP_API_URL}/users/profile-image`,
-    //       formData,
-    //       config
-    //     )
-    //     .then((res) => {
-    //       axios
-    //         .get(`${process.env.REACT_APP_API_URL}/users/info`, {
-    //           withCredentials: true,
-    //         })
-    //         .then((res) => {
-    //           dispatch({
-    //             type: 'SET_UPDATE_USER_INFO',
-    //             payload: res.data.data,
-    //           });
-    //         })
-    //         .catch((err) => {
-    //           dispatch(setLogout());
-    //         });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
+    if (result) {
+      axios
+        .put(
+          `${process.env.REACT_APP_API_URL}/users/profile-image`,
+          {
+            profileImageKey,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((result) => {
+          console.log(result);
+          axios
+            .get(`${process.env.REACT_APP_API_URL}/users/info`, {
+              withCredentials: true,
+            })
+            .then(async (res) => {
+              // console.log('UserInfo', res);
+              const profileImage = await axios.get(
+                `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`,
+                { withCredentials: false }
+              );
+
+              // console.log('profileImageResizing', profileImage);
+              res.data.data.profileImage = profileImage.config.url;
+              dispatch({
+                type: 'SET_UPDATE_USER_INFO',
+                payload: res.data.data,
+              });
+            })
+            .catch((err) => {
+              dispatch(setLogout());
+            });
+        });
+    }
   };
 
   function createImage(file) {
@@ -406,12 +398,15 @@ const Profile = ({ handleChangeAuth }) => {
     const MAX_IMAGE_SIZE = 1000000;
     let reader = new FileReader();
     reader.onload = (e) => {
-      console.log('length: ', e.target.result.includes('data:image/jpeg'));
-      if (!e.target.result.includes('data:image/jpeg')) {
-        return alert('Wrong file type - JPG only.');
+      // const includeJPEG = e.target.result.includes('data:image/jpeg');
+      // const includePNG = e.target.result.includes('data:image/png');
+      const includeImg = e.target.result.includes('data:image');
+      console.log('length: ');
+      if (!includeImg) {
+        return alert('Wrong file type - JPG or PNG only.');
       }
       if (e.target.result.length > MAX_IMAGE_SIZE) {
-        return alert('Image is loo large.');
+        return alert('이미지 용량이 너무 큽니다');
       }
       image = e.target.result;
     };
@@ -461,7 +456,11 @@ const Profile = ({ handleChangeAuth }) => {
           <li className="profile">
             <div className="image">
               {setUserInfo.profileImage ? (
-                <img className="basic_image" src={setUserInfo.profileImage} />
+                <img
+                  className="basic_image"
+                  src={setUserInfo.profileImage}
+                  type="image/jpeg"
+                />
               ) : (
                 <img className="basic_image" src={monkey} />
               )}

@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+// socket 연결
+import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
+
 
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
@@ -53,6 +61,7 @@ const ChatListDiv = styled.div`
           padding: 10px;
           margin-top: 3px;
           .profile_img {
+            display: block;
             height: 60px;
             background-color: #ddd;
             border-radius: 10px;
@@ -117,10 +126,8 @@ const ChatRoomDiv = styled.div`
   }
 `;
 
-const ChatList = ({ display, onClick2 }) => {
+const ChatList = ({ chatRoomId, setChatRoomId }) => {
   const history = useHistory();
-  const [chatRoom, setChatRoom] = useState(false);
-  // const [chatListData, setchatListData] = useState([]);
   const chatListData = useSelector((state) => state.chatListReducer);
   // console.log(chatListData);
   const dispatch = useDispatch();
@@ -135,24 +142,63 @@ const ChatList = ({ display, onClick2 }) => {
   let today = getToday();
 
   function isToday(date) {
-    if (date === null) {
+    if (date === null || date === '') {
       return '';
-    }
-    let resultDate = String(date).split('T')[0];
-    let resultTime = String(date).split('T')[1].split('.')[0];
-    // let resultTime = String(date).split('T')[1].split('.')[0];
-    // console.log(resultDate);
-    console.log(resultTime);
-    if (resultDate === today) {
-      return resultTime;
     } else {
-      return resultDate;
+      let resultDate = String(date).split('T')[0];
+      let resultTime = String(date).split('T')[1].split('.')[0];
+      if (resultDate === today) {
+        return resultTime;
+      } else {
+        return resultDate;
+      }
     }
   }
 
+  
+  // const makePath = (el) => {
+    //   return `/chat/${el.articleId}`
+    // }
+    //  onClick={history.push(`/list/${el.articleId}`)}
+    // onClick={setChatRoomId(el.articleId)}
+    const handleClickChatRoom = (e) => {
+      setChatRoomId(e.target.getAttribute('data-value'));
+      // console.log(socket) ----------소캣 연결 확인
+    };
+    // 채팅내용 불러오기
+    useEffect(() => {
+      console.log('방 바뀜', chatRoomId, '챗룸');
+      history.push(`/chat/${chatRoomId}`);
+    }, [chatRoomId]);
+
+  // const chatContent = (articleid) => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/rooms/messages/${articleid}`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((chatRoomData) => {
+  //       dispatch({
+  //         type: 'SHOW_CHATROOMLIST_TITLE',
+  //         payload: chatRoomData.data.data.title,
+  //       });
+  //       dispatch({
+  //         type: 'SHOW_CHATROOMLIST_CONTENTS',
+  //         payload: chatRoomData.data.data.messageList,
+  //       });
+  //       console.log(chatRoomData.data.data.title);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   chatContent();
+  // }, []);
+
   return (
     <>
-      <ChatListDiv display={display}>
+      <ChatListDiv>
         <p>채팅 리스트</p>
         <div className="chatList_div">
           {/* {chatListData.length === 0 ? (
@@ -167,20 +213,26 @@ const ChatList = ({ display, onClick2 }) => {
                 // onClick={() => {
                 //   setChatRoom(true);
                 // }}
-                onClick={() => {
-                  onClick2();
-                }}
-                // onClick={onClick2}
+                // onClick={() => {
+                //   onClick2();
+                // }}
+
+                data-value={el.articleId}
+                onClick={handleClickChatRoom}
               >
-                <ul className="in_grid">
-                  <li className="profile_img">
-                    <img src={el.image}></img>
+                <ul className="in_grid" data-value={el.articleId}>
+                  <li className="profile_img" data-value={el.articleId}>
+                    <img src={el.image}  data-value={el.articleId}></img>
                   </li>
-                  <li className="chat_info">
+                  <li className="chat_info" data-value={el.articleId}>
                     <ul>
-                      <li className="chat_title">{el.title}</li>
-                      <li className="content">{el.latestMessage}</li>
-                      <li className="created_At">
+                      <li className="chat_title" data-value={el.articleId}>
+                        {el.title}
+                      </li>
+                      <li className="content" data-value={el.articleId}>
+                        {el.latestMessage}
+                      </li>
+                      <li className="created_At" data-value={el.articleId}>
                         {isToday(el.latestCreatedAt)}
                         {/* {String(el.latestCreatedAt).split('T')[0]} */}
                       </li>

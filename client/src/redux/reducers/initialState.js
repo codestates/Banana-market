@@ -21,6 +21,11 @@ export const initialList = [];
 
 export const initialChatList = [];
 
+export const initialChatRoomList = {
+  messageList: [],
+  title: null,
+};
+
 export const initiaPostDetail = {
   post: {
     address: null,

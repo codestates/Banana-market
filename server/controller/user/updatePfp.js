@@ -1,8 +1,8 @@
 const { User } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
-const profileImageUpload = require('../../modules/multerUploadPfp');
+// const profileImageUpload = require('../../modules/multerUploadPfp');
 const deleteProfileImage = require('../../modules/multerDeletePfp');
-const profileImage = profileImageUpload.single('profileImage');
+// const profileImage = profileImageUpload.single('profileImage');
 
 module.exports = async (req, res) => {
   // 프로필 사진 업로드 및 수정
@@ -26,38 +26,64 @@ module.exports = async (req, res) => {
     deleteProfileImage(params);
   }
 
-  profileImage(req, res, function (err) {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({ message: 'Fail upload' });
+  const { profileImageKey } = req.body;
+  if (!profileImageKey) {
+    return res.status(404).send('Not found image');
+  }
+
+  User.update(
+    {
+      profile_image_key: profileImageKey,
+    },
+    {
+      where: { id },
     }
-
-    if (!req.file) {
-      return res.status(404).send('Not found image');
-    }
-
-    const { location, key } = req.file.transforms[0];
-
-    User.update(
-      {
-        profile_image_location: location,
-        profile_image_key: key,
-      },
-      {
-        where: { id },
-      }
-    )
-      .then(() => {
-        return res.status(201).send({
-          data: {
-            profileImage: location,
-          },
-          message: 'ok',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).send('Internal server error');
+  )
+    .then(() => {
+      return res.status(201).send({
+        data: {
+          profileImage: profileImageKey,
+        },
+        message: 'ok',
       });
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send('Internal server error');
+    });
+
+  // profileImage(req, res, function (err) {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(500).send({ message: 'Fail upload' });
+  //   }
+
+  //   if (!req.file) {
+  //     return res.status(404).send('Not found image');
+  //   }
+
+  //   const { location, key } = req.file.transforms[0];
+
+  //   User.update(
+  //     {
+  //       profile_image_location: location,
+  //       profile_image_key: key,
+  //     },
+  //     {
+  //       where: { id },
+  //     }
+  //   )
+  //     .then(() => {
+  //       return res.status(201).send({
+  //         data: {
+  //           profileImage: location,
+  //         },
+  //         message: 'ok',
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       return res.status(500).send('Internal server error');
+  //     });
+  // });
 };

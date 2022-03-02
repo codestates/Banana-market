@@ -24,9 +24,6 @@ module.exports = {
       profile_image_key: {
         type: Sequelize.STRING,
       },
-      profile_image_location: {
-        type: Sequelize.STRING,
-      },
       region_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

@@ -11,7 +11,6 @@ const socket = io.connect(chatroom, {
   withCredentials: true,
 });
 
-
 const ChatListDiv = styled.div`
   /* min-width: 360px; */
   min-height: 710px;
@@ -126,7 +125,7 @@ const ChatRoomDiv = styled.div`
   }
 `;
 
-const ChatList = ({ chatRoomId, setChatRoomId }) => {
+const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
   const history = useHistory();
   const chatListData = useSelector((state) => state.chatListReducer);
   // console.log(chatListData);
@@ -145,8 +144,8 @@ const ChatList = ({ chatRoomId, setChatRoomId }) => {
     if (date === null || date === '') {
       return '';
     } else {
-      let resultDate = String(date).split('T')[0];
-      let resultTime = String(date).split('T')[1].split('.')[0];
+      let resultDate = String(date).split(' ')[0];
+      let resultTime = String(date).split(' ')[1];
       if (resultDate === today) {
         return resultTime;
       } else {
@@ -155,21 +154,24 @@ const ChatList = ({ chatRoomId, setChatRoomId }) => {
     }
   }
 
-  
   // const makePath = (el) => {
-    //   return `/chat/${el.articleId}`
-    // }
-    //  onClick={history.push(`/list/${el.articleId}`)}
-    // onClick={setChatRoomId(el.articleId)}
-    const handleClickChatRoom = (e) => {
-      setChatRoomId(e.target.getAttribute('data-value'));
-      // console.log(socket) ----------소캣 연결 확인
-    };
-    // 채팅내용 불러오기
-    useEffect(() => {
-      console.log('방 바뀜', chatRoomId, '챗룸');
-      history.push(`/chat/${chatRoomId}`);
-    }, [chatRoomId]);
+  //   return `/chat/${el.articleId}`
+  // }
+  //  onClick={history.push(`/list/${el.articleId}`)}
+  // onClick={setChatRoomId(el.articleId)}
+  const handleClickChatRoom = (e) => {
+    let num = e.target.getAttribute('data-value');
+    setChatRoomId(num);
+    let title = document.getElementById(num).innerText;
+    setTitle(title);
+    console.log(e.target.getAttribute('data-value'));
+    // console.log(socket) ----------소캣 연결 확인
+  };
+  // 채팅내용 불러오기
+  useEffect(() => {
+    console.log('방 바뀜', chatRoomId, '챗룸');
+    history.push(`/chat/${chatRoomId}`);
+  }, [chatRoomId]);
 
   // const chatContent = (articleid) => {
   //   axios
@@ -222,11 +224,15 @@ const ChatList = ({ chatRoomId, setChatRoomId }) => {
               >
                 <ul className="in_grid" data-value={el.articleId}>
                   <li className="profile_img" data-value={el.articleId}>
-                    <img src={el.image}  data-value={el.articleId}></img>
+                    <img src={el.image} data-value={el.articleId}></img>
                   </li>
                   <li className="chat_info" data-value={el.articleId}>
                     <ul>
-                      <li className="chat_title" data-value={el.articleId}>
+                      <li
+                        id={el.articleId}
+                        className="chat_title"
+                        data-value={el.articleId}
+                      >
                         {el.title}
                       </li>
                       <li className="content" data-value={el.articleId}>

@@ -1,7 +1,7 @@
 const { Article, UserArticles, Category, Region } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
-const uploadImage = require('../../modules/multerUploadImg');
-const articleImage = uploadImage.single('image');
+// const uploadImage = require('../../modules/multerUploadImg');
+// const articleImage = uploadImage.single('image');
 
 module.exports = async (req, res) => {
   // 포스팅 업로드 기능
@@ -11,105 +11,98 @@ module.exports = async (req, res) => {
   }
   const userId = accessTokenData.id;
 
-  articleImage(req, res, async (err) => {
-    const contentType = req.headers['content-type'];
-    console.log('contentType:', contentType);
-    const articleData = JSON.parse(req.body.data);
-    const image = req.file;
+  // articleImage(req, res, async (err) => {
+  //   const contentType = req.headers['content-type'];
+  //   console.log('contentType:', contentType);
+  //   const articleData = JSON.parse(req.body.data);
+  //   const image = req.file;
 
-    const {
-      title,
-      content,
-      category,
-      market,
-      date,
-      time,
-      tradeType,
-      totalMate,
-      region,
-      address,
-      url,
-    } = articleData;
+  const {
+    title,
+    content,
+    category,
+    market,
+    date,
+    time,
+    tradeType,
+    totalMate,
+    region,
+    address,
+    url,
+  } = req.body;
 
-    if (
-      !title ||
-      !content ||
-      !category ||
-      !market ||
-      !date ||
-      !time ||
-      !tradeType ||
-      !totalMate ||
-      !region ||
-      !address ||
-      !url
-    ) {
-      res.status(422).send({ message: 'Incorrect parameters supplied' });
-    }
+  let { imageKey } = req.body;
 
-    const categoryData = await Category.findOne({
-      where: { food_type: category },
-    });
-    const categoryId = categoryData.dataValues.id;
+  if (
+    !title ||
+    !content ||
+    !category ||
+    !market ||
+    !date ||
+    !time ||
+    !tradeType ||
+    !totalMate ||
+    !region ||
+    !address ||
+    !url
+  ) {
+    res.status(422).send({ message: 'Incorrect parameters supplied' });
+  }
 
-    const regionData = await Region.findOne({
-      where: { city: region },
-    });
-    const regionId = regionData.dataValues.id;
-
-    let imageLocation =
-      'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';
-    let imageKey = 'jointPurchaseDefaultImage.jpeg';
-
-    if (!image) {
-      if (tradeType === 'share') {
-        imageLocation =
-          'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/shareDefaultImage.jpeg';
-        imageKey = 'shareDefaultImage.jpeg';
-      }
-    } else {
-      imageLocation = image.transforms[0].location;
-      imageKey = image.transforms[0].key;
-    }
-
-    Article.create({
-      title,
-      image_key: imageKey,
-      image_location: imageLocation,
-      content,
-      category_id: categoryId,
-      market,
-      region_id: regionId,
-      date,
-      time,
-      total_mate: totalMate,
-      current_mate: 1,
-      trade_type: tradeType,
-      address,
-      url,
-      status: true,
-    })
-      .then((articleData) => {
-        const articleId = articleData.dataValues.id;
-        UserArticles.create({
-          user_id: userId,
-          article_id: articleId,
-          is_host: true,
-        })
-          .then((data) => {
-            console.log('data', data);
-            const id = data.dataValues.article_id;
-            // console.log(data);
-            return res.redirect(`/articles/${id}`);
-          })
-          .catch((err) => {
-            console.log(err);
-            return res.status(500).send('Internal server error');
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).send('Internal server error');
-      });
+  const categoryData = await Category.findOne({
+    where: { food_type: category },
   });
+  const categoryId = categoryData.dataValues.id;
+
+  const regionData = await Region.findOne({
+    where: { city: region },
+  });
+  const regionId = regionData.dataValues.id;
+
+  if (!imageKey) {
+    if (tradeType === 'share') {
+      imageKey = 'shareDefaultImage.jpeg';
+    } else if (tradeType === 'jointPurchase') {
+      imageKey = 'jointPurchaseDefaultImage.jpeg';
+    }
+  }
+
+  Article.create({
+    title,
+    image_key: imageKey,
+    content,
+    category_id: categoryId,
+    market,
+    region_id: regionId,
+    date,
+    time,
+    total_mate: totalMate,
+    current_mate: 1,
+    trade_type: tradeType,
+    address,
+    url,
+    status: true,
+  })
+    .then((articleData) => {
+      const articleId = articleData.dataValues.id;
+      UserArticles.create({
+        user_id: userId,
+        article_id: articleId,
+        is_host: true,
+      })
+        .then((data) => {
+          console.log('data', data);
+          const id = data.dataValues.article_id;
+          // console.log(data);
+          return res.redirect(`/articles/${id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).send('Internal server error');
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send('Internal server error');
+    });
 };

@@ -29,6 +29,7 @@ body {
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  background-color: #ffde72;
   /* background-color: rgb(186, 147, 222); */
 }
 
@@ -44,8 +45,134 @@ body {
   background-color: #495057;
 }
 
+/* ------------select박스 css- (1)---------- */
+select.select_css {
+  border: 1px solid #999;
+  
+  height: 45px;
+  font-size: 14px;
+  line-height: 22px;
+  margin-top: 20px;
+
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: #444;
+  background-color: #fff;
+
+  padding: 0.6em 1.4em 0.5em 0.8em;
+  margin: 0;
+
+  border: 1px solid #dcdfd5;
+  border-radius: 0.5em;
+  /* box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.02); */
+
+  appearance: none;
+  }
+  select.select_css:hover {
+    border-color: #888;
+  }
+
+  select.select_css:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 2px #ff4342;
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222;
+    outline: none;
+  }
+
+  select.select_css:disabled {
+    opacity: 0.5;
+  }
+  select.select_css::-ms-expand {
+    display: none;
+  }
+
+  /* ------------select박스 css- (2)---------- */
+select.select_css2 {
+  border: 1px solid #999;
+  
+  height: 45px;
+  font-size: 14px;
+  line-height: 22px;
+  margin-top: 20px;
+
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: #444;
+  background-color: #fff;
+
+  padding: 0.6em 1.4em 0.5em 0.8em;
+  margin: 0;
+
+  border: 1px solid #dcdfd5;
+  border-radius: 0.5em;
+  /* box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.02); */
+
+  appearance: none;
+  }
+  select.select_css2:hover {
+    border-color: #888;
+  }
+
+  select.select_css2:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 1px 2px #a1d026;
+    box-shadow: 0 0 0 3px -moz-mac-focusring;
+    color: #222;
+    outline: none;
+  }
+
+  select.select_css2:disabled {
+    opacity: 0.5;
+  }
+  select.select_css2::-ms-expand {
+    display: none;
+  }
+
+  /* ------------input css ---(1)-----*/
+  input.input_css{
+    height: 45px;
+    border: none; 
+    border-bottom: 1px solid #dcdfd58c;
+  }
+  input.input_css::placeholder{
+    font-size: 14px;
+    color:#bcbcbc;
+  }
+  input.input_css:focus{
+    border-bottom:2px solid #ff4342;
+    color: #222;
+    outline: none;
+  }
+
 @media only screen and (min-width: 1200px) {
   .section {
     padding-top: 60px;
   }
+}
+
+/* ------------input css -- (2)------*/
+input.input_css2{
+  height: 45px;
+  border: none; 
+  border-bottom: 1px solid #dcdfd58c;
+}
+input.input_css2::placeholder{
+  font-size: 14px;
+  color:#bcbcbc;
+}
+input.input_css2:focus{
+  border-bottom:2px solid #a1d026;
+  color: #222;
+  outline: none;
+}
+
+@media only screen and (min-width: 1200px) {
+.section {
+  padding-top: 60px;
+}
 }

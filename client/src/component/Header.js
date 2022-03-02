@@ -264,7 +264,8 @@ const Header = ({ handleResponseSuccess }) => {
               onClick={() => {
                 toTheTop();
                 console.log('상단이동');
-                dispatch(postListReset());
+                // dispatch(postListReset());
+                // postList(0);
               }}
             >
               <img src={logo_svg} className="logo_icon logo_svg" />

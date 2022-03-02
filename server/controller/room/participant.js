@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     attributes : ['id', 'title'],
     include : {
       model : User,
-      attributes : ['name', ['profile_image_location', 'profileImage']],
+      attributes : ['id', 'name', ['profile_image_location', 'profileImage']],
       through : {
         attributes : [['is_host', 'isHost']]
       }

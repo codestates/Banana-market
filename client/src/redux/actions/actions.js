@@ -123,6 +123,34 @@ export const showMyPostDetail = (payload) => {
     payload,
   };
 };
+// --------------categoryReducer----------------
+export const CATEGORY_DATA = 'CATEGORY_DATA';
+
+export const categoryData = (payload) => {
+  return {
+    type: CATEGORY_DATA,
+    payload,
+  };
+};
+
+// --------------myPostListReducer----------------
+
+export const MY_POST_LIST = 'MY_POST_LIST';
+export const MY_POSTLIST_RESET = 'MY_POSTLIST_RESET';
+
+export const myPostListData = (payload) => {
+  return {
+    type: MY_POST_LIST,
+    payload,
+  };
+};
+
+export const myPostListReset = (payload) => {
+  return {
+    type: MY_POSTLIST_RESET,
+    payload,
+  };
+};
 
 // --------------categoryReducer----------------
 export const CATEGORY_DATA = 'CATEGORY_DATA';

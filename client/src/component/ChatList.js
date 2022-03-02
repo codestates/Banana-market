@@ -161,6 +161,7 @@ const ChatList = ({ chatRoomId, setChatRoomId }) => {
   // onClick={setChatRoomId(el.articleId)}
   const handleClickChatRoom = (e) => {
     setChatRoomId(e.target.getAttribute('data-value'));
+    // console.log(socket) ----------소캣 연결 확인
   };
   // 채팅내용 불러오기
   useEffect(() => {

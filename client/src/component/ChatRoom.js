@@ -5,7 +5,14 @@ import SetModal from './SetModal';
 import { useMediaQuery } from 'react-responsive';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+
+// socket 연결
 import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
 
 const ChatRoomDiv = styled.div`
   /* min-width: 800px; */
@@ -100,8 +107,9 @@ const ChatRoomDiv = styled.div`
     input:focus {
       outline: none;
     }
-    .message_btn {
-      min-height: 40px;
+    button.message_btn {
+      width: 40px;
+      min-height: 30px;
       background-color: #ddd;
       border-radius: 50px;
       cursor: pointer;
@@ -209,15 +217,8 @@ const ChatRoomWrap = styled.div`
   }
 `;
 
-const endpoint = 'http://localhost:3001';
-const chatroom = `${endpoint}/chatroom`;
-
-// socket 연결
-const socket = io(chatroom, {
-  withCredentials: true,
-});
-
 const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
+  const history = useHistory();
   const [secessionModal, setSecessionModal] = useState(false);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
@@ -247,6 +248,22 @@ const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
       .then((res) => {
         setTitle(res.data.data.title);
         setMessage([...res.data.data.messageList]);
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/rooms/participant/${chatRoomId}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log('참여자 목록', res.data.data.participant);
+            setParticipant([...res.data.data.participant]);
+            // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
+            socket.emit('join', { userId, chatRoomId });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(chatRoomId);
@@ -254,24 +271,53 @@ const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
       });
   };
 
-  //채팅내용 불러오기
-  useEffect(() => {
-    if (chatRoomId !== '') {
-      chatContent(chatRoomId);
-    }
-    // console.log('articleNum', articleNum)
-  }, [chatRoomId]);
+  // 작성한 메세지 인풋값 저장
+  const handleChangeMessage = (e) => {
+    setMyMessage(e.target.value);
+  };
+  // 메세지 보내기 버튼 클릭시 진행되는 함수
+  const handleClickSendMessage = (e) => {
+    // console.log(myMessage, userId, chatRoomId, myMessage)
+    console.log(userId);
+    e.preventDefault();
+    //socket.emit('sendMessage', 'from front');
+    socket.emit(
+      'sendMessage',
+      {
+        userId: userId,
+        roomId: chatRoomId,
+        message: myMessage,
+        created: message,
+      },
+      (error) => {
+        if (error) console.log(error);
+      }
+    );
 
-  // 채팅방 참여하기
+    // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+    //     console.log('되니?'); setMyMessage('');
+    //   },
+    //   (error) => {
+    //     if (error) console.log(error);
+    //   }
+    // )
+  };
+
   useEffect(() => {
-    socket.emit('join', { userId, chatRoomId }, (error) => {
-      if (error) console.log(error);
-    });
-  }, [chatRoomId]);
+    socket.on(
+      'message',
+      ({ userId, chatRoomId, message, created }) => {
+        setMessage([...message, { userId, chatRoomId, message, created }]);
+      },
+      (error) => {
+        if (error) console.log(error);
+      }
+    );
+  });
 
   // 메세지 보내기
   // useEffect(() => {
-  //   socket.on('message', ({ myMessage }) => {
+  //   socket.on('message', (m) => {
   //     setchat([...chat, ...message]);
   //   });
   // }, [message]);
@@ -372,6 +418,57 @@ const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
   //   }
   // }, [message]);
 
+  //   // 5번 아티클 6번 유저
+  //   const [roomId, setRoomId] = useState(3);      // 채팅하는 공구 게시글
+  //   const [userId, setUserId] = useState(4);        //
+  //   const [message, setMessage] = useState('4번 유저가 3번 아티클에서 보냄');
+  //   const [messages, setMessages] = useState([]);
+  //   const [testLeave, setTestLeave] = useState(true)
+
+  //   // useEffect(() => {
+  //   //   console.log("소켓 좀 보자", socket)
+  //   //   // 채팅방 참여하기
+  //   //   socket.emit('join', { userId, roomId }, (error) => {
+  //   //     if(error) console.log(error)
+  //   //   })
+  //   // }, [roomId])
+
+  //   // 메세지 작성 handler
+  //   const sendMessage = (event) => {
+  //     // event.preventDefault();
+  //     if(message) {
+  //       socket.emit('sendMessage', ({ userId, roomId, message, created: Date.now() }), () => {
+  //         setMessage('')
+  //       });
+  //     }
+  //   }
+
+  //   // 작성한 메세지 보여주기
+  //   useEffect(() => {
+  //     socket.on('message', ({ message, created }) => {
+  //       setMessages(messages => [ ...messages, message ]);
+  //       console.log("보낸 메세지 날짜 확인", message, created)
+  //     });
+  //     console.log("메세지들", messages)
+  //   }, [message]);
+
+  //   // 메세지 작성 실행
+  //   useEffect(() => {
+  //     if (message) {
+  //       sendMessage();
+  //     }
+  //   }, [message])
+
+  //   // 채팅방 나가기 handler
+  //   // const leaveRoom = (event) => {
+  //   //   // event.preventDefault();
+  //   //   socket.emit('leave', ({ userId, roomId }), (error) => {
+  //   //     if(error) console.log(error)
+  //   //   })
+  //   //   console.log(`${roomId}방을 나갔습니다`)
+  //   // }
+  // >>>>>>> dev
+
   // // 채팅방 나가기 실행
   // useEffect(() => {
   //   if (testLeave) {
@@ -382,72 +479,71 @@ const ChatRoom = ({ chatRoomId, setChatRoomId }) => {
   return (
     <Route path={'/chat/' + chatRoomId}>
       <ChatRoomDiv>
-        <form>
-          {/* onSubmit={sendMessage} */}
-          <div className="chat_title">
-            <BackBtn
-              className="back_btn"
-              // onClick={() => {
-              //   setChatRoom(false);
-              // }}
-            ></BackBtn>
-            <div className="title">
-              <p>{title}</p>
-            </div>
-            <div
-              className="set_btn"
-              onClick={(e) => {
-                setSecessionModal(true);
-              }}
-            >
-              {/* {secessionModal === true ? (
+        {/* onSubmit={sendMessage} */}
+        <div className="chat_title">
+          <BackBtn
+            className="back_btn"
+            // onClick={() => {
+            //   setChatRoom(false);
+            // }}
+          ></BackBtn>
+          <div className="title">
+            <p>{title}</p>
+          </div>
+          <div
+            className="set_btn"
+            onClick={(e) => {
+              setSecessionModal(true);
+            }}
+          >
+            {/* {secessionModal === true ? (
               <SecessionModal
                 setSecessionModal={setSecessionModal}
               ></SecessionModal>
             ) : null} */}
-            </div>
           </div>
-          <div className="chat_room">
-            <ChatContent>
-              {message.length !== 0 ? (
-                message.map((el, idx) => (
-                  <li className="contentDiv" key={idx}>
-                    <ul className="in_grid">
-                      <li className="profileImage">
-                        <img src={el.profileImage}></img>
-                      </li>
-                      <li className="user_info">
-                        <ul>
-                          <li className="name">{el.name}</li>
-                          <li className="content_detail">
-                            <div className="contents">
-                              <p>{el.contents}</p>
-                            </div>
-                            <div className="createdAt">
-                              {isToday(el.createdAt)}
-                            </div>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                ))
-              ) : (
-                <div> 채팅을 시작해주세요. </div>
-              )}
-            </ChatContent>
-          </div>
-          <div className="chat_content">
+        </div>
+        <div className="chat_room">
+          <ChatContent>
+            {message.length !== 0 ? (
+              message.map((el, idx) => (
+                <li className="contentDiv" key={idx}>
+                  <ul className="in_grid">
+                    <li className="profileImage">
+                      <img src={el.profileImage}></img>
+                    </li>
+                    <li className="user_info">
+                      <ul>
+                        <li className="name">{el.name}</li>
+                        <li className="content_detail">
+                          <div className="contents">
+                            <p>{el.contents}</p>
+                          </div>
+                          <div className="createdAt">{el.date}</div>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              ))
+            ) : (
+              <div> 채팅을 시작해주세요. </div>
+            )}
+          </ChatContent>
+        </div>
+        <div className="chat_content">
+          <form onSubmit={handleClickSendMessage}>
             <input
               type="text"
               className="message"
               placeholder="메세지를 입력해주세요."
               onChange={handleChangeMessage}
+              value={myMessage}
               // value={message || ''}
             ></input>
-            <div className="message_btn"></div>
-          </div>
-        </form>
+            <button className="message_btn"></button>
+          </form>
+        </div>
       </ChatRoomDiv>
 
       {/* <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap> */}

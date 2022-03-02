@@ -5,6 +5,14 @@ import ChatRoom from '../component/ChatRoom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ResetChatList } from '../redux/actions/actions';
 import axios from 'axios';
+// socket 연결
+import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
+
 
 const ChatDiv = styled.div`
   max-width: 1200px;

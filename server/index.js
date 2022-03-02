@@ -58,6 +58,14 @@ const io = socket(server, {
 
 socketHandler(io);
 
+//내가 추가한 코드
+// io.on("connection", (socket) => {
+//   console.log('소캣 connect') // 소켓이 연결되면 connect 가 뜬다.
+//   socket.on("message", ({ name, message }) => {
+//     io.emit("message", { name, message });
+//   });
+// });
+
 server.listen(port, () => {
   console.log(`🍌 ~~ Banana Market 서버가 작동 중입니다 ~~ 🍌`);
 });

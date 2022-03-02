@@ -10,11 +10,6 @@ const { checkAccessToken } = require('../tokenFunction');
 module.exports = async (req, res) => {
   // 포스트 상세 내용 요청
   const accessTokenData = checkAccessToken(req);
-  // if (!accessTokenData) {
-  //   return res.status(401).send({ message: 'Not authorized' });
-  // }
-
-  // const userId = accessTokenData.id;
 
   const articleId = req.params.articleid;
   if (!articleId) {
@@ -57,12 +52,18 @@ module.exports = async (req, res) => {
 
     article.region = region;
     article.category = category;
-    article.image = article.image_location;
+    article.image = article.image_key;
     article.totalMate = article.total_mate;
     article.currentMate = article.current_mate;
-    article.tradeType = article.trade_type;
+    const tradeType = article.trade_type;
+    if (tradeType === 'jointPurchase') {
+      article.tradeType = '공구';
+    } else {
+      article.tradeType = '나눔';
+    }
+    // article.tradeType = article.trade_type;
 
-    delete article.image_location;
+    // delete article.image_location;
     delete article.image_key;
     delete article.region_id;
     delete article.category_id;
@@ -76,7 +77,7 @@ module.exports = async (req, res) => {
     user.region = user.Region.city;
 
     delete user.UserArticles;
-    delete user.profile_image_location;
+    // delete user.profile_image_location;
     delete user.profile_image_key;
     delete user.password;
     delete user.region_id;

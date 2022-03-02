@@ -63,6 +63,9 @@ const PostList = () => {
         },
       })
       .then((listData) => {
+        let articleList = listData.data.data.articleList;
+
+        // console.log('ArticleList', listData.data.data.articleList);
         if (listData.data.data.articleList.length === 0) {
           // setTimeout(() => {
           //   setIsLoding(false);
@@ -70,6 +73,11 @@ const PostList = () => {
           setIsLoding(false);
         } else {
           setIsLoding(true);
+          articleList = articleList.map(async (elem) => {
+            let postImageKey = elem.image;
+            elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=115&h=115&f=webp&q=90`;
+            return elem;
+          });
           dispatch({
             type: 'SHOW_MORE_POSTLIST',
             payload: listData.data.data.articleList,
@@ -108,9 +116,9 @@ const PostList = () => {
 
   useEffect(() => {
     return () => {
-      console.log('컴포넌트가 화면에서 사라짐')
+      console.log('컴포넌트가 화면에서 사라짐');
       dispatch(postListReset());
-    }
+    };
   }, []);
 
   // 카테고리 바꿀 시 요청 함수(List 컴포넌트에서 사용)  ------ 0 -> 1
@@ -155,4 +163,3 @@ const PostList = () => {
 };
 
 export default PostList;
-

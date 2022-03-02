@@ -272,13 +272,18 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
       .then(async (detailData) => {
+        // console.log('PostDetail', detailData);
+        const postImageKey = detailData.data.data.post.image;
+        detailData.data.data.post.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=378&h=298&f=webp&q=90`;
+
         const profileImageKey = detailData.data.data.postWriter.profile_image;
-        const userProfileImg = await axios.get(
-          `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=70&h=70&f=webp&q=90`,
-          { withCredentials: false }
-        );
-        detailData.data.data.postWriter.profile_image =
-          userProfileImg.config.url;
+        if (profileImageKey) {
+          detailData.data.data.postWriter.profile_image = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=70&h=70&f=webp&q=90`;
+        } else {
+          detailData.data.data.postWriter.profile_image =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=70&h=70&f=webp&q=90';
+        }
+
         dispatch({
           type: 'SHOW_POST',
           payload: detailData.data.data.post,

@@ -17,10 +17,10 @@ import SecessionModal from './SecessionModal';
 import monkey from '../icon/monkey.png';
 
 const Wrapper = styled.div`
-   max-width: 1200px;
+  max-width: 1200px;
   /* background-color: powderblue; */
   margin: 50px auto;
-  font-size : 18px;
+  font-size: 18px;
   color: #444;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
@@ -80,10 +80,10 @@ const Wrapper = styled.div`
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 1px 1px 5px 0px #00000014;
-    &:hover{
+    &:hover {
       border: 0px;
       background-color: #ff4342;
-      color:#ffe1e0;
+      color: #ffe1e0;
     }
     @media screen and (max-width: 767px) {
       margin: 25px auto 0 auto;
@@ -127,16 +127,16 @@ const UlDiv = styled.ul`
         height: 100%;
       }
     }
-    div.text_user_info{
+    div.text_user_info {
       float: left;
-      >span{
-          font-size: 13px;
-          color:#f4b600;
-          border-radius: 3px;
-          padding: 3px 3px 1px 3px;
-          font-weight: 600;
-          border:2px solid #f4b600;
-        }
+      > span {
+        font-size: 13px;
+        color: #f4b600;
+        border-radius: 3px;
+        padding: 3px 3px 1px 3px;
+        font-weight: 600;
+        border: 2px solid #f4b600;
+      }
       div.text_id {
         width: 100px;
         padding-top: 24px;
@@ -154,43 +154,42 @@ const UlDiv = styled.ul`
         font-weight: 400;
         width: auto;
         border-radius: 10px;
-        color:#6767678c;
-        
-        
+        color: #6767678c;
       }
     }
   }
   li.edit_profile {
     border-top: 1px dashed #c6c6c6;
     height: 60px;
-    >div.tt{
-      width:30%;
+    > div.tt {
+      width: 30%;
       float: left;
       @media screen and (max-width: 450px) {
-        width:45%;
+        width: 45%;
       }
     }
     > div.btn_list {
-      float: right;      
+      float: right;
       /* position: relative; */
       /* right: -30px;
       width: 100%; */
-      > label, div {
+      > label,
+      div {
         display: inline-block;
-        border: 1px solid #bdbdbd ;
+        border: 1px solid #bdbdbd;
         color: #7d7d7d;
         font-weight: 300;
-        width : 100px;
+        width: 100px;
         height: 30px;
         line-height: 30px;
         margin-left: 10px;
         text-align: center;
         font-size: 14px;
         @media screen and (max-width: 450px) {
-          width:60px;
+          width: 60px;
           font-size: 12px;
         }
-        >input.input_hidden{
+        > input.input_hidden {
           display: none;
         }
       }
@@ -198,19 +197,18 @@ const UlDiv = styled.ul`
   }
   li.info_area {
     padding: 20px 14px 0 14px;
-    background-color: #f7f7f7;    
+    background-color: #f7f7f7;
     font-size: 16px;
     line-height: 30px;
     box-sizing: border-box;
-    .tt{
+    .tt {
       /* border: 1px solid red; */
       font-size: 14px;
       font-weight: 400;
       color: #818181;
       width: 100%;
-      
     }
-    .text{
+    .text {
       /* border: 1px solid red; */
       font-size: 18px;
       height: 45px;
@@ -219,21 +217,21 @@ const UlDiv = styled.ul`
       display: inline-block;
       @media screen and (max-width: 767px) {
         width: 80%;
-    }
-      >input{
+      }
+      > input {
         font-size: 18px;
-        width:100%;
+        width: 100%;
         height: 40px;
-        color:black;
+        color: black;
       }
     }
-    .s_btn{
+    .s_btn {
       display: inline-block;
 
       text-align: center;
       font-size: 14px;
       font-weight: 500;
-      width:60px;
+      width: 60px;
       height: 40px;
       line-height: 40px;
       float: right;
@@ -242,14 +240,14 @@ const UlDiv = styled.ul`
       border-radius: 8px;
       @media screen and (max-width: 767px) {
         width: 15%;
-    }
+      }
     }
     @media screen and (max-width: 767px) {
       width: 90%;
       margin: 0 auto;
     }
   }
-  
+
   .spot > div.text {
     width: calc((100% - 70px) / 2);
     @media screen and (max-width: 767px) {
@@ -414,14 +412,7 @@ const Profile = ({ handleChangeAuth }) => {
               withCredentials: true,
             })
             .then(async (res) => {
-              // console.log('UserInfo', res);
-              const profileImage = await axios.get(
-                `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`,
-                { withCredentials: false }
-              );
-
-              // console.log('profileImageResizing', profileImage);
-              res.data.data.profileImage = profileImage.config.url;
+              res.data.data.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`;
               dispatch({
                 type: 'SET_UPDATE_USER_INFO',
                 payload: res.data.data,
@@ -494,10 +485,13 @@ const Profile = ({ handleChangeAuth }) => {
       <div className="detail">
         <UlDiv>
           <li className="profile">
-            <div className='text_user_info'>
+            <div className="text_user_info">
               <span> BANANA - MARKET </span>
-              <div className='text_id'> {setUserInfo.email}</div>
-              <div className='text_trade'> {setUserInfo.totalTrade}회 바나나마켓 이용</div>
+              <div className="text_id"> {setUserInfo.email}</div>
+              <div className="text_trade">
+                {' '}
+                {setUserInfo.totalTrade}회 바나나마켓 이용
+              </div>
             </div>
             <div className="image">
               {setUserInfo.profileImage ? (
@@ -511,10 +505,12 @@ const Profile = ({ handleChangeAuth }) => {
               )}
             </div>
           </li>
-          <li className='edit_profile info_area'>
-          <div className="tt">프로필사진 변경</div>
+          <li className="edit_profile info_area">
+            <div className="tt">프로필사진 변경</div>
             <div className="btn_list">
-              <label htmlFor="image" className="upload_btn profile_btn"> 수정하기
+              <label htmlFor="image" className="upload_btn profile_btn">
+                {' '}
+                수정하기
                 <input
                   id="image"
                   type="file"
@@ -522,17 +518,22 @@ const Profile = ({ handleChangeAuth }) => {
                   className="input_hidden"
                   onChange={handleChangeUpload}
                 />
-                </label>
-                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>삭제하기</div>
+              </label>
+              <div
+                className="delete_btn profile_btn"
+                onClick={handleClickDeleteImg}
+              >
+                삭제하기
               </div>
+            </div>
           </li>
-            {/*  */}
+          {/*  */}
           {changeBtnNick ? (
             <li className="nick info_area">
               <div className="tt">닉네임</div>
               <div className="text">
                 <input
-                  className='input_css2'
+                  className="input_css2"
                   type="text"
                   onChange={handleChangeInputNick}
                   placeholder={setUserInfo.nickName}
@@ -555,7 +556,11 @@ const Profile = ({ handleChangeAuth }) => {
             <li className="spot info_area">
               <div className="tt">장소</div>
               <div className="text">
-                <select className='select_css2' name="city" onChange={handleChangeCity}>
+                <select
+                  className="select_css2"
+                  name="city"
+                  onChange={handleChangeCity}
+                >
                   <option value="">시</option>
                   {SelectList.map((el, idx) => (
                     <option key={idx} value={el}>
@@ -599,19 +604,19 @@ const Profile = ({ handleChangeAuth }) => {
           )}
         </UlDiv>
         <div className="md_btn_list info_area">
-            <div
-              className="md_btn secession_btn"
-              onClick={handleChangeSecessionModalState}
-            >
-              회원탈퇴
-            </div>
-            <div
-              className="md_btn password_change_btn"
-              onClick={handleChangePasswordModalState}
-            >
-              비밀번호 변경
-            </div>
+          <div
+            className="md_btn secession_btn"
+            onClick={handleChangeSecessionModalState}
+          >
+            회원탈퇴
           </div>
+          <div
+            className="md_btn password_change_btn"
+            onClick={handleChangePasswordModalState}
+          >
+            비밀번호 변경
+          </div>
+        </div>
       </div>
     </Wrapper>
   );

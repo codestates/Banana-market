@@ -13,7 +13,6 @@ const socket = io.connect(chatroom, {
   withCredentials: true,
 });
 
-
 const ChatDiv = styled.div`
   max-width: 1200px;
   margin: 80px auto;
@@ -37,6 +36,7 @@ const Chat = () => {
   const [display1, setDisplay1] = useState('block');
 
   const [chatRoomId, setChatRoomId] = useState('');
+  const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 
   const chatListData = () => {
@@ -46,6 +46,14 @@ const Chat = () => {
       })
       .then((chatData) => {
         // console.log(chatData.data.data.roomList);
+        //? ---채팅방 이미지---
+        let { roomList } = chatData.data.data;
+        roomList = roomList.map((elem) => {
+          const postImageKey = elem.image;
+          elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=60&h=60&f=webp&q=90`;
+          return elem;
+        });
+
         dispatch({
           type: 'SHOW_CHATLIST',
           payload: chatData.data.data.roomList,
@@ -79,10 +87,12 @@ const Chat = () => {
         <ChatList
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
+          setTitle={setTitle}
         ></ChatList>
         <ChatRoom
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
+          title={title}
         ></ChatRoom>
       </ChatDiv>
     </div>

@@ -1,15 +1,12 @@
 const { Article, Chat, UserArticles } = require('../../models');
 const { Op } = require('sequelize');
 const { checkAccessToken } = require('../tokenFunction');
-
 module.exports = async (req, res) => {
   const accessTokenData = checkAccessToken(req);
   if (!accessTokenData) {
     return res.status(401).send({ message: 'Not authorized' });
   }
-
   const { id } = accessTokenData;
-
   // 유저가 참여중인 article 목록
   const joinList = await UserArticles.findAll({
     where: {
@@ -37,29 +34,43 @@ module.exports = async (req, res) => {
     }],
     order : [
       [Chat, 'createdAt', 'DESC']
-    ],
-    raw: true,
-    nest: true,
-  }).catch((err) => {
-    console.log(err);
-    res.status(500).send({ message: 'Internal server error' });
-  });
+     ]
+   }).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
 
-  // 채팅 리스트별 최신 메세지 1개
-  const chatListLatestMessage = await Promise.all(
-    articleChatList.rows.map((article) => {
-      const chats = article.Chats
-      const room = {
-        image : article.image,
-        title : article.title,
-        ...chats,
-        articleId : article.articleId
+  //  console.log(JSON.stringify(articleChatList, null, 2))
+
+   // 채팅 리스트별 최신 메세지 1개
+   const chatListLatestMessage = await Promise.all(
+     articleChatList.rows.map((article) => {
+      if(article.Chats.length !==0) {
+        const chats = article.Chats[0].toJSON();
+        const room = {
+         image : article.dataValues.image,
+         title : article.title,
+         ...chats,
+         articleId : article.dataValues.articleId
+       }
+       return room
+      } else {
+        const room = {
+          image : article.dataValues.image,
+          title : article.title,
+          latestMessage : '',
+          latestCreatedAt : '',
+          articleId : article.dataValues.articleId
+        }
+        return room;
       }
-      return room
     })
-  );
+   ).catch((err) => {
+    res.status(500).send({message : 'Internal server error'})
+  })
+  
+   const filteredChatList = chatListLatestMessage.filter(chat => chat !== undefined)   
 
-  const data = { roomList: chatListLatestMessage };
+   const data = { roomList : filteredChatList }
 
-  res.status(200).json({data, message : 'Ok'});
-};
+   res.status(200).json({data, message : 'Ok'});
+ };

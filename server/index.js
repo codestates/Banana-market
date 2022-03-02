@@ -3,7 +3,7 @@ const app = express();
 const indexRouter = require('./routes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const port = 80;
+const port = 3001;
 const models = require('./models/index.js');
 const { sequelize } = require('./models/index.js');
 require('dotenv').config();
@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["https://bananamarket.tk"],
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT'],
   })

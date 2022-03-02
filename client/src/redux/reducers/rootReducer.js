@@ -6,7 +6,7 @@ import setUserInfoReducer from './setUserInfoReducer';
 import postListReducer from './postListReducer';
 import postDetailReducer from './postDetailReducer';
 import setSearchListReducer from './setSearchListReducer'
-import setSearchInfoReducer from './setSearchInfoReducer
+import setSearchInfoReducer from './setSearchInfoReducer'
 import myPostListReducer from './myPostListReducer';
 import chatListReducer from './chatListReducer';
 
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   postListReducer,
   postDetailReducer,
   setSearchListReducer,
-  setSearchInfoReducer
+  setSearchInfoReducer,
   myPostListReducer,
   chatListReducer,
 });

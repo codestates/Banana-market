@@ -126,7 +126,7 @@ module.exports = io => {
       // created = Date.now()
 
       chatroom.to(roomId).emit("message", message, created)
-      // console.log("무슨 메세지?", message)
+      console.log("무슨 메세지?", message)
       callback();
     })
 

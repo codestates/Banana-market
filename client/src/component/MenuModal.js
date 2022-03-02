@@ -57,6 +57,9 @@ const ModalWrapper = styled.div`
       font-size: 22px;
       color: #343434;
       display:flex;
+      @media only screen and (max-width: 430px) {
+        font-size: 1em;
+      }
 
       >div.logout_btn{
         padding: 0 10px;
@@ -107,9 +110,6 @@ const ModalWrapper = styled.div`
           bottom: 0px;
         }
         > span.login_ment {
-          @media only screen and (max-width: 430px) {
-            font-size: 15px;
-          }
         }
         > span.underline{
           display: block;

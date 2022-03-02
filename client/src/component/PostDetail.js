@@ -346,6 +346,20 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     });
   }, []);
 
+  // 참여하기 버튼 클릭시 일어나는 함수
+  const joinChat = (articleid) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/rooms/join/${articleid}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <DetailDiv>
       <div className="detail">
@@ -418,6 +432,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
           className="btn"
           onClick={() => {
             // handleClick();
+            joinChat(post.id);
             history.push('/chat');
           }}
         >

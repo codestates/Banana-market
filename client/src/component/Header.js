@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../App.css'; //이거 써줘야 css적용됨.
-
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLogin, setLogout } from '../redux/actions/actions';
 import { postListReset } from '../redux/actions/actions';
@@ -205,10 +205,31 @@ const Wrapper = styled.div`
   }
 `;
 
-const Header = ({ handleResponseSuccess }) => {
+const Header = ({ handleResponseSuccess}) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
   let dispatch = useDispatch();
   const history = useHistory();
+
+  // PostList > PostList 리로딩 - 로고 눌렀을때 list 요청함수
+  const postList = async (pageNumber) => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
+        params: {
+          category: '',
+          page: pageNumber,
+          sort: '',
+        },
+      })
+      .then((listData) => {
+        dispatch({
+          type: 'SHOW_MORE_POSTLIST',
+          payload: listData.data.data.articleList,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);
@@ -259,7 +280,12 @@ const Header = ({ handleResponseSuccess }) => {
       <div className="header">
         <Wrapper>
           <Link to="/list">
-            <div className="logo"  onClick={() => {toTheTop(); console.log('상단이동');}}>
+            <div className="logo"  onClick={() => {
+              toTheTop(); 
+              console.log('상단이동');
+              // dispatch(postListReset());
+              // postList(0);
+              }}>
               <img src={logo_svg} className="logo_icon logo_svg" />
             </div>
           </Link>

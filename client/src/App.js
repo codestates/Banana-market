@@ -26,6 +26,7 @@ import SignUp from './pages/SignUp';
 import Logout from './pages/Logout';
 import CheckPersonalInform from './pages/CheckPersonalInform';
 import EditPosting from './pages/EditPosting';
+import AdminPage from './pages/AdminPage';
 
 function App(props) {
   const history = useHistory();
@@ -115,6 +116,9 @@ function App(props) {
         <Route path="/chat">
           <Chat></Chat>
         </Route>
+        <Route path="/chat/:id">
+          <Chat></Chat>
+        </Route>
         <Route path="/mylist">
           <MyList></MyList>
         </Route>
@@ -144,6 +148,9 @@ function App(props) {
         </Route>
         <Route path="/piprocess">
           <CheckPersonalInform></CheckPersonalInform>
+        </Route>
+        <Route path="/admin">
+          <AdminPage></AdminPage>
         </Route>
       </Switch>
       <Footer></Footer>

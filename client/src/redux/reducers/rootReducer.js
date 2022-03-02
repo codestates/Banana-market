@@ -9,6 +9,7 @@ import setSearchListReducer from './setSearchListReducer';
 import setSearchInfoReducer from './setSearchInfoReducer';
 import myPostListReducer from './myPostListReducer';
 import chatListReducer from './chatListReducer';
+import chatRoomReducer from './chatRoomReducer';
 
 const rootReducer = combineReducers({
   setLoginReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   setSearchInfoReducer,
   myPostListReducer,
   chatListReducer,
+  chatRoomReducer,
 });
 
 export default rootReducer;

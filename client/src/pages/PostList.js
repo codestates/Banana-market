@@ -100,7 +100,18 @@ const PostList = () => {
   // useEffect :: < 처음 로딩 될때 || 카테고리 데이터 바뀔때 || 페이지 숫자 바뀔때 > 만 실행되는 리스트 요청 함수 ------ 1
   useEffect(() => {
     postList(categoryData, pageNumber, sort);
+    // return () => {
+    //   console.log('컴포넌트가 화면에서 사라짐')
+    //   dispatch(postListReset());
+    // }
   }, [categoryData, pageNumber, sort]);
+
+  useEffect(() => {
+    return () => {
+      console.log('컴포넌트가 화면에서 사라짐')
+      dispatch(postListReset());
+    }
+  }, []);
 
   // 카테고리 바꿀 시 요청 함수(List 컴포넌트에서 사용)  ------ 0 -> 1
   const handleFilterCategory = (event) => {

@@ -17,65 +17,76 @@ import SecessionModal from './SecessionModal';
 import monkey from '../icon/monkey.png';
 
 const Wrapper = styled.div`
-  max-width: 1200px;
+   max-width: 1200px;
   /* background-color: powderblue; */
   margin: 50px auto;
+  font-size : 18px;
+  color: #444;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
   }
-  .title {
-    font-size: 18px;
-    width: 440px;
-    margin: 0 auto;
-    font-weight: 600;
-    /* background-color: red; */
-    margin-bottom: 26px;
-    position: relative;
-    @media screen and (max-width: 767px) {
-      width: 90%;
-    }
-  }
-  .title::after {
-    content: '';
-    background-color: rgba(0, 0, 0, 0.15);
-    position: absolute;
-    left: 0px;
-    bottom: -10px;
-    width: 440px;
-    height: 1px;
-    z-index: -1;
-    @media screen and (max-width: 767px) {
-      width: 100%;
-    }
-  }
   .detail {
     width: 440px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: auto;
+    border: 1px solid #ecede8;
     box-sizing: border-box;
     margin: 0 auto;
+    padding-bottom: 20px;
+    background-color: white;
     /* background-color: peachpuff; */
     border-radius: 10px;
+    box-shadow: 1px 1px 5px 0px #00000014;
     @media screen and (max-width: 767px) {
       width: 90%;
     }
     /* padding-top: 20px; */
   }
-
+  .md_btn_list {
+    display: flex;
+    margin-top: 30px;
+    width: 440px;
+    padding: 20px 30px;
+    .md_btn {
+      box-shadow: 1px 1px 5px 0px #00000014;
+      text-align: center;
+      font-size: 14px;
+      width: 200px;
+      height: 50px;
+      line-height: 50px;
+      background-color: rgba(0, 0, 0, 0.15);
+      color: white;
+      font-weight: 600;
+      border-radius: 10px;
+    }
+    > div.password_change_btn {
+      margin-left: auto;
+      background-color: #95c710;
+      color: rgba(255, 255, 255, 0.9);
+      float: right;
+    }
+  }
   .btn {
     width: 440px;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #ececec;
+    border: 1px solid #eaeaea;
+    color: #aeaeae;
     box-sizing: border-box;
-    margin: 25px auto 0 auto;
-    border-radius: 50px;
+    margin: 20px auto 0 auto;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    color: white;
-    background-color: #95c710;
-    font-weight: 600;
+    box-shadow: 1px 1px 5px 0px #00000014;
+    &:hover{
+      border: 0px;
+      background-color: #ff4342;
+      color:#ffe1e0;
+    }
     @media screen and (max-width: 767px) {
+      margin: 25px auto 0 auto;
       width: 90%;
     }
   }
@@ -91,132 +102,162 @@ const UlDiv = styled.ul`
     margin: 0;
   }
   .profile {
-    width: 285px;
-    height: 100px;
+    padding-top: 30px;
+    height: 130px;
     /* background-color: orange; */
     box-sizing: border-box;
-    margin: 50px auto;
+    margin: 0 auto 20px auto;
+    @media screen and (max-width: 767px) {
+      width: 90%;
+    }
     .image {
-      float: left;
+      float: right;
       width: 100px;
       height: 100px;
-      border-radius: 50px;
       margin-right: 25px;
-      background-color: rgba(255, 250, 176, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.1);
       overflow: hidden;
       > img.basic_image {
         display: inline-block;
+        width: 100px;
+        height: 100px;
+        border-radius: 100px;
+        margin-right: 25px;
+        border: 1.5px solid #dcdfd5;
         width: 100%;
         height: 100%;
       }
     }
-    .btn_list {
-      margin-top: 8px;
+    div.text_user_info{
       float: left;
-      width: 160px;
-      height: 88px;
-      .profile_btn {
-        display: inline-block;
-        width: 100%;
-        font-size: 14px;
-        height: 36px;
-        border-radius: 100px;
-        text-align: center;
-        line-height: 36px;
-        background-color: #95c710;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        > input.input_hidden {
-          display: none;
+      >span{
+          font-size: 13px;
+          color:#f4b600;
+          border-radius: 3px;
+          padding: 3px 3px 1px 3px;
+          font-weight: 600;
+          border:2px solid #f4b600;
         }
+      div.text_id {
+        width: 100px;
+        padding-top: 24px;
+        font-size: 26px;
+        color: #393a3b8c;
+        font-weight: 500;
+        line-height: 20px;
+        padding-right: 20px;
       }
-      .profile_btn.delete_btn {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        color: rgba(0, 0, 0, 0.6);
-        background-color: white;
-        margin-top: 16px;
+      div.text_trade {
+        margin-top: 8px;
+        font-size: 15px;
+        height: 28px;
+        line-height: 28px;
+        font-weight: 400;
+        width: auto;
+        border-radius: 10px;
+        color:#6767678c;
+        
+        
       }
     }
   }
-  .info_area {
-    width: 380px;
+  li.edit_profile {
+    border-top: 1px dashed #c6c6c6;
     height: 60px;
-    font-size: 15px;
-    /* background-color: salmon; */
-    box-sizing: border-box;
-    /* height: 40px; */
-    .tt {
-      /* border: 1px solid red; */
-      width: 70px;
+    >div.tt{
+      width:30%;
       float: left;
-      font-weight: 600;
-      opacity: 0.5;
-    }
-    .text {
-      /* border: 1px solid red; */
-      color: rgba(0, 0, 0, 0.5);
-      height: 40px;
-      width: calc(100% - 150px);
-      float: left;
-      > input {
-        width: 100%;
-        height: 40px;
+      @media screen and (max-width: 450px) {
+        width:45%;
       }
     }
-    .s_btn {
-      line-height: 30px;
+    > div.btn_list {
+      float: right;      
+      /* position: relative; */
+      /* right: -30px;
+      width: 100%; */
+      > label, div {
+        display: inline-block;
+        border: 1px solid #bdbdbd ;
+        color: #7d7d7d;
+        font-weight: 300;
+        width : 100px;
+        height: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+        text-align: center;
+        font-size: 14px;
+        @media screen and (max-width: 450px) {
+          width:60px;
+          font-size: 12px;
+        }
+        >input.input_hidden{
+          display: none;
+        }
+      }
+    }
+  }
+  li.info_area {
+    padding: 20px 14px 0 14px;
+    background-color: #f7f7f7;    
+    font-size: 16px;
+    line-height: 30px;
+    box-sizing: border-box;
+    .tt{
+      /* border: 1px solid red; */
+      font-size: 14px;
+      font-weight: 400;
+      color: #818181;
+      width: 100%;
+      
+    }
+    .text{
+      /* border: 1px solid red; */
+      font-size: 18px;
+      height: 45px;
+      line-height: 40px;
+      width: 80%;
+      display: inline-block;
+      @media screen and (max-width: 767px) {
+        width: 80%;
+    }
+      >input{
+        font-size: 18px;
+        width:100%;
+        height: 40px;
+        color:black;
+      }
+    }
+    .s_btn{
+      display: inline-block;
+
       text-align: center;
       font-size: 14px;
-      width: 70px;
-      height: 30px;
+      font-weight: 500;
+      width:60px;
+      height: 40px;
+      line-height: 40px;
       float: right;
-      border-radius: 100px;
-      border: 1px solid #95c710;
-      color: #95c710;
+      color: #fbfff1;
+      background-color: #a1d026;
+      border-radius: 8px;
+      @media screen and (max-width: 767px) {
+        width: 15%;
+    }
     }
     @media screen and (max-width: 767px) {
       width: 90%;
       margin: 0 auto;
     }
   }
-  .id > div.text,
-  .deal > div.text {
-    width: calc(100% - 70px);
-    font-size: 16px;
-  }
+  
   .spot > div.text {
-    width: calc((100% - 150px) / 2);
+    width: calc((100% - 70px) / 2);
+    @media screen and (max-width: 767px) {
+      width: calc(82% / 2);
+    }
     > select {
       width: 96%;
-      height: 40px;
-      font-size: 14px;
-      line-height: 22px;
-    }
-    > select.sel_right {
-      float: right;
-    }
-  }
-  .md_btn_list {
-    padding-top: 20px;
-    height: 80px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    .md_btn {
-      text-align: center;
-      font-size: 14px;
-      width: calc((100% - 14px) / 2);
-      height: 40px;
-      line-height: 40px;
-      float: left;
-      background-color: rgba(0, 0, 0, 0.15);
-      color: white;
-      font-weight: 600;
-      border-radius: 100px;
-    }
-    > div.password_change_btn {
-      background-color: #95c710;
-      color: rgba(255, 255, 255, 0.9);
-      float: right;
+      font-size: 16px;
     }
   }
 `;
@@ -450,10 +491,14 @@ const Profile = ({ handleChangeAuth }) => {
       ) : (
         <div></div>
       )}
-      <div className="title">마이페이지</div>
       <div className="detail">
         <UlDiv>
           <li className="profile">
+            <div className='text_user_info'>
+              <span> BANANA - MARKET </span>
+              <div className='text_id'> {setUserInfo.email}</div>
+              <div className='text_trade'> {setUserInfo.totalTrade}회 바나나마켓 이용</div>
+            </div>
             <div className="image">
               {setUserInfo.profileImage ? (
                 <img
@@ -465,8 +510,11 @@ const Profile = ({ handleChangeAuth }) => {
                 <img className="basic_image" src={monkey} />
               )}
             </div>
+          </li>
+          <li className='edit_profile info_area'>
+          <div className="tt">프로필사진 변경</div>
             <div className="btn_list">
-              <label htmlFor="image" className="upload_btn profile_btn">
+              <label htmlFor="image" className="upload_btn profile_btn"> 수정하기
                 <input
                   id="image"
                   type="file"
@@ -474,36 +522,24 @@ const Profile = ({ handleChangeAuth }) => {
                   className="input_hidden"
                   onChange={handleChangeUpload}
                 />
-                이미지 업로드
-              </label>
-              <div
-                className="delete_btn profile_btn"
-                onClick={handleClickDeleteImg}
-              >
-                이미지 제거
+                </label>
+                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>삭제하기</div>
               </div>
-            </div>
           </li>
-          <li className="id info_area">
-            <div className="tt">아아디</div>
-            <div className="text">{setUserInfo.email}</div>
-          </li>
-          <li className="deal info_area">
-            <div className="tt">거래횟수</div>
-            <div className="text">{setUserInfo.totalTrade} 번</div>
-          </li>
+            {/*  */}
           {changeBtnNick ? (
             <li className="nick info_area">
               <div className="tt">닉네임</div>
               <div className="text">
                 <input
+                  className='input_css2'
                   type="text"
                   onChange={handleChangeInputNick}
                   placeholder={setUserInfo.nickName}
                 />
               </div>
               <div className="s_btn" onClick={handleChangeBtnNick}>
-                수정완료
+                완료
               </div>
             </li>
           ) : (
@@ -519,7 +555,7 @@ const Profile = ({ handleChangeAuth }) => {
             <li className="spot info_area">
               <div className="tt">장소</div>
               <div className="text">
-                <select name="city" onChange={handleChangeCity}>
+                <select className='select_css2' name="city" onChange={handleChangeCity}>
                   <option value="">시</option>
                   {SelectList.map((el, idx) => (
                     <option key={idx} value={el}>
@@ -530,7 +566,7 @@ const Profile = ({ handleChangeAuth }) => {
               </div>
               <div className="text">
                 <select
-                  className="sel_right"
+                  className="sel_right select_css2"
                   name="district"
                   onChange={handleChangeDistrict}
                 >
@@ -547,12 +583,12 @@ const Profile = ({ handleChangeAuth }) => {
                 </select>
               </div>
               <div className="s_btn" onClick={handleChangeBtnSpot}>
-                수정완료
+                완료
               </div>
             </li>
           ) : (
             <li className="info_area">
-              <div className="tt">장소</div>
+              <div className="tt">나의 동네</div>
               <div className="text">
                 서울특별시, &nbsp; {setUserInfo.region}
               </div>
@@ -561,7 +597,8 @@ const Profile = ({ handleChangeAuth }) => {
               </div>
             </li>
           )}
-          <li className="md_btn_list info_area">
+        </UlDiv>
+        <div className="md_btn_list info_area">
             <div
               className="md_btn secession_btn"
               onClick={handleChangeSecessionModalState}
@@ -574,11 +611,7 @@ const Profile = ({ handleChangeAuth }) => {
             >
               비밀번호 변경
             </div>
-          </li>
-        </UlDiv>
-      </div>
-      <div className="btn" onClick={handleChangeAuth}>
-        <p>로그아웃</p>
+          </div>
       </div>
     </Wrapper>
   );

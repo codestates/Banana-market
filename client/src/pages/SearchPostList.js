@@ -64,10 +64,12 @@ const SearchPostList = () => {
         } else if (result === 'No more articles') {
           setIsLoding(false);
         } else if (result.includes('About')) {
-          dispatch({
-            type: 'SET_RESULT_COUNT_NUM',
-            payload: result.split(' ')[1],
-          });
+          if(pageNumber === 0) {
+            dispatch({
+              type: 'SET_RESULT_COUNT_NUM',
+              payload: result.split(' ')[1],
+            });
+          }
           dispatch({
             type: 'SET_SEARCH_PAGE_NUM',
             payload: setSearchInfo.searchPageNum + 1
@@ -106,13 +108,18 @@ const SearchPostList = () => {
 
   // useEffect :: < 처음 로딩 될때 || 검색단어 바뀔때 || 페이지 숫자 바뀔때 > 만 실행되는 리스트 요청 함수 ------ 1
   useEffect(() => {
-    // 새로고침시 재검색 되게 함
+    console.log('업데이트')
+    postList(searchWord, setSearchInfo.searchPageNum);
+  }, [searchWord, setSearchInfo.searchPageNum]);
+
+  // 새로고침시 재검색 되게 함
+  useEffect(() => {
+    console.log('새로고침')
     dispatch({
       type: 'SET_WORD_FOR_SEARCH',
       payload: searchWord,
     });
-    postList(searchWord, setSearchInfo.searchPageNum);
-  }, [searchWord, setSearchInfo.searchPageNum]);
+  }, [])
 
   // setSearchInfo.searchPageNum
   return (

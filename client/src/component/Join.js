@@ -4,8 +4,8 @@ import { useHistory } from "react-router-dom";
 import Chat from '../pages/Chat';
 import { Link } from "react-router-dom";
 import searchList from '../resource/cityList'
-import check_icon from "../icon/check_icon.png";
-import error_icon from "../icon/error_icon.png";
+import { ReactComponent as CheckIcon1 } from"../icon/check_icon.svg";
+import { ReactComponent as CheckIcon2 } from"../icon/check_icon.svg";
 import next_icon from "../icon/next_icon.png";
 import { useSelector, useDispatch } from 'react-redux'; 
 import { setLogin, setLogout, setUpdateUserInfo} from "../redux/actions/actions";
@@ -16,28 +16,21 @@ const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
   margin: 50px auto;
-  font-size : 24px;
+  font-size : 18px;
+  color: #444;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
   }
-  .title{
-    width: 440px;
-    margin: 0 auto;
-    background-color: red;
-    margin-bottom: 15px;
-    @media screen and (max-width: 767px) {
-      width: 90%;
-    }
-  }
   .detail {
     width: 440px;
-    border: 1px solid #000;
+    border: 1px solid #ecede8;
     box-sizing: border-box;
     margin: 0 auto;
     padding-top: 40px;
-    /* background-color: peachpuff; */
+    background-color: white;
     border-radius: 10px;
+    box-shadow: 1px 1px 5px 0px #00000014;
     @media screen and (max-width: 767px) {
       width: 90%;
       height: auto;
@@ -47,12 +40,26 @@ const Wrapper = styled.div`
 
   .btn {
     width: 440px;
-    height: 45px;
-    border: 1px solid #000;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    font-weight: 500;
     box-sizing: border-box;
-    margin: 40px auto 0 auto;
-    border-radius: 50px;
+    margin: 20px auto 0 auto;
+    border-radius: 10px;
     cursor: pointer;
+    box-shadow: 1px 1px 5px 0px #00000014;
+    border: 0px;
+    background-color:#a1d026;
+    color:#fbfff1;
+    /* border: 1px solid #eaeaea;
+    background-color: #ececec;
+    color: #aeaeae;
+    &:hover{
+      border: 0px;
+      background-color:#a1d026;
+      color:#fbfff1;
+    } */
     @media screen and (max-width: 767px) {
       margin: 25px auto 0 auto;
       width: 90%;
@@ -70,75 +77,36 @@ const UlDiv = styled.ul`
     margin: 0;
   }
   .pi_inform {
-    padding: 16px 0;
-    >div.line{
-      width: 100%;
-      height: 1px;
-      background-color: rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-    >img{
-      padding-top: 5px;
-      display: block;
-      float: right;
-      width: 16px;
-      opacity: 0.3;
-      /* height: 16px; */
+    background-color: #f7f7f7;
+    padding: 15px 10px 15px 20px;
+    border-radius: 10px;
+
+    >input{
+      margin-top:3px;
+      position: relative;
+      top:8px;
     }
     >span#check_pi_inform{
       font-size: 16px;
-      color: black;
+      line-height: 16px;
+      color: #444;
       padding-left: 0px;
+      @media screen and (max-width: 450px) {
+        font-size: 13px;
+      }
     }
-  }
-  .profile {
-    width: 285px;
-    height: 100px;
-    /* background-color: orange; */
-    box-sizing: border-box;
-    margin: 50px auto;
-    .image {
-      float: left;
+    > div{
+      margin-left: 25px;
+      font-size: 13px;
       width: 100px;
-      height: 100px;
-      border-radius: 50px;
-      margin-right: 25px;
-      background-color: rgba(255, 250, 176, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      > img.basic_image {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .btn_list {
-      margin-top: 8px;
-      float: left;
-      width: 160px;
-      height: 88px;
-      .profile_btn{
-        display: inline-block;
-        width: 100%;
-        font-size: 14px;
-        height: 36px;
-        border-radius: 100px;
-        text-align: center;
-        line-height: 36px;
-        background-color: #95c710;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-        >input.input_hidden{
-          display: none;
-        }
-      }
-      .profile_btn.delete_btn{
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        color: rgba(0, 0, 0, 0.6);
-        background-color: white;
-        margin-top: 16px;
-      }
-    }
+      height: 30px;
+      color: #0075ff;
+      border: 1px solid #0075ff;
+      border-radius: 100px;
+      text-align: center;
+      line-height: 30px;
+      margin-top: 20px;
+    } 
   }
   >li.info_area {
     display: block;
@@ -146,23 +114,28 @@ const UlDiv = styled.ul`
     height: auto;
     font-size: 16px;
     /* background-color: salmon; */
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     box-sizing: border-box;
     /* height: 40px; */
     .tt{
       /* border: 1px solid red; */
-      width:70px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #818181;
+      width:60px;
       float: left;
+      padding-top: 18px;
     }
     .text{
       /* border: 1px solid red; */
-      height: 40px;
-      width: calc(100% - 150px);
+      height: 45px;
+      width: calc(100% - 140px);
       float: left;
       >input{
+        font-size: 18px;
         width:100%;
-        height: 100%;
-        border: 1px solid rgb(0, 0, 0, 0.3);
+        height: 45px;
+        color:black;
       }
     }
     .s_btn{
@@ -172,20 +145,22 @@ const UlDiv = styled.ul`
       width:70px;
       height: 40px;
       float: right;
-      background-color: #95c710;
-      color: white;
+      color: #fbfff1;
+      background-color: #a1d026;
       border-radius: 8px;
-      padding-top: 2px;
+      padding-top: 6px;
     }
     >span{
+      position: relative;
+      top: 8px;
       font-size: 12px;
-      padding-left: 70px;
+      padding-left: 60px;
       display: inline-block;
-      color: green;
+      color: #a1d026;
       /* background-color: green; */
     }
     >span.error_message{
-      color: red;
+      color: #ffc004;
     }
     >div.hidden{
       height: 40px;
@@ -202,10 +177,9 @@ const UlDiv = styled.ul`
     width: calc((100% - 80px)/2);
     >select {
       width: 100%;
-      height: 40px;
-      font-size: 14px;
+      height: 45px;
+      font-size: 16px;
       line-height: 22px;
-      border: 1px solid rgb(0, 0, 0, 0.3);
     }
   }
   .spot > div.text_right{
@@ -213,16 +187,13 @@ const UlDiv = styled.ul`
   }
   >li.info_area.password {
     > div.text{
-      width: calc(100% - 70px);
+      width: calc(100% - 60px);
       >input.password{
         display: block;
         width: calc(100% - 20px);
-        height: 40px;
-        border: 1px solid rgb(0, 0, 0, 0.3);
-        outline: 0;
         float: left;
       }
-      > img{
+      svg {
         width: 16px;
         height: 16px;
         margin-top: 12px;
@@ -232,7 +203,7 @@ const UlDiv = styled.ul`
     }
     > span {
       font-size: 12px;
-      padding-left: 70px;
+      padding-left: 60px;
       display: inline-block;
       /* background-color: green; */
       margin-bottom: 8px;
@@ -243,18 +214,17 @@ const UlDiv = styled.ul`
     }
     > div.text_right{
       width: 100%;
-      height: 40px;
-      padding-left: 70px;
+      height: 45px;
+      padding-left: 60px;
       /* background-color: red; */
       >input.password{
+        font-size: 18px;
+        margin-top: 8px;
         display: block;
         width: calc(100% - 20px);
-        height: 40px;
-        border: 1px solid rgb(0, 0, 0, 0.3);
-        outline: 0;
         float: left;
       }
-      > img{
+      svg {
         width: 16px;
         height: 16px;
         margin-top: 12px;
@@ -479,13 +449,12 @@ const Join = () => {
     <> 
       {personalInformModal ? <PersonalInformModal setPersonalInformModal={setPersonalInformModal} setPiCheck={setPiCheck}></PersonalInformModal> : <div></div> }
       <Wrapper>
-        <div className='title'>회원가입</div>
         <div className="detail">
           <UlDiv>
             <li className="id info_area">
               <div className='tt'>아아디</div>
               <div className='text'>
-                <input type='text' onChange={handleChangeId} placeholder='이메일을 입력해주세요'/>
+                <input className='input_css2' type='text' onChange={handleChangeId} placeholder='이메일을 입력해주세요'/>
               </div>
               <div className='s_btn' onClick={handleClickSendSecurityNum}>인증번호<br/>받기</div>
               {inputId === '' ? 
@@ -496,7 +465,7 @@ const Join = () => {
             <li className="security_num info_area">
               <div className='tt'>인증번호</div>
               <div className='text'>
-                <input type='text' onChange={handleChangeSecurityNum} />
+                <input className='input_css2'type='text' onChange={handleChangeSecurityNum} />
               </div>
               {
                 inputSecurityNum !== '' ? <div className='hidden'></div>
@@ -506,7 +475,7 @@ const Join = () => {
             <li className="nick info_area">
               <div className='tt'>닉네임</div>
               <div className='text'>
-                <input type='text' onChange={handleChangeNickName}/>
+                <input className='input_css2' type='text' onChange={handleChangeNickName}/>
               </div>
               <div className='s_btn' onClick={handleClickNickName}>닉네임<br/>중복확인</div>
               { isCheckedNickname ? 
@@ -516,7 +485,7 @@ const Join = () => {
             <li className="spot info_area">
               <div className='tt'>장소</div>
               <div className='text'>
-                <select name="city" onChange={handleChangeCity}>
+                <select className='select_css2' name="city" onChange={handleChangeCity}>
                   <option value="">시</option>
                   {
                     SelectList.map((el, idx) => (
@@ -526,7 +495,7 @@ const Join = () => {
                 </select>
               </div>
               <div className='text text_right'>
-                <select name="district" onChange={handleChangeDistrict}>
+                <select  className='select_css2' name="district" onChange={handleChangeDistrict}>
                   <option value="">구</option>
                   {
                     searchList[0][selectCity] ? 
@@ -542,30 +511,29 @@ const Join = () => {
               <div className='tt'>비밀번호</div>
               <div className='text'>
                 <input
-                  className="password"
+                  className="input_css2 password"
                   type="password"
                   placeholder="비밀번호를 입력해주세요."
                   onChange={handleChangeNewPassword}
                 />
-                <img className='icon' src={checkNewPassword ? check_icon : error_icon}/>
+                {checkNewPassword ? <CheckIcon1 stroke='#a1d026'></CheckIcon1> : <CheckIcon1 stroke='#ececec'></CheckIcon1> }
               </div>
               {checkNewPassword ?<span>사용가능한 비밀번호 입니다.</span>
               : <span className='error_message'>비밀번호는 영문, 숫자, 특수문자를 모두 포함해 6~12자 입니다.</span> }
               <div className='text_right'>
                 <input
-                  className="password"
+                  className="input_css2 password"
                   type="password"
                   placeholder="비밀번호를 확인해주세요."
                   onChange={handleChangeRePassword}
                 />
-                <img className='icon' src={checkReNewPassword ? check_icon : error_icon}/>
+                {checkReNewPassword ? <CheckIcon2 stroke='#a1d026'></CheckIcon2> : <CheckIcon2 stroke='#ececec'></CheckIcon2> }
               </div>
             </li>
             <li className="pi_inform info_area">
-              <div className='line'></div>
               <input id='check_pi_inform' type='checkbox' checked={piCheck} onClick={()=>{setPiCheck(!piCheck)}}/> 
               <span id='check_pi_inform' onClick={()=>{setPiCheck(!piCheck)}}>&nbsp;&nbsp; 바나나마켓 개인정보처리방침에 동의(필수)</span>
-              <img className='icon' src={next_icon} onClick={() => {setPersonalInformModal(true)}}/>
+              <div className='pi_btn' onClick={()=>{setPersonalInformModal(true)}}> 방침확인</div>
             </li>
           </UlDiv>
         </div>

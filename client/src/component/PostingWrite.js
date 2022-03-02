@@ -9,7 +9,7 @@ import '../App.css'; //이거 써줘야 css적용됨.
 import MapModal from './MapModal';
 import camera from "../icon/camera.png";
 import check_icon from "../icon/check_icon.svg";
-// import market from "../icon/market.png";
+import market from "../icon/market.png";
 // import give from "../icon/give.png";
 import axios from 'axios';
 
@@ -34,18 +34,20 @@ const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
   margin: 50px auto;
-  font-size : 24px;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
   }
   .detail {
     width: 440px;
-    border: 1px solid #000;
+    border: 1px solid #ecede8;
     box-sizing: border-box;
     margin: 0 auto;
+    padding-bottom: 20px;
+    background-color: white;
     /* background-color: peachpuff; */
     border-radius: 10px;
+    box-shadow: 1px 1px 5px 0px #00000014;
     @media screen and (max-width: 767px) {
       width: 90%;
     }
@@ -54,12 +56,23 @@ const Wrapper = styled.div`
 
   .btn {
     width: 440px;
-    height: 45px;
-    border: 1px solid #000;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #ececec;
+    border: 1px solid #eaeaea;
+    color: #aeaeae;
     box-sizing: border-box;
-    margin: 40px auto 0 auto;
-    border-radius: 50px;
+    margin: 20px auto 0 auto;
+    border-radius: 10px;
     cursor: pointer;
+    box-shadow: 1px 1px 5px 0px #00000014;
+    &:hover{
+      border: 0px;
+      background-color: #ff4342;
+      color:#ffe1e0;
+    }
     @media screen and (max-width: 767px) {
       margin: 25px auto 0 auto;
       width: 90%;
@@ -81,6 +94,9 @@ const UlDiv = styled.ul`
     /* background-color: red; */
     width: 100%;
     display: flex;
+    @media screen and (max-width: 767px) {
+      width: 90%;
+    }
     >img{
       width: 10px;
       display: block;
@@ -106,6 +122,15 @@ const UlDiv = styled.ul`
       & + label {
         color: #292929;
       }
+      &::after{
+        position: relative;
+        top:1px;
+        content: '✔'; /* 체크 마크 ASCii 문자 */
+        font-size: 18px;
+        line-height: 0.8;
+        color: white;
+        transition: all .3s;
+      }
     }
     >label{
       /* background-color: green; */
@@ -123,6 +148,9 @@ const UlDiv = styled.ul`
     /* background-color: orange; */
     box-sizing: border-box;
     margin: 0 auto 20px auto;
+    @media screen and (max-width: 767px) {
+      width: 90%;
+    }
     .image {
       float: left;
       width: 100px;
@@ -147,10 +175,20 @@ const UlDiv = styled.ul`
       font-weight: 400;
       line-height: 20px;
       padding-top: 3px;
+      padding-right: 20px;
+      @media only screen and (max-width: 430px) {
+        padding-top: 0px;
+        font-size: 12px;
+        line-height: 18px;
+      }
     }
     .btn_list {
+      margin-top: 18px;
       float: left;
       width: 160px;
+      @media only screen and (max-width: 430px) {
+        margin-top: 0.4em;
+      }
       .profile_btn{
         display: inline-block;
         margin-right: 8px;
@@ -172,25 +210,40 @@ const UlDiv = styled.ul`
         border: 1px solid rgba(0, 0, 0, 0.1);
         color: #bdbdbd;
         background-color: white;
-        margin-top: 18px;
       }
     }
   }
   .writing_area {
     width: 380px;
     height: 60px;
-    font-size: 16px;
     /* background-color: salmon; */
     box-sizing: border-box;
+    padding-top: 10px;
     .text{
-      border: 1px solid red;
+      /* border: 1px solid red; */
       height: 40px;
       width: 100%;
       float: left;
       >input{
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #444;
         width:100%;
-        height: 40px;
+        height: 45px;
+        border: none; 
+        border-bottom: 1px solid #dcdfd58c;
+        &::placeholder{
+          font-size: 14px;
+          color:#bcbcbc;
+        }
       }
+      >input:focus{
+        border-bottom:2px solid #ff4342;
+        color: #222;
+        outline: none;
+      }
+
       >textarea {
         overflow-y: hidden;
         width:100%;
@@ -203,28 +256,27 @@ const UlDiv = styled.ul`
       text-align: center;
       font-size: 14px;
       width:70px;
-      height: 40px;
+      height: 45px;
+      line-height: 45px;
       float: right;
-      background-color: cyan;
+      color: #ff4342;
+      border: 2px solid #ff7b7a;
       border-radius: 8px;
     }
-    >select {
+    > select {
       width:100%;
-      height: 40px;
-      font-size: 14px;
-      line-height: 22px;
-      margin-bottom: 20px;
     }
+    
     @media screen and (max-width: 767px) {
       width: 90%;
       margin: 0 auto;
     }
+    
   }
   .s_writing_area{
     width: 50%;
     height: 60px;
-    font-size: 16px;
-    background-color: rebeccapurple;
+    /* background-color: rebeccapurple; */
     box-sizing: border-box;
     float: left;
     >select.time_select {
@@ -243,21 +295,50 @@ const UlDiv = styled.ul`
     }
     >span {
       float: right;
+      line-height: 45px;
+      color: #444;
     }
   }
   .location_box.writing_area > div.text{
-    border: 1px solid red;
+    /* border: 1px solid red; */
     height: 40px;
     width: calc(100% - 80px);
     float: left;
     >input{
       width:100%;
-      height: 40px;
+      height: 45px;
+      border: none; 
+      border-bottom: 1px solid #dcdfd58c;
+      &::placeholder{
+        font-size: 14px;
+        color:#bcbcbc;
+      }
     }
   } 
   li.text_box.writing_area{
     min-height: 120px;
     height: ${props => props.newHeightPx ? props.newHeightPx+20 : 120}px;
+  }
+  .textarea{
+    padding-top: 16px;
+    /* margin-top: 30px; */
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.8;
+    color: #444;
+    border: none; 
+    border-bottom: 1px solid #dcdfd58c;
+    appearance: none;
+  }
+  .textarea:focus{
+    /* border-bottom:2px solid #ff4342; */
+    color: #222;
+    outline: none;
+  }
+  .textarea::placeholder{
+    padding-left:8px;
+    font-size: 14px;
+    color:#bcbcbc;
   }
 `;
 
@@ -272,7 +353,7 @@ const PostingWrite = () => {
   let locationInfoText = `${locationInfo[0]}, ${locationInfo[1]}`;
 
   // SelectBox 내용
-  const CategoryList = [ '정육/계란', '과일','우유/유제품', '채소','수산/건어물',  '베이커리', '간식/떡/방과', '김치/반찬', '기타'];
+  const CategoryList = [ '정육/계란', '과일','우유/유제품', '채소','수산/건어물',  '베이커리', '간식/떡/빙과', '김치/반찬', '기타'];
   const TimeList = ['오전 06~09', '오전 09~12', '오후 01~03', '오후 03~06', '오후 06~09', '오후 09~12', '오전 00~03', '오전 03~06','협의 가능'];
   const PeopleNumList = [1, 2, 3, 4, 5, 6, '6명이상'];
 
@@ -306,18 +387,14 @@ const PostingWrite = () => {
   let [thumbnail, setThumbnail] = useState(null);
 
   // textarea 박스크기 늘이기
-  let[textareaHeight, setTextareaHeight] = useState(40);
+  let[textareaHeight, setTextareaHeight] = useState(45);
   const handleChangeHeight = (e) => {
     if(textareaHeight <= e.target.scrollHeight){
-      let newHeight =  e.target.scrollHeight;
+      let newHeight =  e.target.scrollHeight+10;
       setTextareaHeight(newHeight);
-      setInputText(e.target.value);
       // console.log('늘어날때', e.target.scrollHeight)
-    } else { 
-      setTextareaHeight(textareaHeight-10);
-      setInputText(e.target.value);
-      // console.log('줄어들때', e.target.scrollHeight)
     }
+    setInputText(e.target.value);
   }
   // 스크롤 페이지 상단으로 이동 함수 
   const toTheTop= () => { 
@@ -455,15 +532,15 @@ const PostingWrite = () => {
               </div>
             </li>
             <li className="radio_box writing_area">
-              <img src={check_icon}/>
+              {/* <img src={check_icon}/> */}
               <input id='buy' type="radio" name="about" value="jointPurchase" defaultChecked onClicks={handleClickRadioBox}/> 
               <label htmlFor='buy'>&nbsp;&nbsp;공구</label>
-              <img src={check_icon} />
+              {/* <img src={check_icon} /> */}
               <input id='share' type="radio" name="about" value="share" onClick={handleClickRadioBox}/> 
               <label className='label_right' htmlFor='share'>&nbsp;&nbsp;나눔</label>
             </li>
             <li className="category_box writing_area">
-                <select name="category" onChange={handleChangeCategory}>
+                <select className="select_css" name="category" onChange={handleChangeCategory}>
                   <option value="">카테고리</option>
                   {
                     CategoryList.map((el, idx) => (
@@ -474,14 +551,17 @@ const PostingWrite = () => {
             </li>
             <li className="title_box writing_area">
               <div className='text'>
-                <input type='text' placeholder='제목을 입력하세요' onChange={handleChangeTitle} />
+                <input type='text input_css' placeholder='제목을 입력하세요' onChange={handleChangeTitle} />
               </div>
             </li>
             <li className="location_box writing_area">
               <div className='text'>
-                <input type='text' readOnly value={locationInfoText} placeholder='장소를 선택하세요' />
+                {
+                  locationInfoText === `, ` ? <input type='text' readOnly placeholder='지도에서 장소를 찾아보세요.' />
+                 :  <input type='text input_css' readOnly value={locationInfoText} />
+                 }
               </div>
-              <div className='s_btn' onClick={(e)=> {setMapModal(!mapModal)}}>지도에서<br/>찾기</div>
+              <div className='s_btn' onClick={(e)=> {setMapModal(!mapModal)}}>장소 찾기</div>
             </li>
             <li className="date_box writing_area">
               <div className='text'>
@@ -490,7 +570,7 @@ const PostingWrite = () => {
             </li>
             <li className='writing_area'>
               <div className="time_box s_writing_area">
-                <select className="time_select" name="time" onChange={handleChangeTime}>
+                <select className="time_select select_css" name="time" onChange={handleChangeTime}>
                   <option value="">시간대</option>
                   {
                     TimeList.map((el, idx) => (
@@ -500,7 +580,7 @@ const PostingWrite = () => {
                 </select>
               </div>
               <div className="people_box s_writing_area">
-                <select className="people_num_select" name="people_num" onChange={handleChangeNum}>
+                <select className="people_num_select select_css" name="people_num" onChange={handleChangeNum}>
                   <option value="">총 인원 수</option>
                   {
                     PeopleNumList.map((el, idx) => (
@@ -511,9 +591,9 @@ const PostingWrite = () => {
                 <span>명</span>
               </div>
             </li>
-            <li className="text_box writing_area">
+            <li className="text_box writing_area ">
               <div className='text'>
-                <textarea placeholder='내용을 입력하세요'onChange={handleChangeHeight} ></textarea>
+                <textarea className='textarea' placeholder='바나나를 찾고있는 사람들을 위해 간단한 내용을 입력해주세요.'onKeyUp={handleChangeHeight} onKeyDown={handleChangeHeight}></textarea>
               </div>
             </li>
           </UlDiv>

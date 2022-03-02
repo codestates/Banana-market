@@ -2,6 +2,7 @@ const { Article, Chat, UserArticles } = require('../../models');
 const { Op } = require('sequelize');
 const { checkAccessToken } = require('../tokenFunction');
 module.exports = async (req, res) => {
+
   const accessTokenData = checkAccessToken(req);
   if (!accessTokenData) {
     return res.status(401).send({ message: 'Not authorized' });
@@ -10,8 +11,8 @@ module.exports = async (req, res) => {
   
   // 유저가 참여중인 article 목록
   const joinList = await UserArticles.findAll({
-    where: {
-      user_id: id,
+    where : {
+      user_id : id
     },
     attributes: [['article_id', 'articleId'], 'createdAt'],
   }).catch((err) => {
@@ -19,15 +20,15 @@ module.exports = async (req, res) => {
     res.status(500).send({ message: 'Internal server error' });
   });
 
-  const articles = await joinList.map((ua) => ua.dataValues.articleId);
+   const articles = await joinList.map(ua => ua.dataValues.articleId)
 
-  // 내가 참여하고 있는 모든 채팅방과 모든 메세지
-  const articleChatList = await Article.findAndCountAll({
-    attributes: [['image_location', 'image'], 'title', ['id', 'articleId']],
-    where: {
-      id: {
-        [Op.or]: articles,
-      },
+   // 내가 참여하고 있는 모든 채팅방과 모든 메세지
+   const articleChatList = await Article.findAndCountAll({
+     attributes : [['image_location', 'image'], 'title', ['id', 'articleId']],
+     where : {
+      id : {
+        [Op.or]: articles
+      }
     },
     include : [{
       model : Chat,

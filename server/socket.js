@@ -98,6 +98,7 @@ module.exports = io => {
       console.log("받아서 보낼 메세지", receivedMessage)
       receivedMessage = receivedMessage.get({ plain:true })
 
+
       chatroom.to(roomId).emit("message", receivedMessage)
       // console.log("무슨 메세지?", message)
       callback();

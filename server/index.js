@@ -3,7 +3,7 @@ const app = express();
 const indexRouter = require('./routes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const port = 80;
+const HTTP_PORT = process.env.HTTP_PORT || 80;
 const models = require('./models/index.js');
 const { sequelize } = require('./models/index.js');
 require('dotenv').config();
@@ -59,7 +59,7 @@ const io = socket(server, {
 
 socketHandler(io)
 
-server.listen(port, () => {
-  console.log(`🍌 ~~ Banana Market 서버가 작동 중입니다 ~~ 🍌`);
+server.listen(HTTP_PORT, () => {
+  console.log(`🍌 ~~ Banana Market 서버가 ${HTTP_PORT}번 포트에서  작동 중입니다 ~~ 🍌`);
 });
 

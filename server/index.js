@@ -32,7 +32,10 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: true,
+    origin: [
+      'https://bananamarket.tk',
+      'http://localhost:3000'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT'],
   })

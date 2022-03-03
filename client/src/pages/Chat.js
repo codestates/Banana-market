@@ -34,8 +34,8 @@ const ChatDiv = styled.div`
 const Chat = () => {
   const [display, setDisplay] = useState('none');
   const [display1, setDisplay1] = useState('block');
+  const [chatRoomId, setChatRoomId] = useState(0);
   const ListData = useSelector((state) => state.chatListReducer);
-  const [chatRoomId, setChatRoomId] = useState('');
   const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 

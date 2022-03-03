@@ -74,6 +74,9 @@ const Wrapper = styled.div`
     @media screen and (max-width: 767px) {
       margin: 25px auto 0 auto;
       width: 90%;
+      border: 0px;
+      background-color: #ff4342;
+      color:#ffe1e0;
     }
   }
 `;

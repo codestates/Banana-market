@@ -1,10 +1,4 @@
-const {
-  User,
-  Region,
-  Article,
-  UserArticles,
-  Category,
-} = require('../../models');
+const { User, Region, Article, Category } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
@@ -23,32 +17,33 @@ module.exports = async (req, res) => {
       {
         model: User,
         include: [{ model: Article }, { model: Region }],
-        through: {
-          where: { is_host: true },
-        },
+        // through: {
+        //   where: { is_host: true },
+        // },
       },
     ],
     where: { id: articleId },
   }).then((articleData) => {
-    if (!articleData) {
+    if (!articleData.length) {
       return res.status(404).send({ message: 'Not found article' });
-    }
-    const article = articleData.dataValues;
-    const region = article.Region.dataValues.city;
-    const category = article.Category.dataValues.food_type;
-    // console.log(article.Users);
-    const user = article.Users[0].dataValues;
-    if (accessTokenData) {
-      const userId = accessTokenData.id;
-      const isMyPost = userId === user.id;
-      user.isMyPost = isMyPost;
     } else {
-      user.isMyPost = false;
-    }
+      const article = articleData.dataValues;
+      const region = article.Region.dataValues.city;
+      const category = article.Category.dataValues.food_type;
+      // console.log(article.Users);
+      const user = article.Users[0].dataValues;
+      if (accessTokenData) {
+        const userId = accessTokenData.id;
+        const isMyPost = userId === user.id;
+        user.isMyPost = isMyPost;
+      } else {
+        user.isMyPost = false;
+      }
 
-    delete article.Region;
-    delete article.Category;
-    delete article.Users;
+      delete article.Region;
+      delete article.Category;
+      delete article.Users;
+
 
     article.region = region;
     article.category = category;
@@ -84,12 +79,13 @@ module.exports = async (req, res) => {
     delete user.Region;
     delete user.Articles;
 
-    return res.status(200).send({
-      data: {
-        post: article,
-        postWriter: user,
-      },
-      message: 'ok',
-    });
+      return res.status(200).send({
+        data: {
+          post: article,
+          postWriter: user,
+        },
+        message: 'ok',
+      });
+    }
   });
 };

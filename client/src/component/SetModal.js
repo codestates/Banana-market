@@ -223,6 +223,7 @@ const ExitModalDiv = styled.div`
   }
 `;
 
+
 const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
   const history = useHistory();
   const [isOn, setisOn] = useState(false);
@@ -279,6 +280,7 @@ const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
           >
             인원모집
           </p>
+
           {roomHost === '1' ? (
             <ToggleContainer>
               <ToggleContainer

@@ -17,12 +17,12 @@ const Login_div = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 100;
 
   > .loginmodal {
     width: 480px;
-    height: 540px;
+    height: 500px;
     background-color: white;
     position: relative;
     top: 15%;
@@ -40,88 +40,85 @@ const Login_div = styled.div`
       cursor: pointer;
     }
     > .login_div {
-      width: 260px;
-      height: 375px;
+      letter-spacing: 3px;
+      width: 300px;
       box-sizing: border-box;
       margin: 65px auto 0 auto;
+      > p{
+        margin-top: 100px;
+        margin-bottom : 30px;
+        opacity: 0.6;
+        /* color:#626262; */
+        font-family: Raleway;
+      }
 
       > .loginId {
-        width: 252px;
-        height: 35px;
-        margin: 10px auto;
-        outline: none;
-        border: 1px solid rgb(0, 0, 0, 0.3);
+        margin-top: 10px auto;
+        width: 300px;
+        height: 45px;
         outline: 0;
       }
       > .password {
-        width: 252px;
-        height: 35px;
-        margin: 5px auto 15px auto;
-        border: 1px solid rgb(0, 0, 0, 0.3);
+        width: 300px;
+        height: 45px;
+        margin: 20px auto 15px auto;
         outline: 0;
       }
 
       > .sign_div {
-        width: 257px;
-        height: 40px;
+        width: 300px;
+        height: 50px;
+        line-height: 50px;
         /* border-radius: 3px; */
-        margin: 15px auto 30px auto;
+        margin: 15px auto 15px auto;
         box-sizing: border-box;
-        cursor: pointer;
-        line-height: 40px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 15px;
+        cursor: pointer;;
+        border-radius: 5px;
+        font-weight: 400;
+        font-size: 18px;
         text-align: center;
         cursor: pointer;
-        background-color: rgb(0, 0, 0, 0.1);
-        color: rgb(0, 0, 0, 0.5);
-        &:hover {
-          background-color: #ffd900;
-          color: #2b2828;
-        }
-      }
-      .line {
-        width: 257px;
-        height: 1px;
-        background-color: rgb(0, 0, 0, 0.2);
-      }
-      .join {
-        width: 257px;
-        height: 40px;
-        border-radius: 3px;
-        margin: 35px auto 15px auto;
-        background-color: #2b2828;
-        cursor: pointer;
-        line-height: 40px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 14px;
-        text-align: center;
-        cursor: pointer;
+        background-color: #a1d026;
+        color: #fbfff1;
       }
 
-      > .socialjoin {
-        position: absolute;
-        box-sizing: border-box;
-        width: 257px;
-        height: 40px;
-        border-radius: 3px;
-        border: 1px solid #2b2828;
-        cursor: pointer;
-        line-height: 40px;
-        border-radius: 20px;
-        .google_icon {
-          position: absolute;
-          top: 8px;
-          left: 60px;
-          width: 20px;
-          display: inline-block;
+        .line{
+          margin-top:11px;
+          width: 1px;
+          height: 14px;
+          background-color: black;
+          opacity: 0.2;
         }
-        p {
-          float: right;
-          width: 230px;
+        div.box{
+          display: flex;
+          height: 45px;
+          margin-top: 30px;
+          
+        }
+        div.join>p, div.socialjoin>p {
+          color:#a0a0a0;
+          float: left;
+          letter-spacing: 0.8px;
+          width: 148px;
+          height: 40px;
+          border-radius: 3px;
+          text-decoration: none;
+          cursor: pointer;
           line-height: 40px;
+          font-weight: 400;
+          font-size: 14px;
+          text-align: center;
+          &:hover{
+            font-weight: 600;
+          }
+          > img{
+            border-radius: 4px;
+            border: 1px solid 0.1;
+            width: 15px;
+            position: relative;
+            left: 6px;
+            top: 3px;
+          }
         }
       }
     }
@@ -206,62 +203,45 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
               color: '#2b2828',
             }}
           >
-            LOGIN
+            BANANA MARKET
           </p>
-          <input
-            type="text"
-            className="loginId"
+          <input 
+            type="text "
+            className="loginId input_css2"
             placeholder="이메일을 입력해주세요."
             onChange={handleInputValue('email')}
           />
           <input
-            className="password"
+            className="password input_css2"
             // type="password"
             placeholder="비밀번호를 입력해주세요."
             onChange={handleInputValue('password')}
           />
           <div className="sign_div" onClick={handleClickLoginBtn}>
-            LOGIN
+            로그인하기
           </div>
-          <div className="line"></div>
-          <Link to="/signup">
-            <div
-              className="join"
-              onClick={() => {
-                setLoginModal(!loginModal);
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  color: '#FCFCFC',
-                  textAlign: 'center',
+          <div className='box'>
+            <Link to="/signup">
+              <div
+                className="join"
+                onClick={() => {
+                  setLoginModal(!loginModal);
                 }}
               >
-                JOIN
-              </p>
-            </div>
-          </Link>
-          <div
-            className="socialjoin"
-            onClick={() => {
-              handleClickGoogleSocialLoginBtn();
-            }}
-          >
-            <p
-              style={{
-                fontSize: '15px',
-                fontWeight: '500',
-                color: '#2b2828',
-                textAlign: 'center',
-                marginTop: '0px',
-              }}
-            >
-              <img className="google_icon" src={google_icon} />
-              Google 로그인
-            </p>
-          </div>
+                <p> 회원 가입하기 </p>
+              </div>
+            </Link>
+            <div className='line'></div>
+              <div
+                className="socialjoin"
+                onClick={() => {
+                  handleClickGoogleSocialLoginBtn();
+                }}>
+                <p>
+                  <img className="google_icon" src={google_icon} />
+                  &nbsp; &nbsp;Google 로그인 </p>
+              </div>
+          </div>  
         </div>
       </div>
     </Login_div>

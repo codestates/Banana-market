@@ -97,10 +97,11 @@ const Wrapper = styled.div`
         margin-right: 10px;
         padding: 10px 14px;
         border-radius: 10px;
-        background-color: #ffffe1;
-        border: 1px solid #f7f7d0;
-        color: #ffbf009e;
-        font-weight: 600;
+        background-color: #ffffca;
+        border: 1px solid #f0f0a2;
+        color: #b9b83c;
+
+        font-weight: 400;
         float: left;
       }
     }

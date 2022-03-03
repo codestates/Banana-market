@@ -13,11 +13,11 @@ module.exports = async (req, res) => {
   const getAccessToken = await axios
     .post(
       url,
-      {
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        code,
-      },
+      // {
+      //   client_id: process.env.GOOGLE_CLIENT_ID,
+      //   client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      //   code,
+      // },
       {
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
       }

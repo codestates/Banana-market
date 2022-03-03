@@ -18,7 +18,7 @@ sequelize
   });
 
 // sequelize.sync();
-sequelize.sync({ alter: true });
+// sequelize.sync({ alter: true });
 //   .then(()=> {
 //     console.log('🤢 re-sync db.')
 //   })

@@ -317,9 +317,15 @@ const Join = () => {
   // 이메일 인증번호확인 버튼 클릭 시 진행되는 함수
   const handleClickSendSecurityNum = (e) => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/validation/email`, {
-        email: inputId,
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}/validation/email`,
+        {
+          email: inputId,
+        },
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         alert('이메일에 인증번호가 전송되었습니다');
         // 이메일 인증번호 저장
@@ -359,9 +365,15 @@ const Join = () => {
     setIsCheckedNickname(true);
     if (inputNickname !== '') {
       axios
-        .post(`${process.env.REACT_APP_API_URL}/validation/name`, {
-          name: inputNickname,
-        })
+        .post(
+          `${process.env.REACT_APP_API_URL}/validation/name`,
+          {
+            name: inputNickname,
+          },
+          {
+            withCredentials: true,
+          }
+        )
         .then((res) => {
           console.log(res);
           setCheckNickname(true);
@@ -427,9 +439,7 @@ const Join = () => {
                 name: userNickname,
               },
               {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+                withCredentials: true,
               }
             )
             .then((res) => {

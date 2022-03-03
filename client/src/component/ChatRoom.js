@@ -297,7 +297,21 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log('데이터', res.data.data.messageList);
+        //? ---사용자 프로필 이미지---
+        let messageList = res.data.data.messageList;
+        messageList = messageList.map((elem) => {
+          let profileImageKey = elem.profileImage;
+          if (!profileImageKey) {
+            elem.profileImage =
+              'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+          } else {
+            elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
+          }
+          return elem;
+        });
+        //? ---사용자 프로필 이미지---
+
+        // console.log('데이터', res.data.data.messageList);
         setMessage([]);
         if (res.data.data.messageList !== undefined) {
           setMessage([...res.data.data.messageList].reverse());
@@ -313,6 +327,19 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             }
           )
           .then((res) => {
+            //? ---사용자 프로필 이미지---
+            let { participant } = res.data.data;
+            participant.map((elem) => {
+              let profileImageKey = elem.profileImage;
+              if (!profileImageKey) {
+                elem.profileImage =
+                  'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+              } else {
+                elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
+              }
+              return elem;
+            });
+            //? ---사용자 프로필 이미지---
             console.log('참여자 목록', res.data.data.participant);
             setParticipant([...res.data.data.participant]);
             // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
@@ -327,6 +354,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         console.log(err);
       });
   };
+
   // 작성한 메세지 인풋값 저장
   const handleChangeMessage = (e) => {
     setMyMessage(e.target.value);
@@ -349,29 +377,29 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         if (error) console.log(error);
       }
     );
-    setMyMessage('');
+
+    // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+    //     console.log('되니?'); setMyMessage('');
+    //   },
+    //   (error) => {
+    //     if (error) console.log(error);
+    //   }
+    // )
   };
 
   useEffect(() => {
     socket.on(
       'message',
-      ({ contents }) => {
-        setMessage([
-          ...message,
-          {
-            contents,
-            profileImage:
-              'https://banana-profile-img.s3.ap-northeast-2.amazonaws.com/1645110272558.png',
-            name: '그냥',
-            createdAt: '2022-03-02 24:06:21',
-          },
-        ]);
+      ({ userId, chatRoomId, message, created }) => {
+        setMessage([...message, { userId, chatRoomId, message, created }]);
       },
       (error) => {
         if (error) console.log(error);
       }
     );
-  }, []);
+    setMyMessage('');
+  };
+
 
   // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
   //     console.log('되니?'); setMyMessage('');

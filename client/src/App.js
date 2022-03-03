@@ -39,7 +39,14 @@ function App(props) {
       .get(`${process.env.REACT_APP_API_URL}/users/info`, {
         withCredentials: true,
       })
-      .then((res) => {
+      .then(async (res) => {
+        const profileImageKey = res.data.data.profileImage;
+        if (!profileImageKey) {
+          res.data.data.profileImage =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=100&h=100&f=webp&q=90';
+        } else {
+          res.data.data.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`;
+        }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
       })

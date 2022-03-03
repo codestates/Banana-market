@@ -15,9 +15,6 @@ module.exports = {
       image_key: {
         type: Sequelize.STRING,
       },
-      image_location: {
-        type: Sequelize.STRING,
-      },
       content: {
         type: Sequelize.STRING,
       },

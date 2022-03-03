@@ -49,11 +49,7 @@ module.exports = async (req, res) => {
         include: [
           {
             model: User,
-            attributes: [
-              'id',
-              'name',
-              ['profile_image_location', 'profileImage'],
-            ],
+            attributes: ['id', 'name', ['profile_image_key', 'profileImage']],
           },
         ],
       },

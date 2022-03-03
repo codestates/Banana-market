@@ -231,7 +231,6 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
                   // onClick={() => {
                   //   onClick2();
                   // }}
-
                   data-value={el.articleId}
                   onClick={handleClickChatRoom}
                 >

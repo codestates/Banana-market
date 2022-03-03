@@ -46,6 +46,14 @@ const Chat = () => {
       })
       .then((chatData) => {
         // console.log(chatData.data.data.roomList);
+        //? ---채팅방 이미지---
+        let { roomList } = chatData.data.data;
+        roomList = roomList.map((elem) => {
+          const postImageKey = elem.image;
+          elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=60&h=60&f=webp&q=90`;
+          return elem;
+        });
+
         dispatch({
           type: 'SHOW_CHATLIST',
           payload: chatData.data.data.roomList,

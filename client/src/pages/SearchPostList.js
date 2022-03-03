@@ -13,10 +13,10 @@ import {
 } from '../redux/actions/actions';
 // import { useInView } from "react-intersection-observer";
 
-const PageEnd =  styled.div`
+const PageEnd = styled.div`
   /* background-color: red; */
   height: 10px;
-`
+`;
 const LoadingDiv = styled.div`
   width: 30px;
   height: 30px;
@@ -38,7 +38,7 @@ function Loading() {
 
 // ------------------PostList 컴포넌트
 const SearchPostList = () => {
-  const [isLoding, setIsLoding] = useState(false); 
+  const [isLoding, setIsLoding] = useState(false);
   const setSearchInfo = useSelector((state) => state.setSearchInfoReducer);
   const state = useSelector((state) => state.setSearchListReducer); //리스트 상태값
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const SearchPostList = () => {
       })
       .then((listData) => {
         let result = String(listData.data.message);
-        if (result === 'No results found!'){
+        if (result === 'No results found!') {
           dispatch({
             type: 'SET_RESULT_COUNT_NUM',
             payload: 0,
@@ -64,7 +64,7 @@ const SearchPostList = () => {
         } else if (result === 'No more articles') {
           setIsLoding(false);
         } else if (result.includes('About')) {
-          if(pageNumber === 0) {
+          if (pageNumber === 0) {
             dispatch({
               type: 'SET_RESULT_COUNT_NUM',
               payload: result.split(' ')[1],
@@ -72,8 +72,15 @@ const SearchPostList = () => {
           }
           dispatch({
             type: 'SET_SEARCH_PAGE_NUM',
-            payload: setSearchInfo.searchPageNum + 1
-          })
+            payload: setSearchInfo.searchPageNum + 1,
+          });
+
+          let articleList = listData.data.data.articleList;
+          articleList = articleList.map(async (elem) => {
+            let postImageKey = elem.image;
+            elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=115&h=115&f=webp&q=90`;
+            return elem;
+          });
           dispatch({
             type: 'SHOW_MORE_SEARCH_POSTLIST',
             payload: listData.data.data.articleList,
@@ -95,8 +102,8 @@ const SearchPostList = () => {
           if (entries[0].isIntersecting) {
             dispatch({
               type: 'SET_SEARCH_PAGE_NUM',
-              payload: setSearchInfo.searchPageNum + 1
-            })
+              payload: setSearchInfo.searchPageNum + 1,
+            });
             // 페이지 넘버를 바꿔준다.
           }
         },
@@ -108,18 +115,18 @@ const SearchPostList = () => {
 
   // useEffect :: < 처음 로딩 될때 || 검색단어 바뀔때 || 페이지 숫자 바뀔때 > 만 실행되는 리스트 요청 함수 ------ 1
   useEffect(() => {
-    console.log('업데이트')
+    console.log('업데이트');
     postList(searchWord, setSearchInfo.searchPageNum);
   }, [searchWord, setSearchInfo.searchPageNum]);
 
   // 새로고침시 재검색 되게 함
   useEffect(() => {
-    console.log('새로고침')
+    console.log('새로고침');
     dispatch({
       type: 'SET_WORD_FOR_SEARCH',
       payload: searchWord,
     });
-  }, [])
+  }, []);
 
   // setSearchInfo.searchPageNum
   return (

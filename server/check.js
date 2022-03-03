@@ -1,6 +1,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+const dbCheck = require('./models')
+const { User } = require('./models')
+
 console.log({
   HTTP_PORT: process.env.HTTP_PORT,
   host: process.env.DATABASE_HOST,
@@ -16,3 +19,13 @@ console.log({
   AKEY: process.env.AKEY,
   ASECRET: process.env.ASECRET,
 });
+
+console.log("db 모델 있는지?", dbCheck)
+
+// const userCheck = async() => {
+//   const userOne = await User.findByPk(1)
+//   return userOne.get({plain:true})
+// }
+
+// const testuser = userCheck();
+// console.log("1번 유저 찾아", testuser)

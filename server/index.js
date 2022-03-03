@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const HTTP_PORT = process.env.HTTP_PORT || 80;
 const models = require('./models/index.js');
+const User = require('./models')
 const { sequelize } = require('./models/index.js');
 require('dotenv').config();
 
@@ -39,8 +40,14 @@ app.use(
 );
 
 app.use('/', indexRouter);
-app.get('/', (req, res) => {
-  res.send(`🍌 ~~ Banana Market ~~ 🍌`);
+app.get('/', async(req, res) => {
+  let user = await User.findOne({
+    where: {
+      id: 2
+    }
+  })
+  user = user.get({plain:true})
+  res.json(`🍌 ~~ ${user} ~~ 🍌`);
 });
 
 // http server

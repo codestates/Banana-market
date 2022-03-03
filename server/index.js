@@ -3,7 +3,7 @@ const app = express();
 const indexRouter = require('./routes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const HTTP_PORT = process.env.HTTP_PORT || 80;
+const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const models = require('./models/index.js');
 const { sequelize } = require('./models/index.js');
 require('dotenv').config();

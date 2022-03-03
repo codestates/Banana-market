@@ -15,10 +15,10 @@ module.exports = {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       // signed: true,
-      // domain: process.env.SERVER_DOMAIN,
-      // path: '/',
-      // secure: true,
-      // sameSite: 'none',
+      domain: process.env.SERVER_DOMAIN,
+      path: '/',
+      secure: true,
+      sameSite: 'none',
     });
   },
   // 쿠키로 refresh token 전달

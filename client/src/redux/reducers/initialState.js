@@ -1,5 +1,6 @@
 // initialState.js는 :: state초기값 모아두는 파일
 export const initialStateLogin = false;
+export const initialStateAdminLogin = false;
 export const initialStateUserInfo = {
   userId: null,
   nickName: null,
@@ -25,6 +26,15 @@ export const initialChatRoomList = {
   messageList: [],
   title: null,
 };
+
+export const initialStateMessage = [
+  {
+    profileImage: null,
+    name: null,
+    createdAt: null,
+    content: null,
+  },
+];
 
 export const initiaPostDetail = {
   post: {

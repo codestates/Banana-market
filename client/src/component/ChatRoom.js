@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback} from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams, Route } from 'react-router-dom';
 import SetModal from './SetModal';
@@ -8,7 +8,6 @@ import axios from 'axios';
 
 // socket 연결
 import io from 'socket.io-client';
-// import { startsWith } from 'sequelize/types/lib/operators';
 const endpoint = 'http://localhost:3001';
 const chatroom = `${endpoint}/chatroom`;
 const socket = io.connect(chatroom, {
@@ -80,7 +79,7 @@ const ChatRoomDiv = styled.div`
   }
 
   .chat_room::-webkit-scrollbar {
-    display: none; /* Chrome , Safari , Opera */
+    display: none;  /* Chrome , Safari , Opera */
   }
 
   .chat_content {
@@ -219,96 +218,23 @@ const ChatRoomWrap = styled.div`
   }
 `;
 
-const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
+const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance }) => {
   const history = useHistory();
   const [secessionModal, setSecessionModal] = useState(false);
+  let socketParticipant = [];
+  let message = useSelector((state) => state.setMessageReducer);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
-  
-  // const chatRoomData = useSelector((state) => state.chatRoomReducer);
-  // const { title, messageList } = chatRoomData;
-  // console.log(chatRoomData);
-  // console.log(messageList);
-
-  const [message, setMessage] = useState([
-    {
-      profileImage: null,
-      name: null,
-      createdAt: null,
-      content: null,
-    },
-  ]); // 채팅내용
-  const [myMessage, setMyMessage] = useState([]); // 내가 보내는 메세지
+  const [myMessage, setMyMessage] = useState(''); // 내가 보내는 메세지
   const [participant, setParticipant] = useState([]); // 참가자 목록
-
-  // useEffect(() => {
-  //   socket.on("message", ({}) => {
-  //     setChat
-  //   });
-  // });
   const dispatch = useDispatch();
-  // const [chat, setchat] = useState([1]);
-
   let articleNum = useParams();
-  
-  //참가자 정보 편집
-  const participantEditObj = (participant) => {
-    let ResultObj = {};
-    participant.map ((el) => {
-      let  participantObj = {
-        'name': '', 'profileImage': '' }
-      participantObj['name'] = el.name;
-      participantObj['profileImage'] = el.profileImage;
-      ResultObj[el.id] = participantObj;
-    });
-  return ResultObj;
-  };
 
-  // let user_id = 5;
-  let socketParticipant = participantEditObj(participant); // 참가자 목록 편집
-  
-//-----------------------소캣 온 !!! 
-  useEffect(() => {
-    socket.on(
-      'message',
-      ({ contents, createdAt }) => {
-        setMessage([
-          ...message,
-          {
-            contents: contents,
-            profileImage: socketParticipant.user_id.profileImage,
-            name: socketParticipant.user_id.name,
-            createdAt: createdAt
-          },
-        ]);
 
-        console.log(message, '내가 보낸 메세지 받았니 ? ')
-      },
-      (error) => {
-        if (error) console.log(error);
-      }
-    );
-  }, []);
-
-  ////-------------------------------------------
-
-  // // socket.on 받은 메세지 편집
-  // const messageObj = {
-  //   profileImage: chatParticipants.userId.,
-  //   name: null,
-  //   createdAt: null,
-  //   content: null,
-  // }
-  // userId: userId,
-  // roomId: chatRoomId,
-  // message: myMessage,
-  // created: message,
-
-  useEffect(() => {
-    //채팅방 바뀔때 채팅내용 불러오기--------------0
-    chatContent(chatRoomId);
-  }, [chatRoomId]);
-
+  // 스크롤 하단으로 이동
+  const scrollDivRef = useRef(null);
+  const scrollToElement = () => {scrollDivRef.current.scrollIntoView()};
+  // 날 짜 변 환
   function getToday() {
     let date = new Date();
     let year = date.getFullYear();
@@ -323,21 +249,25 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
       return '';
     } else {
       let resultDate = String(date).split(' ')[0];
-      let resultTime = String(date).split(' ')[1];
+      let resultTime = String(date).split(' ')[1].split(':')[0];
+      let resultMin = String(date).split(' ')[1].split(':')[1];
+      
       if (resultDate === today) {
-        if (resultTime.split(':')[0] > 12) {
+        if (Number(resultTime) > 11 ) {
           return (
             '오후 ' +
-            (Number(resultTime.split(':')[0]) - 12) +
-            ':' +
-            Number(resultTime.split(':')[1])
+            (Number(resultTime) === 12 ? 
+            String(resultTime) :
+            String(Number(resultTime) - 12))            
+            + ':' +
+            String(resultMin)
           );
         } else {
           return (
             '오전 ' +
-            Number(resultTime.split(':')[0]) +
+            String(resultTime) +
             ':' +
-            Number(resultTime.split(':')[1])
+            String(resultMin)
           );
         }
       } else {
@@ -346,16 +276,79 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
     }
   }
 
-  //채팅방 선택 진입 (채팅내용, 참여자 불러옴)----------- 1
+
+
+
+  //-----------------------소캣 온 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!소캣온온온!!!!!!!!
+  const timeSetting = (createdAt) => {
+    let result = '';
+    let date = createdAt.split('T')[0];
+    let time = Number(createdAt.split('T')[1].split('.')[0].split(':')[0]) + 9
+    let min = createdAt.split('T')[1].split('.')[0].split(':')[1]
+    if(time > 24){
+      result = today + ' ' + (time-24) + ':' + min
+    } else{
+      result = date + ' ' + time + ':' + min
+    }
+    return result;
+  }
+  // console.log(timeSetting('2022-03-03T12:59:01.433Z'))
+  
+  useEffect(() => {
+    socket.on(
+      'message',
+      ({ article_id, user_id, contents, createdAt }) => {
+        console.log('소캣온 잘 받고 있나요 ? ',  user_id, contents, createdAt)
+        dispatch({ 
+          type: 'ADD_MESSAGE', 
+          payload: {
+              contents: contents || '' ,
+              profileImage: socketParticipant[user_id]['profileImage'] || '',
+              name: socketParticipant[user_id]['name'] || '??',
+              createdAt: timeSetting(createdAt) || createdAt
+          }
+        });
+        scrollToElement(); //
+      },
+      (error) => {
+        console.log('why error?',error);
+      }
+    );
+  }, []);
+  
+  //참가자 정보 편집 함수
+  const participantEditObj = (participant) => {
+    let ResultObj = {};
+    participant.map ((el) => {
+      let  participantObj = {
+        'name': '', 'profileImage': '' }
+      participantObj['name'] = el.name;
+      participantObj['profileImage'] = el.profileImage;
+      ResultObj[el.id] = participantObj;
+    });
+  return ResultObj;
+  };
+
+   //채팅방 선택 진입 (채팅내용, 참여자 불러옴)----------- 1
   const chatContent = (chatRoomId) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/rooms/messages/${chatRoomId}`, {
         withCredentials: true,
       })
       .then((res) => {
-
-        //? ---사용자 프로필 이미지---
         let messageList = res.data.data.messageList;
+        console.log('채팅내용불러오기', messageList)
+        // 참가후 쓴 메시지 없으면 : { }  , 메세지 있으면 [ {}, {} ]
+        if(!Array.isArray(messageList)) {
+          messageList = [{
+            profileImage: '',
+            name: '바나나마켓',
+            createdAt: '2022-03-03 18:00:00',
+            contents: '이 거래에 참가하신 것을 환영합니다.',
+          }]
+        }
+        console.log('채팅내용 없을때 세팅 후 ' ,messageList)
+        //? ---채팅리스트 프로필 이미지 수정---  
         messageList = messageList.map((elem) => {
           let profileImageKey = elem.profileImage;
           if (!profileImageKey) {
@@ -366,14 +359,12 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
           }
           return elem;
         });
-        //? ---사용자 프로필 이미지---
-        setMessage([]);
-        if (res.data.data.messageList !== undefined) {
-          setMessage([...res.data.data.messageList].reverse());
-        } else {
-          setMessage([]);
-        }
-
+        // 채팅내용 세팅 
+        // setMessage(messageList.reverse());
+        dispatch({ type: 'SHOW_MESSAGE', payload: messageList.reverse() });
+        scrollToElement(); //
+        
+        // 방 참가자 목록받기
         axios
           .get(
             `${process.env.REACT_APP_API_URL}/rooms/participant/${chatRoomId}`,
@@ -382,10 +373,11 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             }
           )
           .then((res) => {
-
-            //? ---사용자 프로필 이미지---
-            let { participant } = res.data.data;
-            participant.map((elem) => {
+            // console.log(res.data.data.participant)
+            //? ---참가자 프로필 이미지 수정---
+            let participantList = res.data.data.participant;
+            console.log('참여자 목록', participantList);
+            participantList = participantList.map((elem) => {
               let profileImageKey = elem.profileImage;
               if (!profileImageKey) {
                 elem.profileImage =
@@ -395,15 +387,22 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
               }
               return elem;
             });
-            //? ---사용자 프로필 이미지---
-            console.log('참여자 목록', res.data.data.participant);
-            setParticipant([...res.data.data.participant]);
+            // console.log('참여자 목록', participantList);
+            setParticipant(participantList);
+            console.log('참여자 목록', participantList);
             // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
-            socket.emit('join', { userId, chatRoomId });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+            console.log('userId', typeof userId, userId,'chatRoomId', typeof chatRoomId, chatRoomId )
+            socket.emit('join', { userId: userId, roomId: chatRoomId });
+            // 참가자 목록 편집
+            socketParticipant = participantEditObj(participant);
+            console.log('소캣용 편집 참가자', socketParticipant )
+            // 참가자 없을때 ====> 방에 참가하지 않았는데 방이 보이는 오류일때 
+            participant? setEnterance(true) :  setEnterance(false)
+        })
+        .catch((err) => {
+          setEnterance(false);
+          console.log(err);
+        });
       })
       .catch((err) => {
         console.log(chatRoomId);
@@ -411,6 +410,23 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
       });
   };
 
+
+  
+  
+
+
+  useEffect(() => {
+    //채팅방 바뀔때 채팅내용 불러오기--------------0
+    chatContent(chatRoomId);
+  }, [chatRoomId]);
+  
+  // useEffect(()=>{
+  //   // 스크롤 하단 이동
+  //   messagesRef.current!.scrollTop = messagesRef.current!.scrollHeight;
+  // }, [messages]);
+ 
+
+ 
   // 작성한 메세지 인풋값 저장
   const handleChangeMessage = (e) => {
     setMyMessage(e.target.value);
@@ -418,7 +434,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   // 메세지 보내기 버튼 클릭시 진행되는 함수
   const handleClickSendMessage = (e) => {
     // console.log(myMessage, userId, chatRoomId, myMessage)
-    console.log('메세지 보냄');
+    console.log('메세지 보냄', myMessage);
     e.preventDefault();
     //socket.emit('sendMessage', 'from front');
     socket.emit(
@@ -429,36 +445,14 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         message: myMessage,
         created: message,
       },
-      
-      
       (error) => {
         if (error) console.log(error);
       }
     );
-
-    // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
-    //     console.log('되니?'); setMyMessage('');
-    //   },
-    //   (error) => {
-    //     if (error) console.log(error);
-    //   }
-    // )
-  };
-
-  useEffect(() => {
-    socket.on(
-      'message',
-      ({ userId, chatRoomId, message, created }) => {
-        setMessage([...message, { userId, chatRoomId, message, created }]);
-      },
-
-      (error) => {
-        if (error) console.log(error);
-      }
-    );
+    console.log('메세지 리셋')
     setMyMessage('');
+    scrollToElement();
   };
-
   
 
   //   // 채팅방 나가기 handler
@@ -473,156 +467,10 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   };
 
 
-
-
-  // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
-  //     console.log('되니?'); setMyMessage('');
-  //   },
-  //   (error) => {
-  //     if (error) console.log(error);
-  //   }
-  // )
-  // 메세지 보내기
-  // useEffect(() => {
-  //   socket.on('message', (m) => {
-  //     setchat([...chat, ...message]);
-  //   });
-  // }, [message]);
-
-  // // 메세지 작성 handler
-  // const sendMessage = (event) => {
-  //   // event.preventDefault();
-  //   if (myMessage) {
-  //     socket.emit(
-  //       'sendMessage',
-  //       { userId, chatRoomId, myMessage, created: Date.now() },
-  //       () => {
-  //         setMessage('');
-  //       }
-  //     );
-  //   }
-  // };
-
-  // // ----메세지 보내기
-  // const onMessageSubmit = (e) => {
-  //   e.preventDefault();
-  // };
-
-  // 메세지 보내기
-  // useEffect(() => {
-  //   socket.on('message', ({ message }) => {
-  //     setchat([...chat, ...message]);
-  //   });
-  // }, [message]);
-
-  // const [roomId, setRoomId] = useState(11); // 채팅하는 공구 게시글
-  // const [userId, setUserId] = useState(7); // 유저
-  // const [message, setMessage] = useState('새로운 메세지로 바꿔보자'); // 작성한 메세지
-  // const [messages, setMessages] = useState([]); // 메세지 모음
-  // const [testLeave, setTestLeave] = useState(false); // 퇴장
-
-  // // 메세지 작성 handler
-  // const sendMessage = (event) => {
-  //   // event.preventDefault();
-  //   if (message) {
-  //     socket.emit(
-  //       'sendMessage',
-  //       { userId, roomId, message, created: Date.now() },
-  //       () => {
-  //         setMessage('');
-  //       }
-  //     );
-  //   }
-  // };
-
-  // // 작성한 메세지 보여주기
-  // useEffect(() => {
-  //   socket.on('message', ({ message, created }) => {
-  //     setMessages((messages) => [...messages, message]);
-  //     console.log('보낸 메세지 날짜 확인', message, created);
-  //   });
-  //   console.log('메세지들', messages);
-  // }, [message]);
-
-  // // 채팅방 나가기 handler
-  // const leaveRoom = (event) => {
-  //   // event.preventDefault();
-  //   socket.emit('leave', { userId, roomId }, (error) => {
-  //     if (error) console.log(error);
-  //   });
-  //   console.log(`${roomId}방을 나갔습니다`);
-  // };
-
-  // // 메세지 작성 실행
-  // useEffect(() => {
-  //   if (message) {
-  //     sendMessage();
-  //     setMessage('');
-  //   }
-  // }, [message]);
-
-  //   // 5번 아티클 6번 유저
-  //   const [roomId, setRoomId] = useState(3);      // 채팅하는 공구 게시글
-  //   const [userId, setUserId] = useState(4);        //
-  //   const [message, setMessage] = useState('4번 유저가 3번 아티클에서 보냄');
-  //   const [messages, setMessages] = useState([]);
-  //   const [testLeave, setTestLeave] = useState(true)
-
-  //   // useEffect(() => {
-  //   //   console.log("소켓 좀 보자", socket)
-  //   //   // 채팅방 참여하기
-  //   //   socket.emit('join', { userId, roomId }, (error) => {
-  //   //     if(error) console.log(error)
-  //   //   })
-  //   // }, [roomId])
-
-  //   // 메세지 작성 handler
-  //   const sendMessage = (event) => {
-  //     // event.preventDefault();
-  //     if(message) {
-  //       socket.emit('sendMessage', ({ userId, roomId, message, created: Date.now() }), () => {
-  //         setMessage('')
-  //       });
-  //     }
-  //   }
-
-  //   // 작성한 메세지 보여주기
-  //   useEffect(() => {
-  //     socket.on('message', ({ message, created }) => {
-  //       setMessages(messages => [ ...messages, message ]);
-  //       console.log("보낸 메세지 날짜 확인", message, created)
-  //     });
-  //     console.log("메세지들", messages)
-  //   }, [message]);
-
-  //   // 메세지 작성 실행
-  //   useEffect(() => {
-  //     if (message) {
-  //       sendMessage();
-  //     }
-  //   }, [message])
-
-  //   // 채팅방 나가기 handler
-  const leaveRoom = (event) => {
-    // event.preventDefault();
-    let obj = { userId: userId, roomId: chatRoomId };
-    socket.emit('leave', obj, (error) => {
-      if (error) console.log(error);
-    });
-    console.log(`${obj.roomId}방을 나갔습니다`);
-  };
-
-  // // 채팅방 나가기 실행
-  // useEffect(() => {
-  //   if (testLeave) {
-  //     leaveRoom();
-  //   }
-  // }, [testLeave]);
-
   return (
     <Route path={'/chat/' + chatRoomId}>
       {title ? (
-        <ChatRoomDiv>
+        <ChatRoomDiv >
           <div className="chat_title">
             <BackBtn
               className="back_btn"
@@ -647,8 +495,8 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             </div>
           </div>
           <div className="chat_room">
-            <ChatContent>
-              {message.length !== 0 ? (
+            <ChatContent >
+              { enterance ? (
                 message.map((el, idx) => (
                   <li className="contentDiv" key={idx}>
                     <ul className="in_grid">
@@ -672,8 +520,9 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
                   </li>
                 ))
               ) : (
-                <div> 채팅을 시작해주세요. </div>
+                <div> 채팅 입장에 실패했습니다. 다시 입장해주세요! </div>
               )}
+              <div className="scrollDiv" ref={scrollDivRef}></div>
             </ChatContent>
           </div>
           <div className="chat_content">

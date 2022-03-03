@@ -86,6 +86,18 @@ const Wrapper = styled.div`
         margin-top: 1px;
       }
     }
+    .icon.admin {
+      width: 50px;
+      line-height: 22px;
+      text-align: center;
+      border-radius: 10px;
+      color: #ff4342;
+      border: 1px solid #ff4342;
+      height: 100%;
+      padding: 4px;
+      margin-top: 10px;
+      font-size: 12px;
+    }
   }
 
   .search_box2 {
@@ -200,12 +212,25 @@ const Wrapper = styled.div`
           margin-top: 2px;
         }
       }
+      .icon.admin {
+        width: 50px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 10px;
+        color: #ff4342;
+        border: 1px solid #ff4342;
+        height: 100%;
+        padding: 4px;
+        margin-top: 14px;
+        font-size: 12px;
+      }
     }
   }
 `;
 
 const Header = ({ handleResponseSuccess }) => {
   let setLoginState = useSelector((state) => state.setLoginReducer);
+  let setAdminLoginState = useSelector((state) => state.setAdminLoginReducer);
   let dispatch = useDispatch();
   const history = useHistory();
 
@@ -303,20 +328,25 @@ const Header = ({ handleResponseSuccess }) => {
             </div>
           </div>
           <div className="menu_wrapper">
-            {setLoginState ? (
-              <div></div>
-            ) : (
-              <div className="icon login_icon">
-                <PersonIcon
-                  className="icon_img login_img"
-                  stroke="#4d4c54"
-                  stroke-width="1.5px"
-                  onClick={() => {
-                    setLoginModal(true);
-                  }}
-                ></PersonIcon>
-              </div>
-            )}
+            { setAdminLoginState ? 
+                <div  className="icon admin" onClick={()=> {
+                  history.push('/admin')
+                }}> 관리자 </div>
+                : 
+                ( setLoginState ? 
+                  <div></div>
+                  : (
+                    <div className="icon login_icon">
+                      <PersonIcon
+                        className="icon_img login_img"
+                        stroke="#4d4c54"
+                        stroke-width="1.5px"
+                        onClick={() => {
+                          setLoginModal(true);
+                        }}
+                      ></PersonIcon>
+                    </div>
+                  ))}
             <Link to={setLoginState ? '/chat' : '/nullpage'}>
               <div className="icon chat_icon">
                 <ChatIcon stroke="#4d4c54"></ChatIcon>

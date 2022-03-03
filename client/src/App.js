@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   setLogin,
   setLogout,
+  setAdminLogin,
+  setAdminLogout,
   setUpdateUserInfo,
   setUserInfoNull,
 } from './redux/actions/actions';
@@ -49,10 +51,21 @@ function App(props) {
         }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
+        if(setUserInfo.type === 'ADMIN'){
+          dispatch(setAdminLogin());
+          console.log(setUserInfo.type);
+        }
+        if(setUserInfo.block){
+          dispatch(setLogout());
+          alert('정지된 유저 입니다!')
+        }
       })
       .catch((err) => {
         dispatch(setLogout());
         dispatch({ type: 'SET_USER_INFO_NULL' });
+        if(setUserInfo.type === 'ADMIN'){
+          dispatch(setAdminLogout());
+        }
       });
   };
 

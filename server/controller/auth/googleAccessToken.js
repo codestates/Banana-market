@@ -24,6 +24,7 @@ module.exports = async (req, res) => {
     )
     .catch((err) => {
       console.log(err);
+      console.log('AccessToken 받아오기 실패! ');
       return res.status(500).send('Internal server error');
     });
 
@@ -42,6 +43,7 @@ module.exports = async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      console.log('유저 데이터 받아오기 실패! ');
       return res.status(500).send('Internal server error');
     });
   const { email, verified_email, name, picture } = userData.data;
@@ -56,7 +58,7 @@ module.exports = async (req, res) => {
     where: { email },
     defaults: {
       email,
-      name: `빠나나 용사 ${randomNum}`,
+      name: `바나나 ${randomNum}`,
       profile_image_location: picture,
       region_id: 1,
       type: 'SOCIALUSER',
@@ -74,9 +76,11 @@ module.exports = async (req, res) => {
       sendAccessToken(res, localAccessToken);
       sendRefreshToken(res, localRefreshToken);
       return res.status(200).send({ message: 'ok' });
+      // return res.redirect(302, '/users/info');
     })
     .catch((err) => {
       console.log(err);
+      console.log('데이터베이스에 유저 정보 입력 실패');
       return res.status(500).send({ message: 'Internal server error' });
     });
 };

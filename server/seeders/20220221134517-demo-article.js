@@ -79,8 +79,6 @@ module.exports = {
       let obj = {
         title: title[i],
         image_key: 'jointPurchaseDefaultImage.jpeg',
-        image_location:
-          'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
         content: '',
         category_id: i,
         market: markets[i],
@@ -105,8 +103,6 @@ module.exports = {
         let obj = {
           title: `${market} -- ${categories[i]} -- ${times[i]}`,
           image_key: 'jointPurchaseDefaultImage.jpeg',
-          image_location:
-            'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg',
           content: '',
           category_id: `${i + 1}`,
           market: `${market}`,

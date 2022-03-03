@@ -334,17 +334,11 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
           </ul>
         </div>
         <div className="selectBox">
-          <select
-            className="category"
-            onChange={handleFilterCategory}
-          >
+          <select className="category" onChange={handleFilterCategory}>
             <option value="전체">전체</option>
             {categoryData.map((category, idx) => {
               return (
-                <option
-                  value={category}
-                  key={idx}
-                >
+                <option value={category} key={idx}>
                   {category}
                 </option>
               );
@@ -359,6 +353,16 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
       <ListDiv>
         <ul>
           {list.map((el, idx) => (
+            // let postImageKey = el.image;
+            //  const postImg = await axios.get(
+            //   `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=115&h=115&f=webp&q=90`,
+            //   {
+            //     withCredentials: false,
+            //   }
+            // );
+
+            // el.image = postImg.config.url;
+
             <li
               key={idx}
               className="list_detail"
@@ -377,7 +381,12 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
                 <li className="inf">
                   <ul>
                     <li className="title">
-                      [{el.tradeType === 'jointPurchase' || el.tradeType === '공구' ? '공구' : '나눔'}] {el.title}
+                      [
+                      {el.tradeType === 'jointPurchase' ||
+                      el.tradeType === '공구'
+                        ? '공구'
+                        : '나눔'}
+                      ] {el.title}
                     </li>
                     <li className="location">{el.market}</li>
                     <li className="date">

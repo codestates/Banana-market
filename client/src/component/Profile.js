@@ -17,10 +17,10 @@ import SecessionModal from './SecessionModal';
 import monkey from '../icon/monkey.png';
 
 const Wrapper = styled.div`
-   max-width: 1200px;
+  max-width: 1200px;
   /* background-color: powderblue; */
   margin: 50px auto;
-  font-size : 18px;
+  font-size: 18px;
   color: #444;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
@@ -28,7 +28,6 @@ const Wrapper = styled.div`
   }
   .detail {
     width: 440px;
-    height: auto;
     border: 1px solid #ecede8;
     box-sizing: border-box;
     margin: 0 auto;
@@ -44,21 +43,32 @@ const Wrapper = styled.div`
   }
   .md_btn_list {
     display: flex;
-    margin-top: 30px;
+    margin-top: 20px;
     width: 440px;
-    padding: 20px 30px;
+    margin: 0 auto;
+    @media screen and (max-width: 767px) {
+      width: 90%;
+    }
+    /* padding: 20px 30px; */
     .md_btn {
       box-shadow: 1px 1px 5px 0px #00000014;
       text-align: center;
       font-size: 14px;
-      width: 200px;
+      width: 212px;
       height: 50px;
       line-height: 50px;
-      background-color: rgba(0, 0, 0, 0.15);
+    font-size: 18px;
+    font-weight: 400;
+      background-color: #7f9879b8;
       color: white;
-      font-weight: 600;
       border-radius: 10px;
+      margin-top: 20px;
+      @media screen and (max-width: 767px) {
+        width: 49% ;
+        justify-content: flex-end;
+      }
     }
+
     > div.password_change_btn {
       margin-left: auto;
       background-color: #95c710;
@@ -71,7 +81,7 @@ const Wrapper = styled.div`
     height: 50px;
     line-height: 50px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
     background-color: #ececec;
     border: 1px solid #eaeaea;
     color: #aeaeae;
@@ -80,10 +90,10 @@ const Wrapper = styled.div`
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 1px 1px 5px 0px #00000014;
-    &:hover{
+    &:hover {
       border: 0px;
       background-color: #ff4342;
-      color:#ffe1e0;
+      color: #ffe1e0;
     }
     @media screen and (max-width: 767px) {
       margin: 25px auto 0 auto;
@@ -106,37 +116,35 @@ const UlDiv = styled.ul`
     height: 130px;
     /* background-color: orange; */
     box-sizing: border-box;
-    margin: 0 auto 20px auto;
+    margin: 0 0 20px 0;
     @media screen and (max-width: 767px) {
+      margin: 0 auto 20px auto;
       width: 90%;
     }
     .image {
+      margin-right: 0px;
       float: right;
       width: 100px;
       height: 100px;
-      margin-right: 25px;
       overflow: hidden;
       > img.basic_image {
-        display: inline-block;
-        width: 100px;
-        height: 100px;
+        display: block;
         border-radius: 100px;
-        margin-right: 25px;
-        border: 1.5px solid #dcdfd5;
+        border: 1px solid #dcdfd5;
         width: 100%;
         height: 100%;
       }
     }
-    div.text_user_info{
+    div.text_user_info {
       float: left;
-      >span{
-          font-size: 13px;
-          color:#f4b600;
-          border-radius: 3px;
-          padding: 3px 3px 1px 3px;
-          font-weight: 600;
-          border:2px solid #f4b600;
-        }
+      > span {
+        font-size: 13px;
+        color: #f4b600;
+        border-radius: 3px;
+        padding: 3px 3px 1px 3px;
+        font-weight: 600;
+        border: 2px solid #f4b600;
+      }
       div.text_id {
         width: 100px;
         padding-top: 24px;
@@ -154,63 +162,71 @@ const UlDiv = styled.ul`
         font-weight: 400;
         width: auto;
         border-radius: 10px;
-        color:#6767678c;
-        
-        
+        color: #6767678c;
       }
     }
   }
   li.edit_profile {
-    border-top: 1px dashed #c6c6c6;
+    padding: 20px 14px 0 14px;
     height: 60px;
+    border-top: 1px dashed #c6c6c6;
+    /* height: 60px; */
     >div.tt{
-      width:30%;
+      line-height: 45px;
+      width:100px;
+      display: inline-block;
       float: left;
       @media screen and (max-width: 450px) {
-        width:45%;
+        /* width:30%; */
       }
     }
     > div.btn_list {
-      float: right;      
+      float: right; 
+      display: inline-block;     
+
       /* position: relative; */
       /* right: -30px;
       width: 100%; */
-      > label, div {
+      > label,
+      div {
         display: inline-block;
-        border: 1px solid #bdbdbd ;
+        border: 1px solid #bdbdbd;
         color: #7d7d7d;
         font-weight: 300;
+
         width : 100px;
-        height: 30px;
-        line-height: 30px;
+        height: 45px;
+        line-height: 45px;
+
         margin-left: 10px;
         text-align: center;
         font-size: 14px;
         @media screen and (max-width: 450px) {
-          width:60px;
+          width: 60px;
           font-size: 12px;
         }
-        >input.input_hidden{
+        > input.input_hidden {
           display: none;
         }
       }
     }
   }
   li.info_area {
-    padding: 20px 14px 0 14px;
+
+    
     background-color: #f7f7f7;    
+
     font-size: 16px;
-    line-height: 30px;
+    line-height: 45px;
     box-sizing: border-box;
-    .tt{
+    .tt {
       /* border: 1px solid red; */
       font-size: 14px;
       font-weight: 400;
       color: #818181;
       width: 100%;
-      
     }
-    .text{
+    .text {
       /* border: 1px solid red; */
       font-size: 18px;
       height: 45px;
@@ -219,21 +235,21 @@ const UlDiv = styled.ul`
       display: inline-block;
       @media screen and (max-width: 767px) {
         width: 80%;
-    }
-      >input{
+      }
+      > input {
         font-size: 18px;
-        width:100%;
+        width: 100%;
         height: 40px;
-        color:black;
+        color: black;
       }
     }
-    .s_btn{
+    .s_btn {
       display: inline-block;
 
       text-align: center;
       font-size: 14px;
       font-weight: 500;
-      width:60px;
+      width: 60px;
       height: 40px;
       line-height: 40px;
       float: right;
@@ -242,22 +258,35 @@ const UlDiv = styled.ul`
       border-radius: 8px;
       @media screen and (max-width: 767px) {
         width: 15%;
-    }
+      }
     }
     @media screen and (max-width: 767px) {
       width: 90%;
       margin: 0 auto;
     }
   }
-  
-  .spot > div.text {
-    width: calc((100% - 70px) / 2);
+
+  li.nick.info_area {
+    padding: 20px 14px 0 14px;
+    display: block;
+    line-height: 45px;
+    padding : 15px;
+  }
+  li.spot.info_area {
+    padding: 0px 14px 20px 14px;
+    line-height: 45px;
+  } div.text {
+    /* width: calc((100% - 70px) / 2); */
+
     @media screen and (max-width: 767px) {
-      width: calc(82% / 2);
+      display: inline-block;
     }
-    > select {
-      width: 96%;
+    > select.select_css2 {
+      width: calc((100% - 8px) / 2);
       font-size: 16px;
+      &.sel_right{
+        margin-left:8px;
+      }
     }
   }
 `;
@@ -373,30 +402,48 @@ const Profile = ({ handleChangeAuth }) => {
   };
 
   //이미지 업로드 버튼 실행함수
-  const handleChangeUpload = (e) => {
-    const uploadFile = e.target.files[0];
-    const formData = new FormData();
-    formData.append('profileImage', uploadFile);
-    const config = {
-      Headers: {
-        'content-type': 'multipart/form-data',
-      },
-      withCredentials: true,
-    };
-    console.log('formData', formData);
-    if (formData) {
+  let image = '';
+  const handleChangeUpload = async (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
+    createImage(files[0]);
+    const signedURL = await axios.get(
+      'https://g07adh91t2.execute-api.ap-northeast-2.amazonaws.com/default/profile-image-upload-with-s3',
+      { withCredentials: false }
+    );
+    const profileImageKey = signedURL.data.Key;
+    let binary = atob(image.split(',')[1]);
+    let array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+
+    let blobData = new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+
+    const result = await fetch(signedURL.data.uploadURL, {
+      method: 'PUT',
+      body: blobData,
+    });
+
+    if (result) {
       axios
         .put(
           `${process.env.REACT_APP_API_URL}/users/profile-image`,
-          formData,
-          config
+          {
+            profileImageKey,
+          },
+          {
+            withCredentials: true,
+          }
         )
-        .then((res) => {
+        .then((result) => {
+          console.log(result);
           axios
             .get(`${process.env.REACT_APP_API_URL}/users/info`, {
               withCredentials: true,
             })
-            .then((res) => {
+            .then(async (res) => {
+              res.data.data.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=100&h=100&f=webp&q=90`;
               dispatch({
                 type: 'SET_UPDATE_USER_INFO',
                 payload: res.data.data,
@@ -405,12 +452,30 @@ const Profile = ({ handleChangeAuth }) => {
             .catch((err) => {
               dispatch(setLogout());
             });
-        })
-        .catch((err) => {
-          console.log(err);
         });
     }
   };
+
+  function createImage(file) {
+    // var image = new Image()
+    const MAX_IMAGE_SIZE = 1000000;
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      // const includeJPEG = e.target.result.includes('data:image/jpeg');
+      // const includePNG = e.target.result.includes('data:image/png');
+      const includeImg = e.target.result.includes('data:image');
+      console.log('length: ');
+      if (!includeImg) {
+        return alert('Wrong file type - JPG or PNG only.');
+      }
+      if (e.target.result.length > MAX_IMAGE_SIZE) {
+        return alert('이미지 용량이 너무 큽니다');
+      }
+      image = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   //이미지 삭제버튼 실행함수
   const handleClickDeleteImg = (e) => {
     axios
@@ -451,23 +516,30 @@ const Profile = ({ handleChangeAuth }) => {
       <div className="detail">
         <UlDiv>
           <li className="profile">
-            <div className='text_user_info'>
+            <div className="text_user_info">
               <span> BANANA - MARKET </span>
               <div className='text_id'> {setUserInfo.email}</div>
-              <div className='text_trade'> {setUserInfo.totalTrade}회 바나나마켓 이용</div>
+              <div className='text_trade'> {setUserInfo.totalTrade}회 바나나마켓 거래 이용</div>
+
             </div>
             <div className="image">
               {setUserInfo.profileImage ? (
-                <img className="basic_image" src={setUserInfo.profileImage} />
+                <img
+                  className="basic_image"
+                  src={setUserInfo.profileImage}
+                  type="image/jpeg"
+                />
               ) : (
                 <img className="basic_image" src={monkey} />
               )}
             </div>
           </li>
-          <li className='edit_profile info_area'>
-          <div className="tt">프로필사진 변경</div>
+          <li className="edit_profile info_area">
+            <div className="tt">프로필사진 변경</div>
             <div className="btn_list">
-              <label htmlFor="image" className="upload_btn profile_btn"> 수정하기
+              <label htmlFor="image" className="upload_btn profile_btn">
+                {' '}
+                수정하기
                 <input
                   id="image"
                   type="file"
@@ -475,17 +547,22 @@ const Profile = ({ handleChangeAuth }) => {
                   className="input_hidden"
                   onChange={handleChangeUpload}
                 />
-                </label>
-                <div className='delete_btn profile_btn' onClick={handleClickDeleteImg}>삭제하기</div>
+              </label>
+              <div
+                className="delete_btn profile_btn"
+                onClick={handleClickDeleteImg}
+              >
+                삭제하기
               </div>
+            </div>
           </li>
-            {/*  */}
+          {/*  */}
           {changeBtnNick ? (
             <li className="nick info_area">
               <div className="tt">닉네임</div>
               <div className="text">
                 <input
-                  className='input_css2'
+                  className="input_css2"
                   type="text"
                   onChange={handleChangeInputNick}
                   placeholder={setUserInfo.nickName}
@@ -506,9 +583,13 @@ const Profile = ({ handleChangeAuth }) => {
           )}
           {changeBtnSpot ? (
             <li className="spot info_area">
-              <div className="tt">장소</div>
+              <div className="tt">나의 동네</div>
               <div className="text">
-                <select className='select_css2' name="city" onChange={handleChangeCity}>
+                <select
+                  className="select_css2"
+                  name="city"
+                  onChange={handleChangeCity}
+                >
                   <option value="">시</option>
                   {SelectList.map((el, idx) => (
                     <option key={idx} value={el}>
@@ -516,8 +597,6 @@ const Profile = ({ handleChangeAuth }) => {
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="text">
                 <select
                   className="sel_right select_css2"
                   name="district"
@@ -540,7 +619,7 @@ const Profile = ({ handleChangeAuth }) => {
               </div>
             </li>
           ) : (
-            <li className="info_area">
+            <li className="spot info_area">
               <div className="tt">나의 동네</div>
               <div className="text">
                 서울특별시, &nbsp; {setUserInfo.region}
@@ -551,7 +630,8 @@ const Profile = ({ handleChangeAuth }) => {
             </li>
           )}
         </UlDiv>
-        <div className="md_btn_list info_area">
+      </div>
+      <div className="md_btn_list info_area">
             <div
               className="md_btn secession_btn"
               onClick={handleChangeSecessionModalState}
@@ -565,7 +645,7 @@ const Profile = ({ handleChangeAuth }) => {
               비밀번호 변경
             </div>
           </div>
-      </div>
+
     </Wrapper>
   );
 };

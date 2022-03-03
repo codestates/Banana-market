@@ -62,14 +62,13 @@ function App(props) {
 
   // google social login 시 authorization code를 server에 보내준다.
   const getGoogleAccessToken = async (authorizationCode) => {
-    const result = await axios
+    axios
       .post(`${process.env.REACT_APP_API_URL}/login/google/callback`, {
         authorizationCode,
       })
-      .then((res) => {
-        isAuthenticated();
-      })
-      .catch((err) => {});
+      .then(() => {
+        handleResponseSuccess();
+      });
   };
   // url에 authorizationCode가 있다면 AccessToken 요청
   const isGoogleAuthorizationCode = async () => {

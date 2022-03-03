@@ -268,6 +268,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
   let articleNum = useParams();
   // console.log(articleid);
 
+  // post 디테일 부분
   const showPostDetail = (articleid) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
@@ -302,6 +303,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     showPostDetail(articleNum.id);
   }, []);
 
+  // post 삭제 부분
   const postDelete = (articleid) => {
     axios
       .delete(`${process.env.REACT_APP_API_URL}/articles/${articleid}`, {
@@ -426,7 +428,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
             className="delete_btn"
             onClick={() => {
               postDelete(post.id);
-              history.push('/list');
+              history.push('/mylist');
             }}
           >
             삭제하기

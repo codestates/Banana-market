@@ -238,7 +238,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   ]); // 채팅내용
   const [myMessage, setMyMessage] = useState([]); // 내가 보내는 메세지
   const [participant, setParticipant] = useState([]); // 참가자 목록
-  let created = Date.now();
   // useEffect(() => {
   //   socket.on("message", ({}) => {
   //     setChat
@@ -315,7 +314,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         // console.log('데이터', res.data.data.messageList);
         setMessage([]);
         if (res.data.data.messageList !== undefined) {
-          setMessage([...res.data.data.messageList]);
+          setMessage([...res.data.data.messageList].reverse());
         } else {
           setMessage([]);
         }
@@ -341,7 +340,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
               return elem;
             });
             //? ---사용자 프로필 이미지---
-
             console.log('참여자 목록', res.data.data.participant);
             setParticipant([...res.data.data.participant]);
             // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
@@ -399,8 +397,17 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         if (error) console.log(error);
       }
     );
-  });
+    setMyMessage('');
+  };
 
+
+  // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+  //     console.log('되니?'); setMyMessage('');
+  //   },
+  //   (error) => {
+  //     if (error) console.log(error);
+  //   }
+  // )
   // 메세지 보내기
   // useEffect(() => {
   //   socket.on('message', (m) => {
@@ -522,13 +529,14 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   //   }, [message])
 
   //   // 채팅방 나가기 handler
-  //   // const leaveRoom = (event) => {
-  //   //   // event.preventDefault();
-  //   //   socket.emit('leave', ({ userId, roomId }), (error) => {
-  //   //     if(error) console.log(error)
-  //   //   })
-  //   //   console.log(`${roomId}방을 나갔습니다`)
-  //   // }
+  const leaveRoom = (event) => {
+    // event.preventDefault();
+    let obj = { userId: userId, roomId: chatRoomId };
+    socket.emit('leave', obj, (error) => {
+      if (error) console.log(error);
+    });
+    console.log(`${obj.roomId}방을 나갔습니다`);
+  };
   // >>>>>>> dev
 
   // // 채팅방 나가기 실행
@@ -540,80 +548,86 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
 
   return (
     <Route path={'/chat/' + chatRoomId}>
-      <ChatRoomDiv>
-        <div className="chat_title">
-          <BackBtn
-            className="back_btn"
-            // onClick={() => {
-            //   setChatRoom(false);
-            // }}
-          ></BackBtn>
-          <div className="title">
-            <p>{title}</p>
-          </div>
-          <div
-            className="set_btn"
-            onClick={(e) => {
-              setSecessionModal(true);
-            }}
-          >
-            {/* {secessionModal === true ? (
+      {title ? (
+        <ChatRoomDiv>
+          <div className="chat_title">
+            <BackBtn
+              className="back_btn"
+              // onClick={() => {
+              //   history.push(`/chat/${ar}`);
+              // }}
+            ></BackBtn>
+            <div className="title">
+              <p>{title}</p>
+            </div>
+            <div
+              className="set_btn"
+              onClick={(e) => {
+                setSecessionModal(true);
+              }}
+            >
+              {/* {secessionModal === true ? (
               <SecessionModal
                 setSecessionModal={setSecessionModal}
               ></SecessionModal>
             ) : null} */}
+            </div>
           </div>
-        </div>
-        <div className="chat_room">
-          <ChatContent>
-            {message.length !== 0 ? (
-              message.map((el, idx) => (
-                <li className="contentDiv" key={idx}>
-                  <ul className="in_grid">
-                    <li className="profileImage">
-                      <img src={el.profileImage}></img>
-                    </li>
-                    <li className="user_info">
-                      <ul>
-                        <li className="name">{el.name}</li>
-                        <li className="content_detail">
-                          <div className="contents">
-                            <p>{el.contents}</p>
-                          </div>
-                          <div className="createdAt">
-                            {isToday(el.createdAt)}
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              ))
-            ) : (
-              <div> 채팅을 시작해주세요. </div>
-            )}
-          </ChatContent>
-        </div>
-        <div className="chat_content">
-          <form onSubmit={handleClickSendMessage}>
-            <input
-              type="text"
-              className="message"
-              placeholder="메세지를 입력해주세요."
-              onChange={handleChangeMessage}
-              value={myMessage}
-              // value={message || ''}
-            ></input>
-            <button className="message_btn"></button>
-          </form>
-        </div>
-      </ChatRoomDiv>
-
-      {/* <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap> */}
+          <div className="chat_room">
+            <ChatContent>
+              {message.length !== 0 ? (
+                message.map((el, idx) => (
+                  <li className="contentDiv" key={idx}>
+                    <ul className="in_grid">
+                      <li className="profileImage">
+                        <img src={el.profileImage}></img>
+                      </li>
+                      <li className="user_info">
+                        <ul>
+                          <li className="name">{el.name}</li>
+                          <li className="content_detail">
+                            <div className="contents">
+                              <p>{el.contents}</p>
+                            </div>
+                            <div className="createdAt">
+                              {isToday(el.createdAt)}
+                            </div>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                ))
+              ) : (
+                <div> 채팅을 시작해주세요. </div>
+              )}
+            </ChatContent>
+          </div>
+          <div className="chat_content">
+            <form onSubmit={handleClickSendMessage}>
+              <input
+                type="text"
+                className="message"
+                placeholder="메세지를 입력해주세요."
+                onChange={handleChangeMessage}
+                value={myMessage}
+                // value={message || ''}
+              ></input>
+              <button className="message_btn"></button>
+            </form>
+          </div>
+        </ChatRoomDiv>
+      ) : (
+        <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>
+      )}
 
       {secessionModal === true ? (
         <SetDiv>
-          <SetModal setSecessionModal={setSecessionModal}></SetModal>
+          <SetModal
+            setSecessionModal={setSecessionModal}
+            leaveRoom={leaveRoom}
+            participant={participant}
+          ></SetModal>
         </SetDiv>
       ) : null}
     </Route>

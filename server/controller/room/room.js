@@ -7,13 +7,12 @@ module.exports = async (req, res) => {
     return res.status(401).send({ message: 'Not authorized' });
   }
   const { id } = accessTokenData;
-  
+
   // 유저가 참여중인 article 목록
   const joinList = await UserArticles.findAll({
     where: {
       user_id: id,
     },
-
     attributes: [['article_id', 'articleId'], 'createdAt'],
   }).catch((err) => {
     console.log(err);

@@ -18,7 +18,7 @@ const ChatListDiv = styled.div`
   @media screen and (max-width: 767px) {
     border: none;
     height: 742px;
-    display: ${(props) => props.display};
+    display: none;
   }
   > p {
     height: 35px;
@@ -147,7 +147,21 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
       let resultDate = String(date).split(' ')[0];
       let resultTime = String(date).split(' ')[1];
       if (resultDate === today) {
-        return resultTime;
+        if (resultTime.split(':')[0] > 12) {
+          return (
+            '오후 ' +
+            (Number(resultTime.split(':')[0]) - 12) +
+            ':' +
+            Number(resultTime.split(':')[1])
+          );
+        } else {
+          return (
+            '오전 ' +
+            Number(resultTime.split(':')[0]) +
+            ':' +
+            Number(resultTime.split(':')[1])
+          );
+        }
       } else {
         return resultDate;
       }
@@ -161,11 +175,10 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
   // onClick={setChatRoomId(el.articleId)}
   const handleClickChatRoom = (e) => {
     let num = e.target.getAttribute('data-value');
-    setChatRoomId(num);
-    let title = document.getElementById(num).innerText;
+    setChatRoomId(Number(num));
+    let title = document.getElementById(num).textContent;
     setTitle(title);
     console.log(e.target.getAttribute('data-value'));
-    // console.log(socket) ----------소캣 연결 확인
   };
   // 채팅내용 불러오기
   useEffect(() => {
@@ -203,51 +216,51 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
       <ChatListDiv>
         <p>채팅 리스트</p>
         <div className="chatList_div">
-          {/* {chatListData.length === 0 ? (
+          {chatListData.length === 0 ? (
             <p style={{ textAlign: 'center', lineHeight: '645px' }}>
               "채팅 목록이 비었습니다"
             </p>
-          ) : ( */}
-          <ul className="grid">
-            {chatListData.map((el, idx) => (
-              <li
-                key={idx}
-                // onClick={() => {
-                //   setChatRoom(true);
-                // }}
-                // onClick={() => {
-                //   onClick2();
-                // }}
-
-                data-value={el.articleId}
-                onClick={handleClickChatRoom}
-              >
-                <ul className="in_grid" data-value={el.articleId}>
-                  <li className="profile_img" data-value={el.articleId}>
-                    <img src={el.image} data-value={el.articleId}></img>
-                  </li>
-                  <li className="chat_info" data-value={el.articleId}>
-                    <ul>
-                      <li
-                        id={el.articleId}
-                        className="chat_title"
-                        data-value={el.articleId}
-                      >
-                        {el.title}
-                      </li>
-                      <li className="content" data-value={el.articleId}>
-                        {el.latestMessage}
-                      </li>
-                      <li className="created_At" data-value={el.articleId}>
-                        {isToday(el.latestCreatedAt)}
-                        {/* {String(el.latestCreatedAt).split('T')[0]} */}
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            ))}
-          </ul>
+          ) : (
+            <ul className="grid">
+              {chatListData.map((el, idx) => (
+                <li
+                  key={idx}
+                  // onClick={() => {
+                  //   setChatRoom(true);
+                  // }}
+                  // onClick={() => {
+                  //   onClick2();
+                  // }}
+                  data-value={el.articleId}
+                  onClick={handleClickChatRoom}
+                >
+                  <ul className="in_grid" data-value={el.articleId}>
+                    <li className="profile_img" data-value={el.articleId}>
+                      <img src={el.image} data-value={el.articleId}></img>
+                    </li>
+                    <li className="chat_info" data-value={el.articleId}>
+                      <ul>
+                        <li
+                          id={el.articleId}
+                          className="chat_title"
+                          data-value={el.articleId}
+                        >
+                          {el.title}
+                        </li>
+                        <li className="content" data-value={el.articleId}>
+                          {el.latestMessage}
+                        </li>
+                        <li className="created_At" data-value={el.articleId}>
+                          {isToday(el.latestCreatedAt)}
+                          {/* {String(el.latestCreatedAt).split('T')[0]} */}
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </ChatListDiv>
       {/* {chatRoom === true ? (

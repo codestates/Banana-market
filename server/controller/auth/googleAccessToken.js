@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
     where: { email },
     defaults: {
       email,
-      name: `빠나나 용사 ${randomNum}`,
+      name: `바나나 ${randomNum}`,
       profile_image_location: picture,
       region_id: 1,
       type: 'SOCIALUSER',

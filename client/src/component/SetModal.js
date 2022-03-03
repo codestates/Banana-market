@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHistory, useParams, Route } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ResetChatList } from '../redux/actions/actions';
+import axios from 'axios';
 const SetModalDiv = styled.div`
   width: 330px;
   height: 712px;
@@ -26,7 +29,7 @@ const SetModalDiv = styled.div`
     position: relative;
     border-bottom: 1px solid #ddd;
     @media screen and (max-width: 768px) {
-      margin: 100px auto 0 auto;
+      margin: 110px auto 0 auto;
     }
     p {
       position: absolute;
@@ -220,12 +223,46 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const SetModal = ({ setSecessionModal }) => {
+const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
+  const history = useHistory();
   const [isOn, setisOn] = useState(false);
   const [existBtn, setExistBtn] = useState(false);
   const [outBtn, setOutBtn] = useState(false);
-  const fakelist = [1, 2, 3, 4, 1, 1];
-  const [list, setList] = useState(fakelist);
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  let userId = setUserInfo.userId;
+  const [closeBtn, setCloseBtn] = useState({});
+
+  // const handleClickCloseBtn = (chatRoomId) => {
+  //   axios
+  //     .patch(`${process.env.REACT_APP_API_URL}/articles/close/${chatRoomId}`)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+  // useEffect(() => {
+  //   handleClickCloseBtn();
+  // }, []);
+
+  //참가자 정보 편집
+  const participantEditObj = (participant) => {
+    let ResultObj = {};
+    participant.map((el) => {
+      let participantObj = {
+        isHost: '',
+      };
+      participantObj['isHost'] = el.isHost;
+      ResultObj[el.id] = participantObj;
+    });
+    return ResultObj;
+  };
+
+  let isHostId = participantEditObj(participant);
+  let roomHost = isHostId[Number(userId)].isHost;
+  // 참가자 목록 편집
+  // console.log(isHostId[Number(userId)].isHost);
 
   return (
     <>
@@ -237,42 +274,48 @@ const SetModal = ({ setSecessionModal }) => {
         <div className="user">
           <p
             style={{
-              fontSize: "16px",
+              fontSize: '16px',
             }}
           >
             인원모집
           </p>
-          <ToggleContainer>
-            <ToggleContainer
-              onClick={() => setisOn(!isOn)}
-              // TODO : 클릭하면 토글이 켜진 상태(isOn)를 boolean 타입으로 변경하는 메소드가 실행되어야 합니다.
-            >
-              {/* TODO : 아래에 div 엘리먼트 2개가 있습니다. 각각의 클래스를 'toggle-container', 'toggle-circle' 로 지정하세요. */}
-              {/* TIP : Toggle Switch가 ON인 상태일 경우에만 toggle--checked 클래스를 div 엘리먼트 2개에 모두 추가합니다. 조건부 스타일링을 활용하세요. */}
-              <div
-                className={`toggle-container ${isOn ? "" : "toggle--checked"}`}
-              />
-              <div
-                className={`toggle-circle ${isOn ? "" : "toggle--checked"}`}
-              />
+          {roomHost === '1' ? (
+            <ToggleContainer>
+              <ToggleContainer
+                onClick={() => setisOn(!isOn)}
+                // TODO : 클릭하면 토글이 켜진 상태(isOn)를 boolean 타입으로 변경하는 메소드가 실행되어야 합니다.
+              >
+                {/* TODO : 아래에 div 엘리먼트 2개가 있습니다. 각각의 클래스를 'toggle-container', 'toggle-circle' 로 지정하세요. */}
+                {/* TIP : Toggle Switch가 ON인 상태일 경우에만 toggle--checked 클래스를 div 엘리먼트 2개에 모두 추가합니다. 조건부 스타일링을 활용하세요. */}
+                <div
+                  className={`toggle-container ${
+                    isOn ? '' : 'toggle--checked'
+                  }`}
+                />
+                <div
+                  className={`toggle-circle ${isOn ? '' : 'toggle--checked'}`}
+                />
+              </ToggleContainer>
             </ToggleContainer>
-          </ToggleContainer>
+          ) : null}
+          {roomHost === '1' ? isOn ? <Desc>OFF</Desc> : <Desc>ON</Desc> : null}
           <div className="user_info">
             인원모집 마감이 ‘OFF’ 이 되면 인원모집이 마감됩니다.<br></br>
             새로운 참가자는 더 이상 거래참가를 할 수 없습니다.
           </div>
-          {isOn ? <Desc>OFF</Desc> : <Desc>ON</Desc>}
         </div>
 
         <div className="user_list">
           <ul className="grid">
-            {list.map((el) => (
-              <li>
-                <div className="user_img"></div>
-                <div className="user_id">바니바니바나나</div>
-                <div className="user_out" onClick={() => setOutBtn(true)}>
-                  내보내기
-                </div>
+            {participant.map((el, idx) => (
+              <li key={idx}>
+                <div className="user_img" src={el.profileImage}></div>
+                <div className="user_id">{el.name}</div>
+                {el.isHost !== '1' ? (
+                  <div className="user_out" onClick={() => setOutBtn(true)}>
+                    내보내기
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>
@@ -282,7 +325,10 @@ const SetModal = ({ setSecessionModal }) => {
           채팅방 나가기
         </div>
         {existBtn === true ? (
-          <ExitModal setExistBtn={setExistBtn}></ExitModal>
+          <ExitModal
+            setExistBtn={setExistBtn}
+            leaveRoom={leaveRoom}
+          ></ExitModal>
         ) : null}
         {outBtn === true ? <UserOut setOutBtn={setOutBtn}></UserOut> : null}
       </SetModalDiv>
@@ -290,7 +336,36 @@ const SetModal = ({ setSecessionModal }) => {
   );
 };
 
-function ExitModal({ setExistBtn }) {
+function ExitModal({ setExistBtn, leaveRoom }) {
+  const history = useHistory();
+  // console.log(chatListData);
+  const dispatch = useDispatch();
+
+  const chatListData = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/rooms`, {
+        withCredentials: true,
+      })
+      .then((chatData) => {
+        // console.log(chatData.data.data.roomList);
+        dispatch({
+          type: 'SHOW_CHATLIST',
+          payload: chatData.data.data.roomList,
+        });
+        // console.log(listData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(ResetChatList());
+      chatListData();
+      console.log('실행');
+    };
+  }, []);
   return (
     <ExitModalDiv>
       <div className="exit_modal">
@@ -303,7 +378,15 @@ function ExitModal({ setExistBtn }) {
           <div className="cancel" onClick={() => setExistBtn(false)}>
             취소하기
           </div>
-          <div className="ok">나가기</div>
+          <div
+            className="ok"
+            onClick={() => {
+              leaveRoom();
+              history.push('/chat/');
+            }}
+          >
+            나가기
+          </div>
         </div>
       </div>
     </ExitModalDiv>

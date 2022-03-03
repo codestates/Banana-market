@@ -13,7 +13,6 @@ const socket = io.connect(chatroom, {
   withCredentials: true,
 });
 
-
 const ChatDiv = styled.div`
   max-width: 1200px;
   margin: 80px auto;
@@ -35,8 +34,9 @@ const ChatDiv = styled.div`
 const Chat = () => {
   const [display, setDisplay] = useState('none');
   const [display1, setDisplay1] = useState('block');
-
+  const ListData = useSelector((state) => state.chatListReducer);
   const [chatRoomId, setChatRoomId] = useState('');
+  const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 
   const chatListData = () => {
@@ -79,10 +79,12 @@ const Chat = () => {
         <ChatList
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
+          setTitle={setTitle}
         ></ChatList>
         <ChatRoom
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
+          title={title}
         ></ChatRoom>
       </ChatDiv>
     </div>

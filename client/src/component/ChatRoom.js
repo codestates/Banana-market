@@ -457,7 +457,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
       }
     );
     setMyMessage('');
-  };
+  });
 
   
 
@@ -602,15 +602,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   //     }
   //   }, [message])
 
-  //   // 채팅방 나가기 handler
-  const leaveRoom = (event) => {
-    // event.preventDefault();
-    let obj = { userId: userId, roomId: chatRoomId };
-    socket.emit('leave', obj, (error) => {
-      if (error) console.log(error);
-    });
-    console.log(`${obj.roomId}방을 나갔습니다`);
-  };
+
 
   // // 채팅방 나가기 실행
   // useEffect(() => {

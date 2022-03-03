@@ -17,14 +17,14 @@ module.exports = async (req, res) => {
       {
         model: User,
         include: [{ model: Article }, { model: Region }],
-        // through: {
-        //   where: { is_host: true },
-        // },
+        through: {
+          where: { is_host: true },
+        },
       },
     ],
     where: { id: articleId },
   }).then((articleData) => {
-    if (!articleData.length) {
+    if (!articleData) {
       return res.status(404).send({ message: 'Not found article' });
     } else {
       const article = articleData.dataValues;

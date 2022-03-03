@@ -55,6 +55,9 @@ module.exports = async (req, res) => {
       } else {
         article.tradeType = '나눔';
       }
+      // article.tradeType = article.trade_type;
+
+      // delete article.image_location;
       delete article.image_key;
       delete article.region_id;
       delete article.category_id;
@@ -68,6 +71,7 @@ module.exports = async (req, res) => {
       user.region = user.Region.city;
 
       delete user.UserArticles;
+      // delete user.profile_image_location;
       delete user.profile_image_key;
       delete user.password;
       delete user.region_id;

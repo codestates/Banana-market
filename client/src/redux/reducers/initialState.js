@@ -42,7 +42,7 @@ export const initiaPostDetail = {
     title: null,
     totalMate: null,
     tradeType: null,
-    url:null,
+    url: null,
   },
   postWriter: {
     userId: null,

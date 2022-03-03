@@ -15,11 +15,11 @@ const Notice = styled.div`
   margin: 30px auto 50px auto;
   border: 1px solid #fcfce1;
   border-radius: 10px;
-  background: #fffff4;
+  background: #fffff487;
   padding: 20px;
   text-align: center;
   font-size: 18px;
-  color: #757575;
+  color: #d2a81e;
   > span {
     font-weight: 600;
   }

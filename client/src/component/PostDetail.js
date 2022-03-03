@@ -268,6 +268,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
   let articleNum = useParams();
   // console.log(articleid);
 
+  // post 디테일 부분
   const showPostDetail = (articleid) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
@@ -302,6 +303,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     showPostDetail(articleNum.id);
   }, []);
 
+  // post 삭제 부분
   const postDelete = (articleid) => {
     axios
       .delete(`${process.env.REACT_APP_API_URL}/articles/${articleid}`, {
@@ -320,36 +322,37 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     showPostDetail(articleNum.id);
     // 카카오지도 api
     // 주소-좌표 변환 객체를 생성합니다
-    let geocoder = new kakao.maps.services.Geocoder();
-    // let coords = '';
-    // // 주소로 좌표를 검색합니다
-    geocoder.addressSearch(post.address, function (result, status) {
-      // 정상적으로 검색이 완료됐으면
-      if (status === kakao.maps.services.Status.OK) {
-        let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+    if( post.address !== null ) {
 
-        // 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다
-        let markers = [
-          {
-            position: coords,
-            text: post.market, // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
-          },
-        ];
+      let geocoder = new kakao.maps.services.Geocoder();
+      // let coords = '';
+      // // 주소로 좌표를 검색합니다
+      geocoder.addressSearch(post.address, function(result, status) {
+        // 정상적으로 검색이 완료됐으면 
+        if (status === kakao.maps.services.Status.OK) {
+          let coords =  new kakao.maps.LatLng(result[0].y, result[0].x);
+          
+          // 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
+          let markers = [{
+            position: coords, 
+            text: post.market // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
+          }];
+      
+          let staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+            staticMapOption = { 
+              center: coords, // 이미지 지도의 중심좌표
+              level: 3, // 이미지 지도의 확대 레벨
+              marker: markers // 이미지 지도에 표시할 마커 
+            };    
+          // 이미지 지도를 생성합니다
+          let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        }
+      })
 
-        let staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
-          staticMapOption = {
-            center: coords, // 이미지 지도의 중심좌표
-            level: 3, // 이미지 지도의 확대 레벨
-            marker: markers, // 이미지 지도에 표시할 마커
-          };
-        // 이미지 지도를 생성합니다
-        let staticMap = new kakao.maps.StaticMap(
-          staticMapContainer,
-          staticMapOption
-        );
-      }
-    });
-  }, []);
+    }
+
+  }, []); 
+  
 
   // 참여하기 버튼 클릭시 일어나는 함수
   const joinChat = (articleid) => {
@@ -426,7 +429,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
             className="delete_btn"
             onClick={() => {
               postDelete(post.id);
-              history.push('/list');
+              history.push('/mylist');
             }}
           >
             삭제하기

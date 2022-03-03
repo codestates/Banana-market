@@ -303,6 +303,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   // roomId: chatRoomId,
   // message: myMessage,
   // created: message,
+
   useEffect(() => {
     //채팅방 바뀔때 채팅내용 불러오기--------------0
     chatContent(chatRoomId);
@@ -352,7 +353,20 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log('데이터', res.data.data.messageList);
+
+        //? ---사용자 프로필 이미지---
+        let messageList = res.data.data.messageList;
+        messageList = messageList.map((elem) => {
+          let profileImageKey = elem.profileImage;
+          if (!profileImageKey) {
+            elem.profileImage =
+              'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+          } else {
+            elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
+          }
+          return elem;
+        });
+        //? ---사용자 프로필 이미지---
         setMessage([]);
         if (res.data.data.messageList !== undefined) {
           setMessage([...res.data.data.messageList].reverse());
@@ -368,6 +382,20 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             }
           )
           .then((res) => {
+
+            //? ---사용자 프로필 이미지---
+            let { participant } = res.data.data;
+            participant.map((elem) => {
+              let profileImageKey = elem.profileImage;
+              if (!profileImageKey) {
+                elem.profileImage =
+                  'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+              } else {
+                elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
+              }
+              return elem;
+            });
+            //? ---사용자 프로필 이미지---
             console.log('참여자 목록', res.data.data.participant);
             setParticipant([...res.data.data.participant]);
             // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
@@ -401,6 +429,29 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         message: myMessage,
         created: message,
       },
+      
+      
+      (error) => {
+        if (error) console.log(error);
+      }
+    );
+
+    // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+    //     console.log('되니?'); setMyMessage('');
+    //   },
+    //   (error) => {
+    //     if (error) console.log(error);
+    //   }
+    // )
+  };
+
+  useEffect(() => {
+    socket.on(
+      'message',
+      ({ userId, chatRoomId, message, created }) => {
+        setMessage([...message, { userId, chatRoomId, message, created }]);
+      },
+
       (error) => {
         if (error) console.log(error);
       }
@@ -420,6 +471,153 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
     console.log(`${obj.roomId}방을 나갔습니다`);
     // history.push('/chat/0');
   };
+
+
+
+
+  // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+  //     console.log('되니?'); setMyMessage('');
+  //   },
+  //   (error) => {
+  //     if (error) console.log(error);
+  //   }
+  // )
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', (m) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // // 메세지 작성 handler
+  // const sendMessage = (event) => {
+  //   // event.preventDefault();
+  //   if (myMessage) {
+  //     socket.emit(
+  //       'sendMessage',
+  //       { userId, chatRoomId, myMessage, created: Date.now() },
+  //       () => {
+  //         setMessage('');
+  //       }
+  //     );
+  //   }
+  // };
+
+  // // ----메세지 보내기
+  // const onMessageSubmit = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', ({ message }) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // const [roomId, setRoomId] = useState(11); // 채팅하는 공구 게시글
+  // const [userId, setUserId] = useState(7); // 유저
+  // const [message, setMessage] = useState('새로운 메세지로 바꿔보자'); // 작성한 메세지
+  // const [messages, setMessages] = useState([]); // 메세지 모음
+  // const [testLeave, setTestLeave] = useState(false); // 퇴장
+
+  // // 메세지 작성 handler
+  // const sendMessage = (event) => {
+  //   // event.preventDefault();
+  //   if (message) {
+  //     socket.emit(
+  //       'sendMessage',
+  //       { userId, roomId, message, created: Date.now() },
+  //       () => {
+  //         setMessage('');
+  //       }
+  //     );
+  //   }
+  // };
+
+  // // 작성한 메세지 보여주기
+  // useEffect(() => {
+  //   socket.on('message', ({ message, created }) => {
+  //     setMessages((messages) => [...messages, message]);
+  //     console.log('보낸 메세지 날짜 확인', message, created);
+  //   });
+  //   console.log('메세지들', messages);
+  // }, [message]);
+
+  // // 채팅방 나가기 handler
+  // const leaveRoom = (event) => {
+  //   // event.preventDefault();
+  //   socket.emit('leave', { userId, roomId }, (error) => {
+  //     if (error) console.log(error);
+  //   });
+  //   console.log(`${roomId}방을 나갔습니다`);
+  // };
+
+  // // 메세지 작성 실행
+  // useEffect(() => {
+  //   if (message) {
+  //     sendMessage();
+  //     setMessage('');
+  //   }
+  // }, [message]);
+
+  //   // 5번 아티클 6번 유저
+  //   const [roomId, setRoomId] = useState(3);      // 채팅하는 공구 게시글
+  //   const [userId, setUserId] = useState(4);        //
+  //   const [message, setMessage] = useState('4번 유저가 3번 아티클에서 보냄');
+  //   const [messages, setMessages] = useState([]);
+  //   const [testLeave, setTestLeave] = useState(true)
+
+  //   // useEffect(() => {
+  //   //   console.log("소켓 좀 보자", socket)
+  //   //   // 채팅방 참여하기
+  //   //   socket.emit('join', { userId, roomId }, (error) => {
+  //   //     if(error) console.log(error)
+  //   //   })
+  //   // }, [roomId])
+
+  //   // 메세지 작성 handler
+  //   const sendMessage = (event) => {
+  //     // event.preventDefault();
+  //     if(message) {
+  //       socket.emit('sendMessage', ({ userId, roomId, message, created: Date.now() }), () => {
+  //         setMessage('')
+  //       });
+  //     }
+  //   }
+
+  //   // 작성한 메세지 보여주기
+  //   useEffect(() => {
+  //     socket.on('message', ({ message, created }) => {
+  //       setMessages(messages => [ ...messages, message ]);
+  //       console.log("보낸 메세지 날짜 확인", message, created)
+  //     });
+  //     console.log("메세지들", messages)
+  //   }, [message]);
+
+  //   // 메세지 작성 실행
+  //   useEffect(() => {
+  //     if (message) {
+  //       sendMessage();
+  //     }
+  //   }, [message])
+
+  //   // 채팅방 나가기 handler
+  const leaveRoom = (event) => {
+    // event.preventDefault();
+    let obj = { userId: userId, roomId: chatRoomId };
+    socket.emit('leave', obj, (error) => {
+      if (error) console.log(error);
+    });
+    console.log(`${obj.roomId}방을 나갔습니다`);
+  };
+
+  // // 채팅방 나가기 실행
+  // useEffect(() => {
+  //   if (testLeave) {
+  //     leaveRoom();
+  //   }
+  // }, [testLeave]);
 
   return (
     <Route path={'/chat/' + chatRoomId}>
@@ -501,6 +699,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
           <SetModal
             setSecessionModal={setSecessionModal}
             leaveRoom={leaveRoom}
+            participant={participant}
           ></SetModal>
         </SetDiv>
       ) : null}

@@ -5,8 +5,8 @@ const sharp = require('sharp');
 // aws.config.loadFromPath(__dirname + "/../config/s3.json");
 
 const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_KEY,
-  secretAccessKey: process.env.AWS_PRIVATE_KEY,
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_KEY,
   region: 'ap-northeast-2',
 });
 

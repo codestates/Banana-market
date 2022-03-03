@@ -44,39 +44,40 @@ module.exports = async (req, res) => {
       delete article.Category;
       delete article.Users;
 
-      article.region = region;
-      article.category = category;
-      article.image = article.image_key;
-      article.totalMate = article.total_mate;
-      article.currentMate = article.current_mate;
-      const tradeType = article.trade_type;
-      if (tradeType === 'jointPurchase') {
-        article.tradeType = '공구';
-      } else {
-        article.tradeType = '나눔';
-      }
-      // article.tradeType = article.trade_type;
 
-      // delete article.image_location;
-      delete article.image_key;
-      delete article.region_id;
-      delete article.category_id;
-      delete article.total_mate;
-      delete article.current_mate;
-      delete article.trade_type;
+    article.region = region;
+    article.category = category;
+    article.image = article.image_key;
+    article.totalMate = article.total_mate;
+    article.currentMate = article.current_mate;
+    const tradeType = article.trade_type;
+    if (tradeType === 'jointPurchase') {
+      article.tradeType = '공구';
+    } else {
+      article.tradeType = '나눔';
+    }
+    // article.tradeType = article.trade_type;
 
-      const totalTrade = user.Articles.length;
-      user.totalTrade = totalTrade;
-      user.profile_image = user.profile_image_key;
-      user.region = user.Region.city;
+    // delete article.image_location;
+    delete article.image_key;
+    delete article.region_id;
+    delete article.category_id;
+    delete article.total_mate;
+    delete article.current_mate;
+    delete article.trade_type;
 
-      delete user.UserArticles;
-      // delete user.profile_image_location;
-      delete user.profile_image_key;
-      delete user.password;
-      delete user.region_id;
-      delete user.Region;
-      delete user.Articles;
+    const totalTrade = user.Articles.length;
+    user.totalTrade = totalTrade;
+    user.profile_image = user.profile_image_key;
+    user.region = user.Region.city;
+
+    delete user.UserArticles;
+    // delete user.profile_image_location;
+    delete user.profile_image_key;
+    delete user.password;
+    delete user.region_id;
+    delete user.Region;
+    delete user.Articles;
 
       return res.status(200).send({
         data: {

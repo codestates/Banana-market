@@ -243,7 +243,7 @@ const UlDiv = styled.ul`
   }
   .map {
     width: 380px;
-    .map_image{
+    .map_image {
       height: 300px;
       border: 1px solid #c4c4c4;
       border-radius: 8px;
@@ -268,10 +268,23 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
   let articleNum = useParams();
   // console.log(articleid);
 
+  // post 디테일 부분
   const showPostDetail = (articleid) => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/articles/${articleid}`)
-      .then((detailData) => {
+      .then(async (detailData) => {
+        // console.log('PostDetail', detailData);
+        const postImageKey = detailData.data.data.post.image;
+        detailData.data.data.post.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=378&h=298&f=webp&q=90`;
+
+        const profileImageKey = detailData.data.data.postWriter.profile_image;
+        if (profileImageKey) {
+          detailData.data.data.postWriter.profile_image = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=70&h=70&f=webp&q=90`;
+        } else {
+          detailData.data.data.postWriter.profile_image =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=70&h=70&f=webp&q=90';
+        }
+
         dispatch({
           type: 'SHOW_POST',
           payload: detailData.data.data.post,
@@ -290,6 +303,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     showPostDetail(articleNum.id);
   }, []);
 
+  // post 삭제 부분
   const postDelete = (articleid) => {
     axios
       .delete(`${process.env.REACT_APP_API_URL}/articles/${articleid}`, {
@@ -304,8 +318,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
       });
   };
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     showPostDetail(articleNum.id);
     // 카카오지도 api
     // 주소-좌표 변환 객체를 생성합니다
@@ -340,6 +353,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
 
   }, []); 
   
+
   // 참여하기 버튼 클릭시 일어나는 함수
   const joinChat = (articleid) => {
     axios
@@ -378,7 +392,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
             [{post.tradeType}] {post.title}
           </li>
           <li className="content">
-            <img src={post.image}/>
+            <img src={post.image} />
             <div>{post.content}</div>
           </li>
           <li className="date">
@@ -388,21 +402,34 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
             지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
           </li>
           <li className="map">
-            <div>장소: {post.market}, ( {post.address} ) </div>
-            <div className='map_image' id='staticMap'></div>
-            <div className='map_btn' onClick={() => window.open(`${post.url}`, '_blank')}>장소 정보 보기</div>  
+            <div>
+              장소: {post.market}, ( {post.address} ){' '}
+            </div>
+            <div className="map_image" id="staticMap"></div>
+            <div
+              className="map_btn"
+              onClick={() => window.open(`${post.url}`, '_blank')}
+            >
+              장소 정보 보기
+            </div>
           </li>
-            
         </UlDiv>
       </div>
       {postWriter.isMyPost === true ? (
         <div className="user_btn">
-          <div className="edit_btn" onClick={()=>{history.push('/edit')}}>수정하기</div>
+          <div
+            className="edit_btn"
+            onClick={() => {
+              history.push('/edit');
+            }}
+          >
+            수정하기
+          </div>
           <div
             className="delete_btn"
             onClick={() => {
               postDelete(post.id);
-              history.push('/list');
+              history.push('/mylist');
             }}
           >
             삭제하기

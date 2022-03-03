@@ -183,6 +183,7 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
     // console.log('chatRoomId', typeof chatRoomId, chatRoomId)
     console.log(e.target.getAttribute('data-value'));
     // console.log(socket) ----------소캣 연결 확인
+
   };
   // 채팅내용 불러오기
   useEffect(() => {

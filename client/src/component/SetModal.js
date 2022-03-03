@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHistory, useParams, Route } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ResetChatList } from '../redux/actions/actions';
+import axios from 'axios';
 const SetModalDiv = styled.div`
   width: 330px;
   height: 712px;
@@ -220,7 +223,8 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-const SetModal = ({ setSecessionModal }) => {
+const SetModal = ({ setSecessionModal, leaveRoom }) => {
+  const history = useHistory();
   const [isOn, setisOn] = useState(false);
   const [existBtn, setExistBtn] = useState(false);
   const [outBtn, setOutBtn] = useState(false);
@@ -237,7 +241,7 @@ const SetModal = ({ setSecessionModal }) => {
         <div className="user">
           <p
             style={{
-              fontSize: "16px",
+              fontSize: '16px',
             }}
           >
             인원모집
@@ -250,10 +254,10 @@ const SetModal = ({ setSecessionModal }) => {
               {/* TODO : 아래에 div 엘리먼트 2개가 있습니다. 각각의 클래스를 'toggle-container', 'toggle-circle' 로 지정하세요. */}
               {/* TIP : Toggle Switch가 ON인 상태일 경우에만 toggle--checked 클래스를 div 엘리먼트 2개에 모두 추가합니다. 조건부 스타일링을 활용하세요. */}
               <div
-                className={`toggle-container ${isOn ? "" : "toggle--checked"}`}
+                className={`toggle-container ${isOn ? '' : 'toggle--checked'}`}
               />
               <div
-                className={`toggle-circle ${isOn ? "" : "toggle--checked"}`}
+                className={`toggle-circle ${isOn ? '' : 'toggle--checked'}`}
               />
             </ToggleContainer>
           </ToggleContainer>
@@ -282,7 +286,10 @@ const SetModal = ({ setSecessionModal }) => {
           채팅방 나가기
         </div>
         {existBtn === true ? (
-          <ExitModal setExistBtn={setExistBtn}></ExitModal>
+          <ExitModal
+            setExistBtn={setExistBtn}
+            leaveRoom={leaveRoom}
+          ></ExitModal>
         ) : null}
         {outBtn === true ? <UserOut setOutBtn={setOutBtn}></UserOut> : null}
       </SetModalDiv>
@@ -290,7 +297,36 @@ const SetModal = ({ setSecessionModal }) => {
   );
 };
 
-function ExitModal({ setExistBtn }) {
+function ExitModal({ setExistBtn, leaveRoom }) {
+  const history = useHistory();
+  // console.log(chatListData);
+  const dispatch = useDispatch();
+
+  const chatListData = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/rooms`, {
+        withCredentials: true,
+      })
+      .then((chatData) => {
+        // console.log(chatData.data.data.roomList);
+        dispatch({
+          type: 'SHOW_CHATLIST',
+          payload: chatData.data.data.roomList,
+        });
+        // console.log(listData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(ResetChatList());
+      chatListData();
+      console.log('실행');
+    };
+  }, []);
   return (
     <ExitModalDiv>
       <div className="exit_modal">
@@ -303,7 +339,15 @@ function ExitModal({ setExistBtn }) {
           <div className="cancel" onClick={() => setExistBtn(false)}>
             취소하기
           </div>
-          <div className="ok">나가기</div>
+          <div
+            className="ok"
+            onClick={() => {
+              leaveRoom();
+              history.push('/chat/');
+            }}
+          >
+            나가기
+          </div>
         </div>
       </div>
     </ExitModalDiv>

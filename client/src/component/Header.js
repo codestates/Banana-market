@@ -211,25 +211,25 @@ const Header = ({ handleResponseSuccess}) => {
   const history = useHistory();
 
   // PostList > PostList 리로딩 - 로고 눌렀을때 list 요청함수
-  const postList = async (pageNumber) => {
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
-        params: {
-          category: '',
-          page: pageNumber,
-          sort: '',
-        },
-      })
-      .then((listData) => {
-        dispatch({
-          type: 'SHOW_MORE_POSTLIST',
-          payload: listData.data.data.articleList,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const postList = async (pageNumber) => {
+  //   await axios
+  //     .get(`${process.env.REACT_APP_API_URL}/articles/lists`, {
+  //       params: {
+  //         category: '',
+  //         page: pageNumber,
+  //         sort: '',
+  //       },
+  //     })
+  //     .then((listData) => {
+  //       dispatch({
+  //         type: 'SHOW_MORE_POSTLIST',
+  //         payload: listData.data.data.articleList,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   // useState로 Modal창 On(true)/Off(false)
   let [searchBox, setSearchBox] = useState(false);

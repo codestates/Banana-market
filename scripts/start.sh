@@ -7,6 +7,7 @@ export DATABASE_PORT=$(aws ssm get-parameters --region ap-northeast-2 --names DA
 export DATABASE_HOST=$(aws ssm get-parameters --region ap-northeast-2 --names DATABASE_HOST --query Parameters[0].Value | sed 's/"//g')
 export DATABASE_NAME=$(aws ssm get-parameters --region ap-northeast-2 --names DATABASE_NAME --query Parameters[0].Value | sed 's/"//g')
 
+export HTTP_PORT=$(aws ssm get-parameters --region ap-northeast-2 --names HTTP_PORT --query Parameters[0].Value | sed 's/"//g')
 
 export ACCESS_SECRET=$(aws ssm get-parameters --region ap-northeast-2 --names ACCESS_SECRET --query Parameters[0].Value | sed 's/"//g')
 export REFRESH_SECRET=$(aws ssm get-parameters --region ap-northeast-2 --names REFRESH_SECRET --query Parameters[0].Value | sed 's/"//g')
@@ -17,6 +18,10 @@ export GOOGLE_REDIRECT_URI=$(aws ssm get-parameters --region ap-northeast-2 --na
 
 export EMAIL=$(aws ssm get-parameters --region ap-northeast-2 --names EMAIL --query Parameters[0].Value | sed 's/"//g')
 export PASSWORD=$(aws ssm get-parameters --region ap-northeast-2 --names PASSWORD --query Parameters[0].Value | sed 's/"//g')
+
+export AKEY=$(aws ssm get-parameters --region ap-northeast-2 --names AKEY --query Parameters[0].Value | sed 's/"//g')
+export ASECRET=$(aws ssm get-parameters --region ap-northeast-2 --names ASECRET --query Parameters[0].Value | sed 's/"//g')
+
 
 sleep 10s && pm2 status // pm2동작을 확인 - 제대로 작동했는지, codedeploy ->로그 확인
 echo $DATABASE_HOST     // 환경변수에 DATABASE_HOST의 값이 무엇인지 확인

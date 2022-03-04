@@ -256,3 +256,12 @@ export const showChatRoomContents = (payload) => {
     payload,
   };
 };
+
+// --------------chatRoomListReducer--------------------
+
+// export const showChatRoomContents = (payload) => {
+//   return {
+//     type: SHOW_CHATROOMLIST_CONTENTS,
+//     payload,
+
+//   };

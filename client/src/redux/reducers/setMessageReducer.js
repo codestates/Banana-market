@@ -12,7 +12,7 @@ const setMessageReducer = ( state=initialStateMessage, action ) => {
           profileImage: null,
           name: null,
           createdAt: null,
-          content: null,
+          contents: null,
         },
       ];
     case SHOW_MESSAGE:

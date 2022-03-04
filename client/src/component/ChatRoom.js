@@ -329,10 +329,7 @@ const ChatRoom = ({
     return () => {
       socket.off('message');
     };
-    
   }, []);
-
-  
 
   //참가자 정보 편집 함수
   const participantEditObj = (participant) => {

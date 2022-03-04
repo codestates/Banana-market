@@ -32,10 +32,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      'https://bananamarket.tk',
-      'http://localhost:3000'
-    ],
+    origin: ['https://bananamarket.tk', 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT'],
   })
@@ -43,7 +40,6 @@ app.use(
 
 app.use('/', indexRouter);
 app.get('/', (req, res) => {
-  
   res.send(`🍌 ~~ Banana Market ~~ 🍌`);
 });
 
@@ -64,5 +60,7 @@ const io = socket(server, {
 socketHandler(io);
 
 server.listen(HTTP_PORT, () => {
-  console.log(`🍌 ~~ Banana Market 서버가 ${HTTP_PORT}번 포트에서  작동 중입니다 ~~ 🍌`);
+  console.log(
+    `🍌 ~~ Banana Market 서버가 ${HTTP_PORT}번 포트에서  작동 중입니다 ~~ 🍌`
+  );
 });

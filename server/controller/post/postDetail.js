@@ -54,6 +54,7 @@ module.exports = async (req, res) => {
             model: Article,
             attributes: [['id', 'participantArticleId']],
           },
+
         ],
         attributes: [
           ['id', 'userId'],
@@ -84,6 +85,13 @@ module.exports = async (req, res) => {
       const category = postData.Category;
       postData['category'] = category.dataValues.category;
       delete postData.Category;
+
+      if (postData.tradeType === 'share') {
+        postData.tradeType = '나눔';
+      } else {
+        postData.tradeType = '공구';
+      }
+
 
       const user = postData.Users;
       let sendObj = {};
@@ -122,3 +130,4 @@ module.exports = async (req, res) => {
       res.status(500).send(err);
     });
 };
+

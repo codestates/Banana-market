@@ -170,14 +170,10 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
 
   const handleClickChatRoom = (e) => {
     let num = e.target.getAttribute('data-value');
-    // console.log('타입', typeof num, num, Number(num), )
-    setChatRoomId(Number(num));
-    // setChatRoomId(num);
     let title = document.getElementById(num).textContent;
     setTitle(title);
-    // console.log('chatRoomId', typeof chatRoomId, chatRoomId)
-    console.log(e.target.getAttribute('data-value'));
-    // console.log(socket) ----------소캣 연결 확인
+    setChatRoomId(Number(num));
+    console.log('방제받아오기', title, '방번호', e.target.getAttribute('data-value'));
   };
   // 채팅내용 불러오기
   useEffect(() => {

@@ -44,9 +44,9 @@ const Login_div = styled.div`
       width: 300px;
       box-sizing: border-box;
       margin: 65px auto 0 auto;
-      > p{
+      > p {
         margin-top: 100px;
-        margin-bottom : 30px;
+        margin-bottom: 30px;
         opacity: 0.6;
         /* color:#626262; */
         font-family: Raleway;
@@ -72,7 +72,7 @@ const Login_div = styled.div`
         /* border-radius: 3px; */
         margin: 15px auto 15px auto;
         box-sizing: border-box;
-        cursor: pointer;;
+        cursor: pointer;
         border-radius: 5px;
         font-weight: 400;
         font-size: 18px;
@@ -82,43 +82,42 @@ const Login_div = styled.div`
         color: #fbfff1;
       }
 
-        .line{
-          margin-top:11px;
-          width: 1px;
-          height: 14px;
-          background-color: black;
-          opacity: 0.2;
+      .line {
+        margin-top: 11px;
+        width: 1px;
+        height: 14px;
+        background-color: black;
+        opacity: 0.2;
+      }
+      div.box {
+        display: flex;
+        height: 45px;
+        margin-top: 30px;
+      }
+      div.join > p,
+      div.socialjoin > p {
+        color: #a0a0a0;
+        float: left;
+        letter-spacing: 0.8px;
+        width: 148px;
+        height: 40px;
+        border-radius: 3px;
+        text-decoration: none;
+        cursor: pointer;
+        line-height: 40px;
+        font-weight: 400;
+        font-size: 14px;
+        text-align: center;
+        &:hover {
+          font-weight: 600;
         }
-        div.box{
-          display: flex;
-          height: 45px;
-          margin-top: 30px;
-          
-        }
-        div.join>p, div.socialjoin>p {
-          color:#a0a0a0;
-          float: left;
-          letter-spacing: 0.8px;
-          width: 148px;
-          height: 40px;
-          border-radius: 3px;
-          text-decoration: none;
-          cursor: pointer;
-          line-height: 40px;
-          font-weight: 400;
-          font-size: 14px;
-          text-align: center;
-          &:hover{
-            font-weight: 600;
-          }
-          > img{
-            border-radius: 4px;
-            border: 1px solid 0.1;
-            width: 15px;
-            position: relative;
-            left: 6px;
-            top: 3px;
-          }
+        > img {
+          border-radius: 4px;
+          border: 1px solid 0.1;
+          width: 15px;
+          position: relative;
+          left: 6px;
+          top: 3px;
         }
       }
     }

@@ -18,13 +18,13 @@ module.exports = async (req, res) => {
     res.status(500).send({ message: 'Internal server error' });
   });
 
-const articles = await joinList.map(ua => ua.dataValues.articleId)
+  const articles = await joinList.map(ua => ua.dataValues.articleId)
 
+  // 참여하고 있는 article이 없을 땐
   if (!articles.length) {
       res.status(200).json({data : {}, message : 'Ok'})
   }
-  else{
-
+  else {
     // 내가 참여하고 있는 모든 채팅방과 모든 메세지
     const articleChatList = await Article.findAndCountAll({
       attributes : [['image_key', 'image'], 'title', ['id', 'articleId']],
@@ -103,3 +103,4 @@ const articles = await joinList.map(ua => ua.dataValues.articleId)
     res.status(200).json({data, message : 'Ok'});
   }
  };
+ 

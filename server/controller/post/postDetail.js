@@ -1,3 +1,4 @@
+//원래 포스트 디테일
 const { User, Region, Article, Category } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 
@@ -58,7 +59,7 @@ module.exports = async (req, res) => {
       } else {
         article.tradeType = '나눔';
       }
-      // article.tradeType = article.trade_type;
+      // article.tradeType = article.trade_type
 
       // delete article.image_location;
       delete article.image_key;

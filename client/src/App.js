@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   setLogin,
   setLogout,
+  setAdminLogin,
+  setAdminLogout,
   setUpdateUserInfo,
   setUserInfoNull,
 } from './redux/actions/actions';
@@ -49,10 +51,21 @@ function App(props) {
         }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
+        if(setUserInfo.type === 'ADMIN'){
+          dispatch(setAdminLogin());
+          console.log(setUserInfo.type);
+        }
+        if(setUserInfo.block){
+          dispatch(setLogout());
+          alert('정지된 유저 입니다!')
+        }
       })
       .catch((err) => {
         dispatch(setLogout());
         dispatch({ type: 'SET_USER_INFO_NULL' });
+        if(setUserInfo.type === 'ADMIN'){
+          dispatch(setAdminLogout());
+        }
       });
   };
 
@@ -62,12 +75,13 @@ function App(props) {
 
   // google social login 시 authorization code를 server에 보내준다.
   const getGoogleAccessToken = async (authorizationCode) => {
-    const result = await axios.post(
-      `${process.env.REACT_APP_API_URL}/login/google/callback`,
-      {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/login/google/callback`, {
         authorizationCode,
-      }
-    );
+      })
+      .then(() => {
+        handleResponseSuccess();
+      });
   };
   // url에 authorizationCode가 있다면 AccessToken 요청
   const isGoogleAuthorizationCode = async () => {

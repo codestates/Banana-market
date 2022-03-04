@@ -54,6 +54,7 @@ module.exports = async (req, res) => {
             model: Article,
             attributes: [['id', 'participantArticleId']],
           },
+
         ],
         attributes: [
           ['id', 'userId'],
@@ -90,6 +91,7 @@ module.exports = async (req, res) => {
       } else {
         postData.tradeType = '공구';
       }
+
 
       const user = postData.Users;
       let sendObj = {};
@@ -128,3 +130,4 @@ module.exports = async (req, res) => {
       res.status(500).send(err);
     });
 };
+

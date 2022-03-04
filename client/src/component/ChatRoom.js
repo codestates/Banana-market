@@ -433,7 +433,6 @@ const ChatRoom = ({
           });
       })
       .catch((err) => {
-        console.log(chatRoomId);
         console.log(err);
       });
   };
@@ -478,7 +477,8 @@ const ChatRoom = ({
       if (error) console.log(error);
     });
     console.log(`${obj.roomId}방을 나갔습니다`);
-    // history.push('/chat/0');
+    history.push('/chat/0');
+    setChatRoomId(0);
   };
 
   return (
@@ -534,7 +534,7 @@ const ChatRoom = ({
                   </li>
                 ))
               ) : (
-                <div> 채팅 입장에 실패했습니다. 다시 입장해주세요! </div>
+                <div> 참여하지 않은 채팅방입니다. </div>
               )}
               <div className="scrollDiv" ref={scrollDivRef}></div>
             </ChatContent>

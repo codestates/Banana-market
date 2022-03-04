@@ -35,6 +35,16 @@ export const initialStateMessage = [
     content: null,
   },
 ];
+export const initialStateSocketMessage = [
+  {
+    article_id: null,
+    user_id: null,
+    contents: null,
+    createdAt: null,
+  },
+];
+export const initialStateSocketUser = {};
+
 
 export const initiaPostDetail = {
   post: {

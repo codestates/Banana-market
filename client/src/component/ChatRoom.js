@@ -226,7 +226,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
 
-
   // const chatRoomData = useSelector((state) => state.chatRoomReducer);
   // const { title, messageList } = chatRoomData;
   // console.log(chatRoomData);
@@ -395,7 +394,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         withCredentials: true,
       })
       .then((res) => {
-
         let messageList = res.data.data.messageList;
         console.log('채팅내용불러오기', messageList)
         // 참가후 쓴 메시지 없으면 : { }  , 메세지 있으면 [ {}, {} ]
@@ -425,7 +423,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         scrollToElement(); //
         
         // 방 참가자 목록받기
-
         axios
           .get(
             `${process.env.REACT_APP_API_URL}/rooms/participant/${chatRoomId}`,
@@ -435,9 +432,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
           )
           .then((res) => {
             // console.log(res.data.data.participant)
-
-            //? ---참가자 프로필 이미지 수정---
-
             let participantList = res.data.data.participant;
             console.log('참여자 목록', participantList);
             participantList = participantList.map((elem) => {
@@ -450,9 +444,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
               }
               return elem;
             });
-
-            //? ---참가자 프로필 이미지---
-
             // console.log('참여자 목록', participantList);
             setParticipant(participantList);
             console.log('참여자 목록', participantList);
@@ -511,8 +502,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         message: myMessage,
         created: message,
       },
-
-
       (error) => {
         if (error) console.log(error);
       }
@@ -555,7 +544,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
     console.log(`${obj.roomId}방을 나갔습니다`);
     // history.push('/chat/0');
   };
-
 
   // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
   //     console.log('되니?'); setMyMessage('');
@@ -772,6 +760,8 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         <SetDiv>
           <SetModal
             setSecessionModal={setSecessionModal}
+            chatRoomId={chatRoomId}
+            // handleClickCloseBtn={handleClickCloseBtn}
             leaveRoom={leaveRoom}
             participant={participant}
           ></SetModal>

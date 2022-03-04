@@ -71,11 +71,19 @@ const SetModalDiv = styled.div`
         }
         .user_id {
           margin-left: 10px;
-          width: 140px;
+          width: 99px;
           height: 40px;
           font-size: 15px;
           color: #2b2828;
           line-height: 40px;
+        }
+        .declaration_btn {
+          width: 25px;
+          height: 25px;
+          background-color: antiquewhite;
+          margin-top: 7px;
+          margin-left: 8px;
+          cursor: pointer;
         }
         .user_out {
           height: 25px;
@@ -89,6 +97,7 @@ const SetModalDiv = styled.div`
           cursor: pointer;
           color: #ff3c3c;
           text-align: center;
+          margin-left: 8px;
         }
       }
     }
@@ -223,29 +232,55 @@ const ExitModalDiv = styled.div`
   }
 `;
 
-
-const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
+const SetModal = ({
+  setSecessionModal,
+  leaveRoom,
+  participant,
+  chatRoomId,
+}) => {
   const history = useHistory();
-  const [isOn, setisOn] = useState(false);
+  // const [isOn, setisOn] = useState(false);
   const [existBtn, setExistBtn] = useState(false);
   const [outBtn, setOutBtn] = useState(false);
+  const [declaration, setDeclaration] = useState(false);
+  const dispatch = useDispatch();
+  const [status, setStatus] = useState(true);
+
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
-  const [closeBtn, setCloseBtn] = useState({});
 
-  // const handleClickCloseBtn = (chatRoomId) => {
-  //   axios
-  //     .patch(`${process.env.REACT_APP_API_URL}/articles/close/${chatRoomId}`)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-  // useEffect(() => {
-  //   handleClickCloseBtn();
-  // }, []);
+  // ----- 메이트 모집 완료 표시
+  const handleClickCloseBtn = (articleid) => {
+    axios
+      .patch(`${process.env.REACT_APP_API_URL}/articles/close/${articleid}`)
+      .then((res) => {
+        console.log(res.data.data.article);
+        setStatus(res.data.data.article.status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // 참가자 신고
+  const userDeclaration = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/users/report`,
+        {
+          userId,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //참가자 정보 편집
   const participantEditObj = (participant) => {
@@ -262,6 +297,14 @@ const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
 
   let isHostId = participantEditObj(participant);
   let roomHost = isHostId[Number(userId)].isHost;
+
+  let hostId = participant.filter((person) => {
+    return person.isHost === '1';
+  });
+  // console.log('참가자', participant[0].isHost);
+  hostId = hostId[0].id;
+  // console.log(hostId);
+  // console.log(hostId[0].id);
   // 참가자 목록 편집
   // console.log(isHostId[Number(userId)].isHost);
 
@@ -284,44 +327,80 @@ const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
           {roomHost === '1' ? (
             <ToggleContainer>
               <ToggleContainer
-                onClick={() => setisOn(!isOn)}
-                // TODO : 클릭하면 토글이 켜진 상태(isOn)를 boolean 타입으로 변경하는 메소드가 실행되어야 합니다.
+                onClick={() => {
+                  // setisOn(!isOn);
+                  handleClickCloseBtn(chatRoomId);
+                  // handleClickCloseBtn();
+                }}
               >
-                {/* TODO : 아래에 div 엘리먼트 2개가 있습니다. 각각의 클래스를 'toggle-container', 'toggle-circle' 로 지정하세요. */}
-                {/* TIP : Toggle Switch가 ON인 상태일 경우에만 toggle--checked 클래스를 div 엘리먼트 2개에 모두 추가합니다. 조건부 스타일링을 활용하세요. */}
                 <div
                   className={`toggle-container ${
-                    isOn ? '' : 'toggle--checked'
+                    status === false ? '' : 'toggle--checked'
                   }`}
                 />
                 <div
-                  className={`toggle-circle ${isOn ? '' : 'toggle--checked'}`}
+                  className={`toggle-circle ${
+                    status === false ? '' : 'toggle--checked'
+                  }`}
                 />
               </ToggleContainer>
             </ToggleContainer>
           ) : null}
-          {roomHost === '1' ? isOn ? <Desc>OFF</Desc> : <Desc>ON</Desc> : null}
+          {roomHost === '1' ? (
+            status === false ? (
+              <Desc>OFF</Desc>
+            ) : (
+              <Desc>ON</Desc>
+            )
+          ) : null}
           <div className="user_info">
             인원모집 마감이 ‘OFF’ 이 되면 인원모집이 마감됩니다.<br></br>
             새로운 참가자는 더 이상 거래참가를 할 수 없습니다.
           </div>
         </div>
 
-        <div className="user_list">
-          <ul className="grid">
-            {participant.map((el, idx) => (
-              <li key={idx}>
-                <div className="user_img" src={el.profileImage}></div>
-                <div className="user_id">{el.name}</div>
-                {el.isHost !== '1' ? (
-                  <div className="user_out" onClick={() => setOutBtn(true)}>
-                    내보내기
-                  </div>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {hostId === userId ? (
+          <div className="user_list">
+            <ul className="grid">
+              {participant.map((el, idx) => (
+                <li key={idx}>
+                  <div className="user_img" src={el.profileImage}></div>
+                  <div className="user_id">{el.name}</div>
+                  <div
+                    className="declaration_btn"
+                    onClick={() => {
+                      setDeclaration(true);
+                    }}
+                  ></div>
+                  {el.isHost === '1' ? null : (
+                    <>
+                      <div className="user_out" onClick={() => setOutBtn(true)}>
+                        내보내기
+                      </div>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="user_list">
+            <ul className="grid">
+              {participant.map((el, idx) => (
+                <li key={idx}>
+                  <div className="user_img" src={el.profileImage}></div>
+                  <div className="user_id">{el.name}</div>
+                  <div
+                    className="declaration_btn"
+                    onClick={() => {
+                      setDeclaration(true);
+                    }}
+                  ></div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="exit" onClick={() => setExistBtn(true)}>
           채팅방 나가기
@@ -333,6 +412,12 @@ const SetModal = ({ setSecessionModal, leaveRoom, participant }) => {
           ></ExitModal>
         ) : null}
         {outBtn === true ? <UserOut setOutBtn={setOutBtn}></UserOut> : null}
+        {declaration === true ? (
+          <UserDeclaration
+            setDeclaration={setDeclaration}
+            userDeclaration={userDeclaration}
+          ></UserDeclaration>
+        ) : null}
       </SetModalDiv>
     </>
   );
@@ -394,6 +479,7 @@ function ExitModal({ setExistBtn, leaveRoom }) {
     </ExitModalDiv>
   );
 }
+
 function UserOut({ setOutBtn }) {
   return (
     <ExitModalDiv>
@@ -406,7 +492,37 @@ function UserOut({ setOutBtn }) {
           <div className="cancel" onClick={() => setOutBtn(false)}>
             취소하기
           </div>
-          <div className="ok">내보내기</div>
+          <div className="ok" onClick={() => setOutBtn(false)}>
+            내보내기
+          </div>
+        </div>
+      </div>
+    </ExitModalDiv>
+  );
+}
+function UserDeclaration({ setDeclaration, userDeclaration, participant }) {
+  let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  let userId = setUserInfo.userId;
+  return (
+    <ExitModalDiv>
+      <div className="exit_modal">
+        <div className="exit_title">이 참가자를 신고하시겠습니까 ?</div>
+        <div className="exit_info">
+          신고한 참가자는 <br></br>더 이상 거래를 이용할 수 없습니다.
+        </div>
+        <div className="exit_btn">
+          <div className="cancel" onClick={() => setDeclaration(false)}>
+            취소하기
+          </div>
+          <div
+            className="ok"
+            onClick={() => {
+              userDeclaration(userId);
+              setDeclaration(false);
+            }}
+          >
+            신고하기
+          </div>
         </div>
       </div>
     </ExitModalDiv>

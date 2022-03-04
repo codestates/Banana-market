@@ -301,6 +301,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
   };
   useEffect(() => {
     showPostDetail(articleNum.id);
+    console.log('아티클넘', articleNum);
   }, []);
 
   // post 삭제 부분
@@ -322,37 +323,38 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
     showPostDetail(articleNum.id);
     // 카카오지도 api
     // 주소-좌표 변환 객체를 생성합니다
-    if( post.address !== null ) {
-
+    if (post.address !== null) {
       let geocoder = new kakao.maps.services.Geocoder();
       // let coords = '';
       // // 주소로 좌표를 검색합니다
-      geocoder.addressSearch(post.address, function(result, status) {
-        // 정상적으로 검색이 완료됐으면 
+      geocoder.addressSearch(post.address, function (result, status) {
+        // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
-          let coords =  new kakao.maps.LatLng(result[0].y, result[0].x);
-          
-          // 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
-          let markers = [{
-            position: coords, 
-            text: post.market // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
-          }];
-      
-          let staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-            staticMapOption = { 
+          let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+          // 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다
+          let markers = [
+            {
+              position: coords,
+              text: post.market, // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+            },
+          ];
+
+          let staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+            staticMapOption = {
               center: coords, // 이미지 지도의 중심좌표
               level: 3, // 이미지 지도의 확대 레벨
-              marker: markers // 이미지 지도에 표시할 마커 
-            };    
+              marker: markers, // 이미지 지도에 표시할 마커
+            };
           // 이미지 지도를 생성합니다
-          let staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+          let staticMap = new kakao.maps.StaticMap(
+            staticMapContainer,
+            staticMapOption
+          );
         }
-      })
-
+      });
     }
-
-  }, []); 
-  
+  }, []);
 
   // 참여하기 버튼 클릭시 일어나는 함수
   const joinChat = (articleid) => {
@@ -369,85 +371,170 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
   };
 
   return (
-    <DetailDiv>
-      <div className="detail">
-        <UlDiv>
-          <div className="profile">
-            <ul className="in_grid">
-              <li className="image">
-                <img src={basicProfileImage}></img>
-              </li>
-              <li className="profile_info">
-                <ul>
-                  <li className="id">{postWriter.name}</li>
-                  <li className="location">{postWriter.region}</li>
-                  <li className="deal_total">
-                    총 거래 : {postWriter.totalTrade}회
+    <>
+      {/* {!post.status ? (
+        <div>마감</div>
+      ) : (
+        <DetailDiv>
+          <div className="detail">
+            <UlDiv>
+              <div className="profile">
+                <ul className="in_grid">
+                  <li className="image">
+                    <img src={basicProfileImage}></img>
+                  </li>
+                  <li className="profile_info">
+                    <ul>
+                      <li className="id">{postWriter.name}</li>
+                      <li className="location">{postWriter.region}</li>
+                      <li className="deal_total">
+                        총 거래 : {postWriter.totalTrade}회
+                      </li>
+                    </ul>
                   </li>
                 </ul>
+              </div>
+              <li className="title">
+                [{post.tradeType}] {post.title}
               </li>
-            </ul>
+              <li className="content">
+                <img src={post.image} />
+                <div>{post.content}</div>
+              </li>
+              <li className="date">
+                {post.date} &#124; {post.time}
+              </li>
+              <li className="pepole">
+                지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
+              </li>
+              <li className="map">
+                <div>
+                  장소: {post.market}, ( {post.address} ){' '}
+                </div>
+                <div className="map_image" id="staticMap"></div>
+                <div
+                  className="map_btn"
+                  onClick={() => window.open(`${post.url}`, '_blank')}
+                >
+                  장소 정보 보기
+                </div>
+              </li>
+            </UlDiv>
           </div>
-          <li className="title">
-            [{post.tradeType}] {post.title}
-          </li>
-          <li className="content">
-            <img src={post.image} />
-            <div>{post.content}</div>
-          </li>
-          <li className="date">
-            {post.date} &#124; {post.time}
-          </li>
-          <li className="pepole">
-            지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
-          </li>
-          <li className="map">
-            <div>
-              장소: {post.market}, ( {post.address} ){' '}
+          {postWriter.isMyPost === true ? (
+            <div className="user_btn">
+              <div
+                className="edit_btn"
+                onClick={() => {
+                  history.push('/edit');
+                }}
+              >
+                수정하기
+              </div>
+              <div
+                className="delete_btn"
+                onClick={() => {
+                  postDelete(post.id);
+                  history.push('/mylist');
+                }}
+              >
+                삭제하기
+              </div>
             </div>
-            <div className="map_image" id="staticMap"></div>
+          ) : (
             <div
-              className="map_btn"
-              onClick={() => window.open(`${post.url}`, '_blank')}
+              className="btn"
+              onClick={() => {
+                // handleClick();
+                joinChat(post.id);
+                history.push('/chat');
+              }}
             >
-              장소 정보 보기
+              참여하기
             </div>
-          </li>
-        </UlDiv>
-      </div>
-      {postWriter.isMyPost === true ? (
-        <div className="user_btn">
+          )}
+        </DetailDiv>
+      )} */}
+      <DetailDiv>
+        <div className="detail">
+          <UlDiv>
+            <div className="profile">
+              <ul className="in_grid">
+                <li className="image">
+                  <img src={basicProfileImage}></img>
+                </li>
+                <li className="profile_info">
+                  <ul>
+                    <li className="id">{postWriter.name}</li>
+                    <li className="location">{postWriter.region}</li>
+                    <li className="deal_total">
+                      총 거래 : {postWriter.totalTrade}회
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <li className="title">
+              [{post.tradeType}] {post.title}
+            </li>
+            <li className="content">
+              <img src={post.image} />
+              <div>{post.content}</div>
+            </li>
+            <li className="date">
+              {post.date} &#124; {post.time}
+            </li>
+            <li className="pepole">
+              지금 {post.currentMate} 명 &#124; 전체 {post.totalMate} 명
+            </li>
+            <li className="map">
+              <div>
+                장소: {post.market}, ( {post.address} ){' '}
+              </div>
+              <div className="map_image" id="staticMap"></div>
+              <div
+                className="map_btn"
+                onClick={() => window.open(`${post.url}`, '_blank')}
+              >
+                장소 정보 보기
+              </div>
+            </li>
+          </UlDiv>
+        </div>
+        {postWriter.isMyPost === true ? (
+          <div className="user_btn">
+            <div
+              className="edit_btn"
+              onClick={() => {
+                history.push('/edit');
+              }}
+            >
+              수정하기
+            </div>
+            <div
+              className="delete_btn"
+              onClick={() => {
+                postDelete(post.id);
+                history.push('/mylist');
+              }}
+            >
+              삭제하기
+            </div>
+          </div>
+        ) : (
           <div
-            className="edit_btn"
+            className="btn"
             onClick={() => {
-              history.push('/edit');
+              // handleClick();
+              joinChat(post.id);
+              history.push('/chat');
             }}
           >
-            수정하기
+            참여하기
           </div>
-          <div
-            className="delete_btn"
-            onClick={() => {
-              postDelete(post.id);
-              history.push('/mylist');
-            }}
-          >
-            삭제하기
-          </div>
-        </div>
-      ) : (
-        <div
-          className="btn"
-          onClick={() => {
-            // handleClick();
-            joinChat(post.id);
-            history.push('/chat');
-          }}
-        >
-          참여하기
-        </div>
-      )}
-    </DetailDiv>
+        )}
+      </DetailDiv>
+    </>
   );
 };
 

@@ -168,11 +168,6 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
     }
   }
 
-  // const makePath = (el) => {
-  //   return `/chat/${el.articleId}`
-  // }
-  //  onClick={history.push(`/list/${el.articleId}`)}
-  // onClick={setChatRoomId(el.articleId)}
   const handleClickChatRoom = (e) => {
     let num = e.target.getAttribute('data-value');
     let title = document.getElementById(num).textContent;
@@ -185,32 +180,6 @@ const ChatList = ({ chatRoomId, setChatRoomId, setTitle }) => {
     console.log('방 바뀜', chatRoomId, '챗룸');
     history.push(`/chat/${chatRoomId}`);
   }, [chatRoomId]);
-
-  
-  // const chatContent = (articleid) => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_API_URL}/rooms/messages/${articleid}`, {
-  //       withCredentials: true,
-  //     })
-  //     .then((chatRoomData) => {
-  //       dispatch({
-  //         type: 'SHOW_CHATROOMLIST_TITLE',
-  //         payload: chatRoomData.data.data.title,
-  //       });
-  //       dispatch({
-  //         type: 'SHOW_CHATROOMLIST_CONTENTS',
-  //         payload: chatRoomData.data.data.messageList,
-  //       });
-  //       console.log(chatRoomData.data.data.title);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   chatContent();
-  // }, []);
 
   return (
     <>

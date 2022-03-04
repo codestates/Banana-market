@@ -229,7 +229,6 @@ export const AddSocketMessage = (payload) => {
   };
 };
 
-
 // --------------setSocketUserReducer--------------------
 export const SET_SOCKET_USER = 'SET_SOCKET_USER';
 export const ShowSocketUser = (payload) => {
@@ -238,9 +237,6 @@ export const ShowSocketUser = (payload) => {
     payload,
   };
 };
-
-
-
 
 // --------------chatRoomListReducer--------------------
 export const SHOW_CHATROOMLIST = 'SHOW_CHATROOMLIST';

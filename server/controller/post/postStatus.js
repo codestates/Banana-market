@@ -19,8 +19,7 @@ module.exports = async (req, res) => {
     res
       .status(404)
       .send({ message: `Article with id '${articleId}' not found` });
-  }else {
-
+  } else {
     // 상태가 1이면 (true이면) false로 상태 변경
     if (article.status) {
       const updateStatus = await article.update({

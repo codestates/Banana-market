@@ -1,94 +1,133 @@
-//원래 포스트 디테일
 const { User, Region, Article, Category } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
-  // 포스트 상세 내용 요청
   let accessTokenData = '';
+  let userId = '';
   if (req.cookies) {
     accessTokenData = checkAccessToken(req);
+    userId = accessTokenData.id;
   }
 
   const articleId = req.params.articleid;
   if (!articleId) {
     return res.status(422).send({ message: 'Incorrect parameters supplied' });
-  } else {
-    Article.findOne({
-      include: [
-        { model: Region },
-        { model: Category },
-        {
-          model: User,
-          include: [{ model: Article }, { model: Region }],
-          through: {
-            where: { is_host: true },
-          },
-        },
-      ],
-      where: { id: articleId },
-    }).then((articleData) => {
-      if (!articleData) {
-        return res.status(404).send({ message: 'Not found article' });
-      } else {
-        const article = articleData.dataValues;
-        const region = article.Region.dataValues.city;
-        const category = article.Category.dataValues.food_type;
-        // console.log(article.Users);
-        const user = article.Users[0].dataValues;
-        if (accessTokenData) {
-          const userId = accessTokenData.id;
-          const isMyPost = userId === user.id;
-          user.isMyPost = isMyPost;
-        } else {
-          user.isMyPost = false;
-        }
-
-        delete article.Region;
-        delete article.Category;
-        delete article.Users;
-
-        article.region = region;
-        article.category = category;
-        article.image = article.image_key;
-        article.totalMate = article.total_mate;
-        article.currentMate = article.current_mate;
-        const tradeType = article.trade_type;
-        if (tradeType === 'jointPurchase') {
-          article.tradeType = '공구';
-        } else {
-          article.tradeType = '나눔';
-        }
-        // article.tradeType = article.trade_type;
-
-        // delete article.image_location;
-        delete article.image_key;
-        delete article.region_id;
-        delete article.category_id;
-        delete article.total_mate;
-        delete article.current_mate;
-        delete article.trade_type;
-
-        const totalTrade = user.Articles.length;
-        user.totalTrade = totalTrade;
-        user.profile_image = user.profile_image_key;
-        user.region = user.Region.city;
-
-        delete user.UserArticles;
-        // delete user.profile_image_location;
-        delete user.profile_image_key;
-        delete user.password;
-        delete user.region_id;
-        delete user.Region;
-        delete user.Articles;
-
-        return res.status(200).send({
-          data: {
-            post: article,
-            postWriter: user,
-          },
-          message: 'ok',
-        });
-      }
-    });
   }
+
+  Article.findOne({
+    where: { id: articleId },
+    attributes: [
+      'id',
+      'title',
+      ['image_key', 'image'],
+      'content',
+      'market',
+      'date',
+      'time',
+      ['total_mate', 'totalMate'],
+      ['current_mate', 'currentMate'],
+      'status',
+      'address',
+      'url',
+      ['trade_type', 'tradeType'],
+      'createdAt',
+      'updatedAt',
+    ],
+
+    include: [
+      {
+        model: Region,
+        attributes: [['city', 'region']],
+      },
+      {
+        model: Category,
+        attributes: [['food_type', 'category']],
+      },
+      {
+        model: User,
+        include: [
+          {
+            model: Region,
+            attributes: [['city', 'region']],
+          },
+          {
+            model: Article,
+            attributes: [['id', 'participantArticleId']],
+          },
+
+        ],
+        attributes: [
+          ['id', 'userId'],
+          'name',
+          'email',
+          'block',
+          'type',
+          'createdAt',
+          'updatedAt',
+          ['profile_image_key', 'profile_image'],
+        ],
+        through: {
+          where: { is_host: true },
+          attributes: [
+            ['id', 'writerId'],
+            ['is_host', 'isHost'],
+          ],
+        },
+      },
+    ],
+  })
+    .then((data) => {
+      const postData = data.dataValues;
+      const articleRegion = postData.Region;
+      postData['region'] = articleRegion.dataValues.region;
+      delete postData.Region;
+
+      const category = postData.Category;
+      postData['category'] = category.dataValues.category;
+      delete postData.Category;
+
+      if (postData.tradeType === 'share') {
+        postData.tradeType = '나눔';
+      } else {
+        postData.tradeType = '공구';
+      }
+
+
+      const user = postData.Users;
+      let sendObj = {};
+      if (!user.length) {
+        // sendObj['post'] = postData;
+        // return res
+        //   .status(200)
+        //   .send({ data: sendObj, message: 'writer 정보가 없습니다' });
+        return res
+          .status(404)
+          .send({ message: '작성자가 없거나, 존재하지 않는 게시물 입니다' });
+      } else {
+        const userData = user[0].dataValues;
+        userData.region = userData.Region.dataValues.region;
+        delete userData.Region;
+        userData.totalTrade = userData.Articles.length;
+        delete userData.Articles;
+        let writer = userData.UserArticles.dataValues.writerId;
+        let isMyPost = false;
+        if (writer === userId) {
+          isMyPost = true;
+        }
+        userData.isMyPost = isMyPost;
+        delete userData.UserArticles;
+
+        sendObj['postWriter'] = userData;
+        delete postData.Users;
+        sendObj['post'] = postData;
+        console.log(sendObj);
+
+        res.status(200).send({ data: sendObj, message: 'ok' });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 };
+

@@ -34,6 +34,7 @@ function App(props) {
   const history = useHistory();
   let setLoginState = useSelector((state) => state.setLoginReducer);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
+  let message = useSelector((state) => state.setMessageReducer);
   let dispatch = useDispatch();
 
   const isAuthenticated = () => {
@@ -51,11 +52,11 @@ function App(props) {
         }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
+       
         if(setUserInfo.type === 'ADMIN'){
           dispatch(setAdminLogin());
           console.log(setUserInfo.type);
-        }
-        if(setUserInfo.block){
+        } else if(setUserInfo.block){
           dispatch(setLogout());
           alert('정지된 유저 입니다!')
         }

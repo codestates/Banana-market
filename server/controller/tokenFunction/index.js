@@ -26,10 +26,10 @@ module.exports = {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       // signed: true,
-      // domain: process.env.SERVER_DOMAIN,
-      // path: '/',
-      // secure: true,
-      // sameSite: 'none',
+      domain: process.env.SERVER_DOMAIN,
+      path: '/',
+      secure: true,
+      sameSite: 'none',
     });
   },
   // access token 유효성 확인

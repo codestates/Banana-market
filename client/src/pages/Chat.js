@@ -32,6 +32,7 @@ const ChatDiv = styled.div`
 `;
 
 const Chat = () => {
+  const [enterance, setEnterance] = useState(false);
   const [display, setDisplay] = useState('none');
   const [display1, setDisplay1] = useState('block');
   const [chatRoomId, setChatRoomId] = useState(0);
@@ -85,11 +86,15 @@ const Chat = () => {
     <div className="section2">
       <ChatDiv>
         <ChatList
+          enterance ={enterance}
+          setEnterance ={setEnterance}
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
           setTitle={setTitle}
         ></ChatList>
         <ChatRoom
+          enterance ={enterance}
+          setEnterance ={setEnterance}
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
           title={title}

@@ -149,40 +149,31 @@ module.exports = (io) => {
     });
 
     // C. 메세지 작성 -> 작성자, 게시글, 메세지 받아서 채팅 db에 저장
-    socket.on(
-      'sendMessage',
-      async ({ userId, roomId, message, created }, callback) => {
-        console.log(
-          ' 📨 ',
-          '유저:',
-          userId,
-          ', 룸: ',
-          roomId,
-          message,
-          ', 날짜:',
-          created
-        );
+    socket.on('sendMessage', async ({ userId, roomId, message }, callback) => {
+      console.log(' 📨 ', '유저:', userId, ', 룸: ', roomId, message);
 
-        console.log(' 참여중인 룸 ?? : ', socket.rooms);
+      console.log(' 참여중인 룸 ?? : ', socket.rooms);
 
-        let receivedMessage = await Chat.create({
-          user_id: userId,
-          article_id: roomId,
-          contents: message,
-        });
+      let receivedMessage = await Chat.create({
+        user_id: userId,
+        article_id: roomId,
+        contents: message,
+      });
 
-        let userPfp = await User.findByPk(userId, {
-          attributes: ['id', 'name', ['profile_image_key', 'profileImage']],
-        });
-        userPfp = userPfp.get({ plain: true });
-        receivedMessage = receivedMessage.get({ plain: true });
-        receivedMessage = { ...receivedMessage, ...userPfp };
+      let userPfp = await User.findByPk(userId, {
+        attributes: ['id', 'name', ['profile_image_key', 'profileImage']],
+      });
+      userPfp = userPfp.get({ plain: true });
+      receivedMessage = receivedMessage.get({ plain: true });
+      // console.log("받아서 보낼 메세지 1", receivedMessage)
+      receivedMessage = { ...receivedMessage, ...userPfp };
+      console.log('받아서 보낼 메세지 2', receivedMessage);
+      // receivedMessage = receivedMessage.get({ plain:true })
 
-        chatroom.to(roomId).emit('message', receivedMessage);
-        // console.log("무슨 메세지?", message)
-        callback();
-      }
-    );
+      chatroom.to(roomId).emit('message', receivedMessage);
+      // console.log("무슨 메세지?", message)
+      callback();
+    });
 
     // D. 소켓 연결 종료 (브라우저 닫을 때)
     socket.on('disconnect', () => {

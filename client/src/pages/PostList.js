@@ -73,7 +73,7 @@ const PostList = () => {
           setIsLoding(false);
         } else {
           setIsLoding(true);
-          articleList = articleList.map(async (elem) => {
+          articleList = articleList.map((elem) => {
             let postImageKey = elem.image;
             elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=115&h=115&f=webp&q=90`;
             return elem;

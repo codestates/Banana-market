@@ -225,10 +225,69 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
   let message = useSelector((state) => state.setMessageReducer);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
+
+
+  // const chatRoomData = useSelector((state) => state.chatRoomReducer);
+  // const { title, messageList } = chatRoomData;
+  // console.log(chatRoomData);
+  // console.log(messageList);
+
+  const [message, setMessage] = useState([
+    {
+      profileImage: null,
+      name: null,
+      createdAt: null,
+      content: null,
+    },
+  ]); // 채팅내용
   const [myMessage, setMyMessage] = useState(''); // 내가 보내는 메세지
   const [participant, setParticipant] = useState([]); // 참가자 목록
   const dispatch = useDispatch();
   let articleNum = useParams();
+
+  //참가자 정보 편집
+  const participantEditObj = (participant) => {
+    let ResultObj = {};
+    participant.map((el) => {
+      let participantObj = {
+        name: '',
+        profileImage: '',
+      };
+      participantObj['name'] = el.name;
+      participantObj['profileImage'] = el.profileImage;
+      ResultObj[el.id] = participantObj;
+    });
+    return ResultObj;
+  };
+
+  // let user_id = 5;
+  let socketParticipant = participantEditObj(participant); // 참가자 목록 편집
+
+  //-----------------------소캣 온 !!!
+  useEffect(() => {
+    socket.on(
+      'message',
+      ({ contents, createdAt }) => {
+        setMessage([
+          ...message,
+          {
+            contents: contents,
+            profileImage: socketParticipant.user_id.profileImage,
+            name: socketParticipant.user_id.name,
+            createdAt: createdAt,
+          },
+        ]);
+
+        console.log(message, '내가 보낸 메세지 받았니 ? ');
+      },
+      (error) => {
+        if (error) console.log(error);
+      }
+    );
+  }, []);
+
+  ////-------------------------------------------
+
 
 
   // 스크롤 하단으로 이동
@@ -336,6 +395,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         withCredentials: true,
       })
       .then((res) => {
+
         let messageList = res.data.data.messageList;
         console.log('채팅내용불러오기', messageList)
         // 참가후 쓴 메시지 없으면 : { }  , 메세지 있으면 [ {}, {} ]
@@ -365,6 +425,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         scrollToElement(); //
         
         // 방 참가자 목록받기
+
         axios
           .get(
             `${process.env.REACT_APP_API_URL}/rooms/participant/${chatRoomId}`,
@@ -374,7 +435,9 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
           )
           .then((res) => {
             // console.log(res.data.data.participant)
+
             //? ---참가자 프로필 이미지 수정---
+
             let participantList = res.data.data.participant;
             console.log('참여자 목록', participantList);
             participantList = participantList.map((elem) => {
@@ -387,6 +450,9 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
               }
               return elem;
             });
+
+            //? ---참가자 프로필 이미지---
+
             // console.log('참여자 목록', participantList);
             setParticipant(participantList);
             console.log('참여자 목록', participantList);
@@ -445,15 +511,39 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
         message: myMessage,
         created: message,
       },
+
+
       (error) => {
         if (error) console.log(error);
       }
     );
-    console.log('메세지 리셋')
-    setMyMessage('');
-    scrollToElement();
+
+    // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+    //     console.log('되니?'); setMyMessage('');
+    //   },
+    //   (error) => {
+    //     if (error) console.log(error);
+    //   }
+    // )
   };
-  
+
+//   useEffect(() => {
+//     socket.on(
+//       'message',
+//       ({ userId, chatRoomId, message, created }) => {
+//         setMessage([...message, { userId, chatRoomId, message, created }]);
+//       },
+
+//       (error) => {
+//         if (error) console.log(error);
+//       }
+//     );
+//     console.log('메세지 리셋')
+//     setMyMessage('');
+//     scrollToElement();
+
+//   }, []);
+
 
   //   // 채팅방 나가기 handler
   const leaveRoom = (event) => {
@@ -465,6 +555,141 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title, enterance, setEnterance })
     console.log(`${obj.roomId}방을 나갔습니다`);
     // history.push('/chat/0');
   };
+
+
+  // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
+  //     console.log('되니?'); setMyMessage('');
+  //   },
+  //   (error) => {
+  //     if (error) console.log(error);
+  //   }
+  // )
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', (m) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // // 메세지 작성 handler
+  // const sendMessage = (event) => {
+  //   // event.preventDefault();
+  //   if (myMessage) {
+  //     socket.emit(
+  //       'sendMessage',
+  //       { userId, chatRoomId, myMessage, created: Date.now() },
+  //       () => {
+  //         setMessage('');
+  //       }
+  //     );
+  //   }
+  // };
+
+  // // ----메세지 보내기
+  // const onMessageSubmit = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // 메세지 보내기
+  // useEffect(() => {
+  //   socket.on('message', ({ message }) => {
+  //     setchat([...chat, ...message]);
+  //   });
+  // }, [message]);
+
+  // const [roomId, setRoomId] = useState(11); // 채팅하는 공구 게시글
+  // const [userId, setUserId] = useState(7); // 유저
+  // const [message, setMessage] = useState('새로운 메세지로 바꿔보자'); // 작성한 메세지
+  // const [messages, setMessages] = useState([]); // 메세지 모음
+  // const [testLeave, setTestLeave] = useState(false); // 퇴장
+
+  // // 메세지 작성 handler
+  // const sendMessage = (event) => {
+  //   // event.preventDefault();
+  //   if (message) {
+  //     socket.emit(
+  //       'sendMessage',
+  //       { userId, roomId, message, created: Date.now() },
+  //       () => {
+  //         setMessage('');
+  //       }
+  //     );
+  //   }
+  // };
+
+  // // 작성한 메세지 보여주기
+  // useEffect(() => {
+  //   socket.on('message', ({ message, created }) => {
+  //     setMessages((messages) => [...messages, message]);
+  //     console.log('보낸 메세지 날짜 확인', message, created);
+  //   });
+  //   console.log('메세지들', messages);
+  // }, [message]);
+
+  // // 채팅방 나가기 handler
+  // const leaveRoom = (event) => {
+  //   // event.preventDefault();
+  //   socket.emit('leave', { userId, roomId }, (error) => {
+  //     if (error) console.log(error);
+  //   });
+  //   console.log(`${roomId}방을 나갔습니다`);
+  // };
+
+  // // 메세지 작성 실행
+  // useEffect(() => {
+  //   if (message) {
+  //     sendMessage();
+  //     setMessage('');
+  //   }
+  // }, [message]);
+
+  //   // 5번 아티클 6번 유저
+  //   const [roomId, setRoomId] = useState(3);      // 채팅하는 공구 게시글
+  //   const [userId, setUserId] = useState(4);        //
+  //   const [message, setMessage] = useState('4번 유저가 3번 아티클에서 보냄');
+  //   const [messages, setMessages] = useState([]);
+  //   const [testLeave, setTestLeave] = useState(true)
+
+  //   // useEffect(() => {
+  //   //   console.log("소켓 좀 보자", socket)
+  //   //   // 채팅방 참여하기
+  //   //   socket.emit('join', { userId, roomId }, (error) => {
+  //   //     if(error) console.log(error)
+  //   //   })
+  //   // }, [roomId])
+
+  //   // 메세지 작성 handler
+  //   const sendMessage = (event) => {
+  //     // event.preventDefault();
+  //     if(message) {
+  //       socket.emit('sendMessage', ({ userId, roomId, message, created: Date.now() }), () => {
+  //         setMessage('')
+  //       });
+  //     }
+  //   }
+
+  //   // 작성한 메세지 보여주기
+  //   useEffect(() => {
+  //     socket.on('message', ({ message, created }) => {
+  //       setMessages(messages => [ ...messages, message ]);
+  //       console.log("보낸 메세지 날짜 확인", message, created)
+  //     });
+  //     console.log("메세지들", messages)
+  //   }, [message]);
+
+  //   // 메세지 작성 실행
+  //   useEffect(() => {
+  //     if (message) {
+  //       sendMessage();
+  //     }
+  //   }, [message])
+
+  // // 채팅방 나가기 실행
+  // useEffect(() => {
+  //   if (testLeave) {
+  //     leaveRoom();
+  //   }
+  // }, [testLeave]);
 
 
   return (

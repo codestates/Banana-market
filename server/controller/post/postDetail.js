@@ -97,7 +97,10 @@ const { checkAccessToken } = require('../tokenFunction');
 
 module.exports = async (req, res) => {
   // 포스트 상세 내용 요청
-  const accessTokenData = checkAccessToken(req);
+  let accessTokenData = '';
+  if (req.cookies) {
+    accessTokenData = checkAccessToken(req);
+  }
 
   const articleId = req.params.articleid;
   if (!articleId) {

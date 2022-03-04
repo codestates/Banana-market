@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -80,56 +80,63 @@ const Wrapper = styled.div`
   
 `;
 
-
 const Admin = () => {
-  //임의의 신고된 유저 리스트 
-  const [list, setList] = useState([{
-    userId: '다오',
-    name: '다오',
-    email: '다오이메일',
-    profileImage: 'https://media.vlpt.us/images/ez0ez0/post/dc0f7d3f-6bd7-4788-81c4-c5bc16f8cd80/placeholder.png',
-    block:''
-  },
-  {
-    userId: '다오1',
-    name: '다오1',
-    email: '다오이메일1',
-    profileImage: 'https://media.vlpt.us/images/ez0ez0/post/dc0f7d3f-6bd7-4788-81c4-c5bc16f8cd80/placeholder.png',
-    block:''
-  },
-  {
-    userId: '다오2',
-    name: '다오2',
-    email: '다오이메일2',
-    profileImage: 'https://media.vlpt.us/images/ez0ez0/post/dc0f7d3f-6bd7-4788-81c4-c5bc16f8cd80/placeholder.png',
-    block:''
-  }]);
+  const [reportedUsers, setReportedUsers] = useState([]);
+  const [blockinfo, setBlockInfo] = useState('true');
+  const [blockedUserId, setBlockedUserId] = useState();
 
-  const handleClickBlockUser = () => {
-    alert('유저차단axio보내주세요.')
+  const getReportUserList = () => {
+    return axios.get(`${process.env.REACT_APP_API_URL}/admin/report`, {
+      withCredentials: true,
+    })
   }
 
+  useEffect(async()=> {
+    let userList = await (await getReportUserList()).data.data.reportedUserInfo;
+    if (userList.length) {
+      userList = userList.map((el) => {
+        let profileImageKey = el.profileImage;
+        el.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=70&h=70&f=webp&q=90`;
+        return el
+      })
+      setReportedUsers(userList)
+    }
+  }, [blockedUserId])
+
+  const handleClickBlockUser = async(userId) => {
+    // alert('유저차단axio보내주세요.')
+    let userBlock = await axios
+    .patch(`${process.env.REACT_APP_API_URL}/admin/block`, {
+      userId: userId
+    }, {
+      withCredentials: true,
+    })
+    userBlock = userBlock.data.data.userId
+    setBlockedUserId(userBlock)
+  }
+  
   return (
     <div>
       <Wrapper>
         <div className='report_list'>
           <ul>
-          {list.map((el, idx) => (
+          {reportedUsers.map((reportedUser, idx) => (
             <li key={idx} >
               <div className='userinfo_area'>
-                <img src={el.profileImage}/>
+                <img src={reportedUser.profileImage}/>
                 <div class='userinfo_text'>
-                  <div className='userId'> <span>유저 아이디 :</span> {el.userId}</div>
-                  <div className='name'><span>유저 이름 : </span>{el.name}</div>
-                  <div className='email'><span>유저 이메일 : </span>{el.email}</div>
-                  <div className='block'><span>block 정보 : </span>{el.block}</div>
+                  <div className='userId'><span>유저 아이디 :</span> {reportedUser.userId}</div>
+                  <div className='name'><span>유저 이름 : </span>{reportedUser.name}</div>
+                  <div className='email'><span>유저 이메일 : </span>{reportedUser.email}</div>
+                  <div className='block'><span>block 정보 : </span>{
+                  reportedUser.userId === blockedUserId? blockinfo : reportedUser.block.toString()
+                  }</div>
                 </div>
               </div>
-              <div className='block_btn' onClick={handleClickBlockUser}>정지버튼</div>
+              <div className='block_btn' onClick={()=>handleClickBlockUser(reportedUser.userId)}>정지버튼</div>
             </li>
           ))}
           </ul>
-        
         </div>
       </Wrapper>
     </div>

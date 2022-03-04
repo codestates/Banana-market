@@ -76,7 +76,7 @@ const Wrapper = styled.div`
       width: 90%;
       border: 0px;
       background-color: #ff4342;
-      color:#ffe1e0;
+      color: #ffe1e0;
     }
   }
 `;

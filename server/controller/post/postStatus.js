@@ -19,34 +19,34 @@ module.exports = async (req, res) => {
     res
       .status(404)
       .send({ message: `Article with id '${articleId}' not found` });
-  }
-
-  // 상태가 1이면 (true이면) false로 상태 변경
-  if (article.status) {
-    const updateStatus = await article.update({
-      status: false,
-    });
-    res.status(200).json({
-      data: {
-        article: {
-          status: updateStatus.status,
+  } else {
+    // 상태가 1이면 (true이면) false로 상태 변경
+    if (article.status) {
+      const updateStatus = await article.update({
+        status: false,
+      });
+      res.status(200).json({
+        data: {
+          article: {
+            status: updateStatus.status,
+          },
         },
-      },
-      message: 'ok',
-    });
-  }
-  // 상태가 0이면 (false) true로 상태 변경
-  else if (article.status === false) {
-    const updateStatus = await article.update({
-      status: true,
-    });
-    res.status(200).json({
-      data: {
-        article: {
-          status: updateStatus.status,
+        message: 'ok',
+      });
+    }
+    // 상태가 0이면 (false) true로 상태 변경
+    else if (article.status === false) {
+      const updateStatus = await article.update({
+        status: true,
+      });
+      res.status(200).json({
+        data: {
+          article: {
+            status: updateStatus.status,
+          },
         },
-      },
-      message: 'ok',
-    });
+        message: 'ok',
+      });
+    }
   }
 };

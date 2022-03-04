@@ -19,7 +19,7 @@ import monkey from '../icon/monkey.png';
 const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
-  margin: 50px auto;
+  margin: 125px auto;
   font-size: 18px;
   color: #444;
   @media screen and (max-width: 767px) {
@@ -57,14 +57,14 @@ const Wrapper = styled.div`
       width: 212px;
       height: 50px;
       line-height: 50px;
-    font-size: 18px;
-    font-weight: 400;
+      font-size: 18px;
+      font-weight: 400;
       background-color: #7f9879b8;
       color: white;
       border-radius: 10px;
       margin-top: 20px;
       @media screen and (max-width: 767px) {
-        width: 49% ;
+        width: 49%;
         justify-content: flex-end;
       }
     }
@@ -171,9 +171,9 @@ const UlDiv = styled.ul`
     height: 60px;
     border-top: 1px dashed #c6c6c6;
     /* height: 60px; */
-    >div.tt{
+    > div.tt {
       line-height: 45px;
-      width:100px;
+      width: 100px;
       display: inline-block;
       float: left;
       @media screen and (max-width: 450px) {
@@ -181,8 +181,8 @@ const UlDiv = styled.ul`
       }
     }
     > div.btn_list {
-      float: right; 
-      display: inline-block;     
+      float: right;
+      display: inline-block;
 
       /* position: relative; */
       /* right: -30px;
@@ -194,7 +194,7 @@ const UlDiv = styled.ul`
         color: #7d7d7d;
         font-weight: 300;
 
-        width : 100px;
+        width: 100px;
         height: 45px;
         line-height: 45px;
 
@@ -212,9 +212,7 @@ const UlDiv = styled.ul`
     }
   }
   li.info_area {
-
-    
-    background-color: #f7f7f7;    
+    background-color: #f7f7f7;
 
     font-size: 16px;
     line-height: 45px;
@@ -270,12 +268,13 @@ const UlDiv = styled.ul`
     padding: 20px 14px 0 14px;
     display: block;
     line-height: 45px;
-    padding : 15px;
+    padding: 15px;
   }
   li.spot.info_area {
     padding: 0px 14px 20px 14px;
     line-height: 45px;
-  } div.text {
+  }
+  div.text {
     /* width: calc((100% - 70px) / 2); */
 
     @media screen and (max-width: 767px) {
@@ -284,8 +283,8 @@ const UlDiv = styled.ul`
     > select.select_css2 {
       width: calc((100% - 8px) / 2);
       font-size: 16px;
-      &.sel_right{
-        margin-left:8px;
+      &.sel_right {
+        margin-left: 8px;
       }
     }
   }
@@ -518,9 +517,11 @@ const Profile = ({ handleChangeAuth }) => {
           <li className="profile">
             <div className="text_user_info">
               <span> BANANA - MARKET </span>
-              <div className='text_id'> {setUserInfo.email}</div>
-              <div className='text_trade'> {setUserInfo.totalTrade}회 바나나마켓 거래 이용</div>
-
+              <div className="text_id"> {setUserInfo.email}</div>
+              <div className="text_trade">
+                {' '}
+                {setUserInfo.totalTrade}회 바나나마켓 거래 이용
+              </div>
             </div>
             <div className="image">
               {setUserInfo.profileImage ? (
@@ -632,20 +633,19 @@ const Profile = ({ handleChangeAuth }) => {
         </UlDiv>
       </div>
       <div className="md_btn_list info_area">
-            <div
-              className="md_btn secession_btn"
-              onClick={handleChangeSecessionModalState}
-            >
-              회원탈퇴
-            </div>
-            <div
-              className="md_btn password_change_btn"
-              onClick={handleChangePasswordModalState}
-            >
-              비밀번호 변경
-            </div>
-          </div>
-
+        <div
+          className="md_btn secession_btn"
+          onClick={handleChangeSecessionModalState}
+        >
+          회원탈퇴
+        </div>
+        <div
+          className="md_btn password_change_btn"
+          onClick={handleChangePasswordModalState}
+        >
+          비밀번호 변경
+        </div>
+      </div>
     </Wrapper>
   );
 };

@@ -6,14 +6,14 @@ import { useSelector, useDispatch } from 'react-redux';
 const SelectBtn = styled.div`
   max-width: 1200px;
   height: 35px;
-  margin: 80px auto 55px auto;
+  margin: 65px auto 55px auto;
   /* background-color: sienna; */
   @media screen and (max-width: 1200px) {
-    margin: 50px 15px 15px 15px;
+    margin: 65px 15px 15px 15px;
   }
 
   @media screen and (max-width: 767px) {
-    margin: 75px 10px 10px 10px;
+    margin: 80px 10px 10px 10px;
     height: 30px;
   }
 
@@ -64,7 +64,7 @@ const SelectBtn = styled.div`
       height: 35px;
       border-radius: 5px;
       margin-right: 20px;
-
+      background-color: #fff;
       @media screen and (max-width: 767px) {
         width: 100px;
         height: 30px;
@@ -75,6 +75,7 @@ const SelectBtn = styled.div`
       height: 35px;
       border-radius: 5px;
       margin-right: 5px;
+      background-color: #fff;
       @media screen and (max-width: 1200px) {
         margin-right: 0;
       }
@@ -89,9 +90,14 @@ const SelectBtn = styled.div`
 const ListDiv = styled.div`
   max-width: 1200px;
   min-height: 690px;
-  /* background-color: aquamarine; */
-  margin: 55px auto 80px;
 
+  margin: 55px auto 80px;
+  @media screen and (max-width: 1200px) {
+    margin: 40px auto 80px;
+  }
+  @media screen and (max-width: 768px) {
+    margin: 0px auto 80px;
+  }
   > ul {
     max-width: 1200px;
     /* margin: 0px auto 70px auto; */
@@ -240,7 +246,8 @@ const ListDiv = styled.div`
 `;
 
 const ListDeTail = styled.div`
-  box-shadow: 2px 3px 4px 2px #ddd;
+  /* box-shadow: 2px 3px 4px 2px #ddd; */
+  box-shadow: ${(props) => (props.status ? '2px 3px 4px 2px #ddd' : '')};
   /* min-width: 379px; */
   min-height: 150px;
   border-radius: 10px;

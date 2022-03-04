@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   setMessageReducer,
   setAdminLoginReducer,
   setSocketMessageReducer,
-  setSocketUserReducer
+  setSocketUserReducer,
 });
 
 export default rootReducer;

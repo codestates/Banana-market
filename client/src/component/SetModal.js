@@ -435,6 +435,14 @@ function ExitModal({ setExistBtn, leaveRoom }) {
       })
       .then((chatData) => {
         // console.log(chatData.data.data.roomList);
+        let { roomList } = chatData.data.data;
+        console.log(roomList);
+        roomList = roomList.map((elem) => {
+          const postImageKey = elem.image;
+          elem.image = `https://d2fg2pprparkkb.cloudfront.net/${postImageKey}?w=60&h=60&f=webp&q=90`;
+          return elem;
+        });
+
         dispatch({
           type: 'SHOW_CHATLIST',
           payload: chatData.data.data.roomList,

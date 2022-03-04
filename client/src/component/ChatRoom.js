@@ -303,13 +303,18 @@ const ChatRoom = ({
           name
         );
         // console.log('여기',socketParticipant)
+        if (!profileImage) {
+          profileImage =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+        } else {
+          profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImage}?w=40&h=40&f=webp&q=90`;
+        }
+
         dispatch({
           type: 'ADD_MESSAGE',
           payload: {
             contents: contents,
-            profileImage: null
-              ? 'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90'
-              : `https://d35fj6mbinlfx5.cloudfront.net/${profileImage}?w=40&h=40&f=webp&q=90`,
+            profileImage: profileImage,
             name: name,
             createdAt: timeSetting(createdAt),
           },
@@ -551,6 +556,7 @@ const ChatRoom = ({
       {secessionModal === true ? (
         <SetDiv>
           <SetModal
+            chatRoomId={chatRoomId}
             setSecessionModal={setSecessionModal}
             leaveRoom={leaveRoom}
             participant={participant}

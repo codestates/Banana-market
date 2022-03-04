@@ -45,7 +45,6 @@ export const initialStateSocketMessage = [
 ];
 export const initialStateSocketUser = {};
 
-
 export const initiaPostDetail = {
   post: {
     address: null,

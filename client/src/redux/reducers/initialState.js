@@ -43,6 +43,7 @@ export const initialStateSocketMessage = [
     createdAt: null,
   },
 ];
+export const initialStateSocketUser = {};
 
 
 export const initiaPostDetail = {

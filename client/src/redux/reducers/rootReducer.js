@@ -13,7 +13,7 @@ import chatRoomReducer from './chatRoomReducer';
 import setMessageReducer from './setMessageReducer';
 import setAdminLoginReducer from './setAdminLoginReducer';
 import setSocketMessageReducer from './setSocketMessageReducer';
-
+import setSocketUserReducer from './setSocketUserReducer';
 
 const rootReducer = combineReducers({
   setLoginReducer,
@@ -27,7 +27,8 @@ const rootReducer = combineReducers({
   chatRoomReducer,
   setMessageReducer,
   setAdminLoginReducer,
-  setSocketMessageReducer
+  setSocketMessageReducer,
+  setSocketUserReducer
 });
 
 export default rootReducer;

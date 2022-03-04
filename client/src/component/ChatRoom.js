@@ -463,6 +463,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
     setMyMessage('');
   }, []);
 
+
   //   // 채팅방 나가기 handler
   const leaveRoom = (event) => {
     // event.preventDefault();

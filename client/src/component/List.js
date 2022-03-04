@@ -121,7 +121,8 @@ const ListDiv = styled.div`
       min-height: 150px;
       border-radius: 10px;
       cursor: pointer;
-      background-color: #fff;
+      background-color: #ddd;
+      opacity: 0.5;
       /* margin-bottom: 25px; */
 
       transition: all 0.2s linear;
@@ -238,71 +239,123 @@ const ListDiv = styled.div`
   }
 `;
 
-const ExitModalDiv = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 100;
-  /* width: 330px;
-  height: 710px; */
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
-  background-color: rgb(0, 0, 0, 0.6);
-  .exit_modal {
-    width: 250px;
-    height: 180px;
-    background-color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border-radius: 10px;
-    transform: translate(-50%, -50%);
-    .exit_title {
-      text-align: center;
-      width: 220px;
-      margin: 30px auto 15px auto;
-      font-weight: 600;
-    }
-    .exit_info {
-      width: 200px;
-      margin: 0 auto;
-      font-size: 11px;
-      margin: 0 auto 25px auto;
-      text-align: center;
-      line-height: 1.5;
-      color: #4c4c4c;
+const ListDeTail = styled.div`
+  box-shadow: 2px 3px 4px 2px #ddd;
+  /* min-width: 379px; */
+  min-height: 150px;
+  border-radius: 10px;
+  cursor: ${(props) => (props.status ? 'pointer' : '')};
+  background-color: ${(props) => (props.status ? 'white' : '#ddd')};
+  opacity: ${(props) => (props.status ? '' : '0.7')};
+
+  transition: all 0.2s linear;
+  &:hover {
+    opacity: ${(props) => (props.status ? '0.7' : '')};
+  }
+  @media screen and (max-width: 1200px) {
+    /* min-width: 300px; */
+    min-height: 130px;
+  }
+
+  @media screen and (max-width: 768px) {
+    min-height: 130px;
+  }
+  > .in_grid {
+    display: grid;
+    grid-template-columns: 120px auto;
+    padding: 15px;
+    grid-gap: 15px;
+
+    @media screen and (max-width: 1200px) {
+      grid-template-columns: 115px auto;
     }
 
-    .exit_btn {
-      width: 210px;
-      height: 30px;
-      margin: 0 auto;
-      > div {
-        float: left;
+    @media screen and (max-width: 768px) {
+      grid-template-columns: 110px auto;
+    }
+
+    .img {
+      min-height: 120px;
+      /* border: 1px solid #fff; */
+      background-color: #ddd;
+      border-radius: 10px;
+      background-size: cover;
+      @media screen and (max-width: 1200px) {
+        /* min-width: 300px; */
+        min-height: 115px;
       }
-      .cancel {
-        width: 90px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        background-color: #f4f4f4;
-        font-size: 13px;
-        cursor: pointer;
+
+      @media screen and (max-width: 768px) {
+        min-height: 110px;
       }
-      .ok {
-        width: 90px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        background-color: #c4c4c4;
-        font-size: 13px;
-        float: right;
-        cursor: pointer;
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+      }
+    }
+
+    .inf {
+      min-height: 120px;
+      /* border: 1px solid #fff; */
+      border-radius: 10px;
+      cursor: pointer;
+      @media screen and (max-width: 1200px) {
+        /* min-width: 300px; */
+        min-height: 115px;
+      }
+
+      @media screen and (max-width: 768px) {
+        min-height: 110px;
+      }
+
+      .title {
+        width: 100%;
+        min-height: 19px;
+        /* background-color: beige; */
+        font-size: 17px;
+        margin-top: 10px;
+        font-weight: 500;
+        color: #2b2828;
+        @media screen and (max-width: 1200px) {
+          /* min-width: 300px; */
+          font-size: 17px;
+          margin-top: 8px;
+        }
+
+        @media screen and (max-width: 768px) {
+          font-size: 16px;
+          margin-top: 6px;
+        }
+      }
+      .location {
+        width: 100%;
+        font-size: 14px;
+        margin-top: 13px;
+        color: #2b2828;
+        @media screen and (max-width: 768px) {
+          font-size: 14px;
+        }
+      }
+      .date {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 20px;
+        color: #2b2828;
+
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+        }
+      }
+      .pepole {
+        width: 100%;
+        font-size: 12px;
+        margin-top: 7px;
+        color: #2b2828;
+
+        @media screen and (max-width: 768px) {
+          font-size: 12px;
+        }
       }
     }
   }
@@ -312,6 +365,9 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
   const history = useHistory();
   const setLoginState = useSelector((state) => state.setLoginReducer);
   const list = useSelector((state) => state.postListReducer);
+
+  // const off = useSelector((state) => state.setModalReducer);
+  // console.log(off);
   const categoryData = [
     '정육/계란',
     '과일',
@@ -363,13 +419,15 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
 
             // el.image = postImg.config.url;
 
-            <li
+            <ListDeTail
               key={idx}
-              className="list_detail"
+              status={el.status}
               onClick={() => {
                 history.push(
                   setLoginState
-                    ? `/view/${el.id}`
+                    ? el.status === true
+                      ? `/view/${el.id}`
+                      : alert('마감되었습니다.')
                     : alert('로그인 후 이용 가능합니다.')
                 );
               }}
@@ -398,7 +456,7 @@ const List = ({ handleFilterCategory, handleFilterSort }) => {
                   </ul>
                 </li>
               </ul>
-            </li>
+            </ListDeTail>
           ))}
         </ul>
       </ListDiv>

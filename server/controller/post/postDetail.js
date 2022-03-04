@@ -1,3 +1,4 @@
+//원래 포스트 디테일
 const { User, Region, Article, Category } = require('../../models');
 const { checkAccessToken } = require('../tokenFunction');
 

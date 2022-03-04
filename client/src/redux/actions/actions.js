@@ -9,6 +9,13 @@ export const SET_LOGOUT = 'SET_LOGOUT';
 export const setLogin = () => ({ type: SET_LOGIN });
 export const setLogout = () => ({ type: SET_LOGOUT });
 
+// ---------------setAdminLoginReducer--------------
+export const SET_ADMIN_LOGIN = 'SET_ADMIN_LOGIN';
+export const SET_ADMIN_LOGOUT = 'SET_ADMIN_LOGOUT';
+
+export const setAdminLogin = () => ({ type: SET_ADMIN_LOGIN });
+export const setAdminLogout = () => ({ type: SET_ADMIN_LOGOUT });
+
 // ---------------setUserInfoReducer--------------
 export const SET_UPDATE_USER_INFO = 'SET_UPDATE_USER_INFO';
 export const SET_USER_INFO_NULL = 'SET_USER_INFO_NULL';
@@ -170,6 +177,33 @@ export const ShowChatList = (payload) => {
   };
 };
 
+// --------------setMessageReducer--------------------
+export const RESET_MESSAGE = 'RESET_MESSAGE';
+export const SHOW_MESSAGE = 'SHOW_MESSAGE';
+export const ADD_MESSAGE = 'ADD_MESSAGE';
+
+export const ResetMessage = (payload) => {
+  return {
+    type: RESET_MESSAGE,
+    payload,
+  };
+};
+
+export const ShowMessage = (payload) => {
+  return {
+    type: SHOW_MESSAGE,
+    payload,
+  };
+};
+
+export const AddMessage = (payload) => {
+  return {
+    type: ADD_MESSAGE,
+    payload,
+  };
+};
+
+
 // --------------chatRoomListReducer--------------------
 export const SHOW_CHATROOMLIST = 'SHOW_CHATROOMLIST';
 export const SHOW_CHATROOMLIST_TITLE = 'SHOW_CHATROOMLIST_TITLE';
@@ -195,3 +229,12 @@ export const showChatRoomContents = (payload) => {
     payload,
   };
 };
+
+// --------------chatRoomListReducer--------------------
+
+// export const showChatRoomContents = (payload) => {
+//   return {
+//     type: SHOW_CHATROOMLIST_CONTENTS,
+//     payload,
+
+//   };

@@ -64,7 +64,7 @@ const PostList = () => {
       })
       .then((listData) => {
         let articleList = listData.data.data.articleList;
-
+        console.log(articleList);
         // console.log('ArticleList', listData.data.data.articleList);
         if (listData.data.data.articleList.length === 0) {
           // setTimeout(() => {

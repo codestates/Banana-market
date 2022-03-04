@@ -53,5 +53,5 @@ module.exports = async (req, res) => {
       block : true
     })
 
-  res.status(200).send({ message: 'Ok' });
+  res.status(200).send({ data: {userId}, message: 'Ok' });
 };

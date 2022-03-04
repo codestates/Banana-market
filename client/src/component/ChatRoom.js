@@ -325,6 +325,10 @@ const ChatRoom = ({
         console.log('why error?', error);
       }
     );
+
+    return () => {
+      socket.off('message');
+    };
   }, []);
 
   //참가자 정보 편집 함수

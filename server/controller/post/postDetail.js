@@ -85,6 +85,12 @@ module.exports = async (req, res) => {
       postData['category'] = category.dataValues.category;
       delete postData.Category;
 
+      if (postData.tradeType === 'share') {
+        postData.tradeType = '나눔';
+      } else {
+        postData.tradeType = '공구';
+      }
+
       const user = postData.Users;
       let sendObj = {};
       if (!user.length) {

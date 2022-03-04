@@ -1,4 +1,4 @@
-const { Article, Chat, UserArticles } = require('./models')
+const { Article, User, Chat, UserArticles } = require('./models')
 // const { Op } = require("sequelize");
 
 module.exports = io => {
@@ -95,9 +95,15 @@ module.exports = io => {
         contents : message
       })
 
-      console.log("받아서 보낼 메세지", receivedMessage)
+      let userPfp = await User.findByPk(userId, {
+        attributes: ['id', 'name', ['profile_image_key', 'profileImage']]
+      })
+      userPfp = userPfp.get({plain:true})
       receivedMessage = receivedMessage.get({ plain:true })
-
+      // console.log("받아서 보낼 메세지 1", receivedMessage)
+      receivedMessage = {...receivedMessage, ...userPfp}
+      console.log("받아서 보낼 메세지 2", receivedMessage)
+      // receivedMessage = receivedMessage.get({ plain:true })
 
       chatroom.to(roomId).emit("message", receivedMessage)
       // console.log("무슨 메세지?", message)

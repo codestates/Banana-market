@@ -203,6 +203,33 @@ export const AddMessage = (payload) => {
   };
 };
 
+// --------------setSocketMessageReducer--------------------
+export const RESET_SOCKET_MESSAGE = 'RESET_SOCKET_MESSAGE';
+export const SHOW_SOCKET_MESSAGE = 'SHOW_SOCKET_MESSAGE';
+export const ADD_SOCKET_MESSAGE = 'ADD_SOCKET_MESSAGE';
+
+export const ResetSocketMessage = (payload) => {
+  return {
+    type: RESET_SOCKET_MESSAGE,
+    payload,
+  };
+};
+
+export const ShowSocketMessage = (payload) => {
+  return {
+    type: SHOW_SOCKET_MESSAGE,
+    payload,
+  };
+};
+
+export const AddSocketMessage = (payload) => {
+  return {
+    type: ADD_SOCKET_MESSAGE,
+    payload,
+  };
+};
+
+
 
 // --------------chatRoomListReducer--------------------
 export const SHOW_CHATROOMLIST = 'SHOW_CHATROOMLIST';

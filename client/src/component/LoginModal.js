@@ -205,7 +205,7 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
           >
             BANANA MARKET
           </p>
-          <input 
+          <input
             type="text "
             className="loginId input_css2"
             placeholder="이메일을 입력해주세요."
@@ -220,7 +220,7 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
           <div className="sign_div" onClick={handleClickLoginBtn}>
             로그인하기
           </div>
-          <div className='box'>
+          <div className="box">
             <Link to="/signup">
               <div
                 className="join"
@@ -231,17 +231,19 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
                 <p> 회원 가입하기 </p>
               </div>
             </Link>
-            <div className='line'></div>
-              <div
-                className="socialjoin"
-                onClick={() => {
-                  handleClickGoogleSocialLoginBtn();
-                }}>
-                <p>
-                  <img className="google_icon" src={google_icon} />
-                  &nbsp; &nbsp;Google 로그인 </p>
-              </div>
-          </div>  
+            <div className="line"></div>
+            <div
+              className="socialjoin"
+              onClick={() => {
+                handleClickGoogleSocialLoginBtn();
+              }}
+            >
+              <p>
+                <img className="google_icon" src={google_icon} />
+                &nbsp; &nbsp;Google 로그인{' '}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </Login_div>

@@ -53,3 +53,7 @@ export const initiaPostDetail = {
     totalTrade: null,
   },
 };
+
+export const initialOnOffBtn = {
+  status: true,
+};

@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
     !address ||
     !url
   ) {
-    res.status(422).send({ message: 'Incorrect parameters supplied' });
+    return res.status(422).send({ message: 'Incorrect parameters supplied' });
   }
 
   const categoryData = await Category.findOne({

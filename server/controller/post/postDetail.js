@@ -5,9 +5,12 @@ module.exports = async (req, res) => {
   let accessTokenData = '';
   let userId = '';
   if (req.cookies) {
+    console.log('쿸키');
     accessTokenData = checkAccessToken(req);
     userId = accessTokenData.id;
   }
+
+  console.log('userId', userId);
 
   const articleId = req.params.articleid;
   if (!articleId) {
@@ -54,7 +57,6 @@ module.exports = async (req, res) => {
             model: Article,
             attributes: [['id', 'participantArticleId']],
           },
-
         ],
         attributes: [
           ['id', 'userId'],
@@ -69,7 +71,7 @@ module.exports = async (req, res) => {
         through: {
           where: { is_host: true },
           attributes: [
-            ['id', 'writerId'],
+            ['user_id', 'writerId'],
             ['is_host', 'isHost'],
           ],
         },
@@ -92,14 +94,9 @@ module.exports = async (req, res) => {
         postData.tradeType = '공구';
       }
 
-
       const user = postData.Users;
       let sendObj = {};
       if (!user.length) {
-        // sendObj['post'] = postData;
-        // return res
-        //   .status(200)
-        //   .send({ data: sendObj, message: 'writer 정보가 없습니다' });
         return res
           .status(404)
           .send({ message: '작성자가 없거나, 존재하지 않는 게시물 입니다' });
@@ -120,8 +117,6 @@ module.exports = async (req, res) => {
         sendObj['postWriter'] = userData;
         delete postData.Users;
         sendObj['post'] = postData;
-        console.log(sendObj);
-
         res.status(200).send({ data: sendObj, message: 'ok' });
       }
     })
@@ -130,4 +125,3 @@ module.exports = async (req, res) => {
       res.status(500).send(err);
     });
 };
-

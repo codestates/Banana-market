@@ -73,6 +73,7 @@ const Chat = () => {
     };
   }, []);
 
+
   // const onClick = () => {
   //   display === 'none' ? setDisplay('block') : setDisplay('none');
   //   display1 === 'block' ? setDisplay1('none') : setDisplay1('block');

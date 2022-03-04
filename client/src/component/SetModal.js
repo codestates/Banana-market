@@ -4,6 +4,15 @@ import { useHistory, useParams, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ResetChatList } from '../redux/actions/actions';
 import axios from 'axios';
+
+// socket 연결
+import io from 'socket.io-client';
+const endpoint = 'http://localhost:3001';
+const chatroom = `${endpoint}/chatroom`;
+const socket = io.connect(chatroom, {
+  withCredentials: true,
+});
+
 const SetModalDiv = styled.div`
   width: 330px;
   height: 712px;
@@ -236,6 +245,7 @@ const SetModal = ({
   setSecessionModal,
   leaveRoom,
   participant,
+  setParticipant,
   chatRoomId,
 }) => {
   const history = useHistory();
@@ -248,6 +258,7 @@ const SetModal = ({
 
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
+  let [outUserId, setOutUserId] = useState(null);
 
   // ----- 메이트 모집 완료 표시
   const handleClickCloseBtn = (articleid) => {
@@ -260,6 +271,29 @@ const SetModal = ({
       .catch((err) => {
         console.log(err);
       });
+  };
+  
+
+
+  //참가자 내보내기 버튼 클릭 handler
+  const handleClickOutBtn = (e) => {
+    let num = e.target.getAttribute('data-value');
+    setOutUserId(num);
+    setOutBtn(true); 
+  };
+
+  //채팅방 내보내기 확인!! handler
+  const outRoomConfirm = (event) => {
+    // event.preventDefault();
+    let obj = { userId: outUserId, roomId: chatRoomId };
+    socket.emit('leave', obj, (error) => {
+      if (error) console.log(error);
+    });
+    alert(`${obj.roomId}가 방에서 내보내졌습니다.`);
+    setOutBtn(false); 
+    let participantList = participant;
+    delete participantList[outUserId];
+    setParticipant(participantList);
   };
 
   // 참가자 신고
@@ -302,7 +336,7 @@ const SetModal = ({
     return person.isHost === '1';
   });
   // console.log('참가자', participant[0].isHost);
-  if(hostId.length === 0 ){
+  if( hostId.length === 0 ){
     hostId = 1;
   }else {
     hostId = hostId[0].id 
@@ -366,7 +400,9 @@ const SetModal = ({
             <ul className="grid">
               {participant.map((el, idx) => (
                 <li key={idx}>
-                  <div className="user_img" src={el.profileImage}></div>
+                  <div className="user_img" src={el.profileImage}>
+                    <img src={el.profileImage}></img>
+                  </div>
                   <div className="user_id">{el.name}</div>
                   <div
                     className="declaration_btn"
@@ -376,7 +412,7 @@ const SetModal = ({
                   ></div>
                   {el.isHost === '1' ? null : (
                     <>
-                      <div className="user_out" onClick={() => setOutBtn(true)}>
+                      <div className="user_out" data-value={el.id} onClick={handleClickOutBtn}>
                         내보내기
                       </div>
                     </>
@@ -390,7 +426,9 @@ const SetModal = ({
             <ul className="grid">
               {participant.map((el, idx) => (
                 <li key={idx}>
-                  <div className="user_img" src={el.profileImage}></div>
+                  <div className="user_img">
+                    <img src={el.profileImage}></img>
+                  </div>
                   <div className="user_id">{el.name}</div>
                   <div
                     className="declaration_btn"
@@ -414,7 +452,7 @@ const SetModal = ({
             leaveRoom={leaveRoom}
           ></ExitModal>
         ) : null}
-        {outBtn === true ? <UserOut setOutBtn={setOutBtn}></UserOut> : null}
+        {outBtn === true ? <UserOut outRoomConfirm={outRoomConfirm} setOutBtn={setOutBtn}></UserOut> : null}
         {declaration === true ? (
           <UserDeclaration
             setDeclaration={setDeclaration}
@@ -493,7 +531,7 @@ function ExitModal({ setExistBtn, leaveRoom, setSecessionModal }) {
   );
 }
 
-function UserOut({ setOutBtn }) {
+function UserOut({ setOutBtn, outRoomConfirm }) {
   return (
     <ExitModalDiv>
       <div className="exit_modal">
@@ -505,7 +543,7 @@ function UserOut({ setOutBtn }) {
           <div className="cancel" onClick={() => setOutBtn(false)}>
             취소하기
           </div>
-          <div className="ok" onClick={() => setOutBtn(false)}>
+          <div className="ok" onClick={outRoomConfirm}>
             내보내기
           </div>
         </div>

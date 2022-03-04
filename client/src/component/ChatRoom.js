@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams, Route } from 'react-router-dom';
 import SetModal from './SetModal';
-import { useMediaQuery } from 'react-responsive';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
@@ -18,6 +17,7 @@ const ChatRoomDiv = styled.div`
   /* min-width: 800px; */
   min-height: 710px;
   border: 1px solid #c4c4c4;
+
   /* position: absolute;
   right: 0; */
   box-sizing: border-box;
@@ -35,7 +35,7 @@ const ChatRoomDiv = styled.div`
     display: grid;
     grid-template-columns: auto 40px;
     padding: 10px;
-    grid-gap: 19px;
+    grid-gap: 15px;
     background-color: #fff;
     @media screen and (max-width: 768px) {
       grid-template-columns: 30px auto 40px;
@@ -45,6 +45,7 @@ const ChatRoomDiv = styled.div`
     .title {
       height: 30px;
       margin-left: 5px;
+      /* background-color: violet; */
       p {
         font-size: 17px;
         font-weight: 500;
@@ -60,6 +61,7 @@ const ChatRoomDiv = styled.div`
     }
     .set_btn {
       min-height: 30px;
+      margin-right: 5px;
       background-color: #ddd;
       cursor: pointer;
     }
@@ -70,6 +72,67 @@ const ChatRoomDiv = styled.div`
 
     @media screen and (max-width: 768px) {
       height: 632px;
+    }
+
+    .chatContent {
+      display: grid;
+      grid-template-columns: auto;
+      grid-gap: 15px;
+      padding: 20px;
+
+      .contentDiv {
+        width: 330px;
+        /* border: 1px solid #ddd; */
+
+        .in_grid {
+          display: grid;
+          grid-template-columns: 40px auto;
+          margin-bottom: 20px;
+          grid-gap: 15px;
+          .profileImage {
+            height: 40px;
+            background-color: palegoldenrod;
+            border-radius: 50px;
+            /* img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
+        } */
+          }
+          .user_info {
+            border-radius: 10px;
+
+            .name {
+              font-size: 15px;
+            }
+
+            .content_detail {
+              display: flex;
+              align-items: flex-end;
+              margin-top: 10px;
+              div {
+                float: left;
+              }
+              .contents {
+                font-size: 15px;
+                max-width: 250px;
+                height: 100%;
+                box-sizing: border-box;
+                background-color: cornsilk;
+                p {
+                  padding: 10px;
+                  min-width: 20px;
+                }
+              }
+              .createdAt {
+                font-size: 12px;
+                color: #9d9c9c;
+                margin-left: 5px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -108,9 +171,10 @@ const ChatRoomDiv = styled.div`
       outline: none;
     }
     button.message_btn {
-      width: 30px;
+      width: 40px;
       min-height: 30px;
       background-color: #ddd;
+      border: none;
       border-radius: 50px;
       cursor: pointer;
       float: right;
@@ -121,65 +185,7 @@ const ChatRoomDiv = styled.div`
   }
 `;
 
-const ChatContent = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  grid-gap: 15px;
-  padding: 20px;
-
-  .contentDiv {
-    width: 330px;
-    /* border: 1px solid #ddd; */
-
-    .in_grid {
-      display: grid;
-      grid-template-columns: 40px auto;
-      grid-gap: 15px;
-      .profileImage {
-        height: 40px;
-        background-color: palegoldenrod;
-        border-radius: 50px;
-        /* img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50px;
-        } */
-      }
-      .user_info {
-        border-radius: 10px;
-
-        .name {
-          font-size: 15px;
-        }
-
-        .content_detail {
-          display: flex;
-          align-items: flex-end;
-          margin-top: 10px;
-          div {
-            float: left;
-          }
-          .contents {
-            font-size: 15px;
-            max-width: 250px;
-            height: 100%;
-            box-sizing: border-box;
-            background-color: cornsilk;
-            p {
-              padding: 10px;
-              min-width: 20px;
-            }
-          }
-          .createdAt {
-            font-size: 12px;
-            color: #9d9c9c;
-            margin-left: 5px;
-          }
-        }
-      }
-    }
-  }
-`;
+const ChatContent = styled.div``;
 
 const SetDiv = styled.div`
   max-width: 1200px;
@@ -238,6 +244,12 @@ const ChatRoom = ({
 
   // 스크롤 하단으로 이동
   const scrollDivRef = useRef(null);
+  const scrollToBottomSend = () => {
+    scrollDivRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const scrollToBottom = () => {
+    scrollDivRef.current?.scrollIntoView({});
+  };
   // const scrollToElement = () => {scrollDivRef.current.scrollIntoView()};
   // 날 짜 변 환
   function getToday() {
@@ -319,6 +331,7 @@ const ChatRoom = ({
             createdAt: timeSetting(createdAt),
           },
         });
+        scrollToBottomSend();
         // scrollToElement(); //
       },
       (error) => {
@@ -329,10 +342,7 @@ const ChatRoom = ({
     return () => {
       socket.off('message');
     };
-    
   }, []);
-
-  
 
   //참가자 정보 편집 함수
   const participantEditObj = (participant) => {
@@ -382,7 +392,7 @@ const ChatRoom = ({
         // 채팅내용 세팅
         // setMessage(messageList.reverse());
         dispatch({ type: 'SHOW_MESSAGE', payload: messageList.reverse() });
-        // scrollToElement(); //
+        // scrollToBottom(); //
 
         // 방 참가자 목록받기
         axios
@@ -436,6 +446,7 @@ const ChatRoom = ({
           });
       })
       .catch((err) => {
+        console.log(chatRoomId);
         console.log(err);
       });
   };
@@ -512,7 +523,7 @@ const ChatRoom = ({
             </div>
           </div>
           <div className="chat_room">
-            <ChatContent>
+            <div className="chatContent">
               {enterance ? (
                 message.map((el, idx) => (
                   <li className="contentDiv" key={idx}>
@@ -530,6 +541,7 @@ const ChatRoom = ({
                             <div className="createdAt">
                               {isToday(el.createdAt)}
                             </div>
+                            <div className="scrollDiv" ref={scrollDivRef}></div>
                           </li>
                         </ul>
                       </li>
@@ -537,24 +549,23 @@ const ChatRoom = ({
                   </li>
                 ))
               ) : (
-                <div> 참여하지 않은 채팅방입니다. </div>
+                <div> 채팅 입장에 실패했습니다. 다시 입장해주세요! </div>
               )}
-              <div className="scrollDiv" ref={scrollDivRef}></div>
-            </ChatContent>
+            </div>
+            {/* <ChatContent></ChatContent> */}
           </div>
-          <div className="chat_content">
-            <form onSubmit={handleClickSendMessage}>
-              <input
-                type="text"
-                className="message"
-                placeholder="메세지를 입력해주세요."
-                onChange={handleChangeMessage}
-                value={myMessage}
-                // value={message || ''}
-              ></input>
-              <button className="message_btn"></button>
-            </form>
-          </div>
+
+          <form onSubmit={handleClickSendMessage} className="chat_content">
+            <input
+              type="text"
+              className="message"
+              placeholder="메세지를 입력해주세요."
+              onChange={handleChangeMessage}
+              value={myMessage}
+              // value={message || ''}
+            ></input>
+            <button className="message_btn"></button>
+          </form>
         </ChatRoomDiv>
       ) : (
         <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>

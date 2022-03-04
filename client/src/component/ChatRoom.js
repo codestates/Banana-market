@@ -224,7 +224,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   const [secessionModal, setSecessionModal] = useState(false);
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let userId = setUserInfo.userId;
-  
+
   // const chatRoomData = useSelector((state) => state.chatRoomReducer);
   // const { title, messageList } = chatRoomData;
   // console.log(chatRoomData);
@@ -238,7 +238,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
       content: null,
     },
   ]); // 채팅내용
-  const [myMessage, setMyMessage] = useState([]); // 내가 보내는 메세지
+  const [myMessage, setMyMessage] = useState(''); // 내가 보내는 메세지
   const [participant, setParticipant] = useState([]); // 참가자 목록
 
   // useEffect(() => {
@@ -250,24 +250,26 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   // const [chat, setchat] = useState([1]);
 
   let articleNum = useParams();
-  
+
   //참가자 정보 편집
   const participantEditObj = (participant) => {
     let ResultObj = {};
-    participant.map ((el) => {
-      let  participantObj = {
-        'name': '', 'profileImage': '' }
+    participant.map((el) => {
+      let participantObj = {
+        name: '',
+        profileImage: '',
+      };
       participantObj['name'] = el.name;
       participantObj['profileImage'] = el.profileImage;
       ResultObj[el.id] = participantObj;
     });
-  return ResultObj;
+    return ResultObj;
   };
 
   // let user_id = 5;
   let socketParticipant = participantEditObj(participant); // 참가자 목록 편집
-  
-//-----------------------소캣 온 !!! 
+
+  //-----------------------소캣 온 !!!
   useEffect(() => {
     socket.on(
       'message',
@@ -278,11 +280,11 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             contents: contents,
             profileImage: socketParticipant.user_id.profileImage,
             name: socketParticipant.user_id.name,
-            createdAt: createdAt
+            createdAt: createdAt,
           },
         ]);
 
-        console.log(message, '내가 보낸 메세지 받았니 ? ')
+        console.log(message, '내가 보낸 메세지 받았니 ? ');
       },
       (error) => {
         if (error) console.log(error);
@@ -353,26 +355,28 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         withCredentials: true,
       })
       .then((res) => {
-
-        //? ---사용자 프로필 이미지---
-        let messageList = res.data.data.messageList;
-        messageList = messageList.map((elem) => {
-          let profileImageKey = elem.profileImage;
-          if (!profileImageKey) {
-            elem.profileImage =
-              'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
-          } else {
-            elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
-          }
-          return elem;
-        });
-        //? ---사용자 프로필 이미지---
         setMessage([]);
-        if (res.data.data.messageList !== undefined) {
-          setMessage([...res.data.data.messageList].reverse());
+        let messageList = res.data.data.messageList;
+        if (Object.keys(message).length !== 0) {
+          //? ---채팅리스트 프로필 이미지---
+          messageList = messageList.map((elem) => {
+            let profileImageKey = elem.profileImage;
+            if (!profileImageKey) {
+              elem.profileImage =
+                'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+            } else {
+              elem.profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImageKey}?w=40&h=40&f=webp&q=90`;
+            }
+            return elem;
+          });
+          //? ---채팅리스트 프로필 이미지---
+          setMessage([messageList].reverse());
         } else {
           setMessage([]);
         }
+        console.log('메세지 응답', res, res.data.data.messageList, message);
+
+        // console.log('메세지 응답', messageList , message);
 
         axios
           .get(
@@ -382,10 +386,11 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
             }
           )
           .then((res) => {
-
-            //? ---사용자 프로필 이미지---
-            let { participant } = res.data.data;
-            participant.map((elem) => {
+            // console.log(res.data.data.participant)
+            //? ---참가자 프로필 이미지---
+            let participantList = res.data.data.participant;
+            console.log('참여자 목록', participantList);
+            participantList = participantList.map((elem) => {
               let profileImageKey = elem.profileImage;
               if (!profileImageKey) {
                 elem.profileImage =
@@ -395,9 +400,10 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
               }
               return elem;
             });
-            //? ---사용자 프로필 이미지---
-            console.log('참여자 목록', res.data.data.participant);
-            setParticipant([...res.data.data.participant]);
+            //? ---참가자 프로필 이미지---
+            // console.log('참여자 목록', participantList);
+            setParticipant(participantList);
+            console.log('참여자 목록', participantList);
             // 채팅방 참여하기 ------------------------ 2 :: 소캣으로 채팅 참여
             socket.emit('join', { userId, chatRoomId });
           })
@@ -429,8 +435,7 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
         message: myMessage,
         created: message,
       },
-      
-      
+
       (error) => {
         if (error) console.log(error);
       }
@@ -451,15 +456,13 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
       ({ userId, chatRoomId, message, created }) => {
         setMessage([...message, { userId, chatRoomId, message, created }]);
       },
-
       (error) => {
         if (error) console.log(error);
       }
     );
     setMyMessage('');
-  });
+  }, []);
 
-  
 
   //   // 채팅방 나가기 handler
   const leaveRoom = (event) => {
@@ -471,9 +474,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
     console.log(`${obj.roomId}방을 나갔습니다`);
     // history.push('/chat/0');
   };
-
-
-
 
   // socket.emit("sendMessage",({ userId, chatRoomId, myMessage }) => {
   //     console.log('되니?'); setMyMessage('');
@@ -601,8 +601,6 @@ const ChatRoom = ({ chatRoomId, setChatRoomId, title }) => {
   //       sendMessage();
   //     }
   //   }, [message])
-
-
 
   // // 채팅방 나가기 실행
   // useEffect(() => {

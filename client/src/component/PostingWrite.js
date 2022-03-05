@@ -31,7 +31,7 @@ const MapModalWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
-  margin: 50px auto;
+  margin: 41px auto;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;
@@ -76,7 +76,7 @@ const Wrapper = styled.div`
       width: 90%;
       border: 0px;
       background-color: #ff4342;
-      color:#ffe1e0;
+      color: #ffe1e0;
     }
   }
 `;

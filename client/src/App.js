@@ -29,7 +29,6 @@ import Logout from './pages/Logout';
 import CheckPersonalInform from './pages/CheckPersonalInform';
 import EditPosting from './pages/EditPosting';
 import AdminPage from './pages/AdminPage';
-
 function App(props) {
   const history = useHistory();
   let setLoginState = useSelector((state) => state.setLoginReducer);
@@ -52,19 +51,19 @@ function App(props) {
         }
         dispatch({ type: 'SET_UPDATE_USER_INFO', payload: res.data.data });
         dispatch(setLogin());
-       
-        if(setUserInfo.type === 'ADMIN'){
+
+        if (setUserInfo.type === 'ADMIN') {
           dispatch(setAdminLogin());
           console.log(setUserInfo.type);
-        } else if(setUserInfo.block){
+        } else if (setUserInfo.block) {
           dispatch(setLogout());
-          alert('정지된 유저 입니다!')
+          alert('정지된 유저 입니다!');
         }
       })
       .catch((err) => {
         dispatch(setLogout());
         dispatch({ type: 'SET_USER_INFO_NULL' });
-        if(setUserInfo.type === 'ADMIN'){
+        if (setUserInfo.type === 'ADMIN') {
           dispatch(setAdminLogout());
         }
       });

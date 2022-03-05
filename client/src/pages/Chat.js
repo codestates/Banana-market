@@ -83,6 +83,15 @@ const Chat = () => {
     display === 'block' ? setDisplay('none') : setDisplay('block');
   };
 
+  // const onClick = () => {
+  //   display === 'none' ? setDisplay('block') : setDisplay('none');
+  //   display1 === 'block' ? setDisplay1('none') : setDisplay1('block');
+  // };
+  // const onClick2 = () => {
+  //   display === 'block' ? setDisplay('none') : setDisplay('none');
+  //   display1 === 'none' ? setDisplay1('block') : setDisplay1('block');
+  // };
+
   return (
     <div className="section2">
       <ChatDiv>

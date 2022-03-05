@@ -108,6 +108,7 @@ module.exports = (io) => {
 
     // D. 소켓 연결 종료 (브라우저 닫을 때)
     socket.on('disconnect', () => {
+      // socket.leave(roomId)
       console.log(`서버 연결 종료`);
     });
   });

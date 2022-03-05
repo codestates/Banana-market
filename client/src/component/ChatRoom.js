@@ -178,6 +178,67 @@ const ChatRoomDiv = styled.div`
         }
       }
     }
+
+    .chatContent {
+      display: grid;
+      grid-template-columns: auto;
+      grid-gap: 15px;
+      padding: 20px;
+
+      .contentDiv {
+        width: 330px;
+        /* border: 1px solid #ddd; */
+
+        .in_grid {
+          display: grid;
+          grid-template-columns: 40px auto;
+          margin-bottom: 20px;
+          grid-gap: 15px;
+          .profileImage {
+            height: 40px;
+            background-color: palegoldenrod;
+            border-radius: 50px;
+            /* img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
+        } */
+          }
+          .user_info {
+            border-radius: 10px;
+
+            .name {
+              font-size: 15px;
+            }
+
+            .content_detail {
+              display: flex;
+              align-items: flex-end;
+              margin-top: 10px;
+              div {
+                float: left;
+              }
+              .contents {
+                font-size: 15px;
+                max-width: 250px;
+                height: 100%;
+                box-sizing: border-box;
+                background-color: cornsilk;
+                p {
+                  padding: 10px;
+                  min-width: 20px;
+                }
+              }
+              .createdAt {
+                font-size: 12px;
+                color: #9d9c9c;
+                margin-left: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .chat_room {
@@ -724,6 +785,18 @@ const ChatRoom = ({
               </button>
             </form>
           </div>
+
+          <form onSubmit={handleClickSendMessage} className="chat_content">
+            <input
+              type="text"
+              className="message"
+              placeholder="메세지를 입력해주세요."
+              onChange={handleChangeMessage}
+              value={myMessage}
+              // value={message || ''}
+            ></input>
+            <button className="message_btn"></button>
+          </form>
         </ChatRoomDiv>
       ) : (
         <ChatRoomWrap>

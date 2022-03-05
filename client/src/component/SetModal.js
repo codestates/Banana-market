@@ -315,6 +315,27 @@ const SetModal = ({
     setParticipant(participantList);
   };
 
+  //참가자 내보내기 버튼 클릭 handler
+  const handleClickOutBtn = (e) => {
+    let num = e.target.getAttribute('data-value');
+    setOutUserId(num);
+    setOutBtn(true);
+  };
+
+  //채팅방 내보내기 확인!! handler
+  const outRoomConfirm = (event) => {
+    // event.preventDefault();
+    let obj = { userId: outUserId, roomId: chatRoomId };
+    socket.emit('leave', obj, (error) => {
+      if (error) console.log(error);
+    });
+    alert(`${obj.roomId}가 방에서 내보내졌습니다.`);
+    setOutBtn(false);
+    let participantList = participant;
+    delete participantList[outUserId];
+    setParticipant(participantList);
+  };
+
   // 참가자 신고
   const userDeclaration = () => {
     axios

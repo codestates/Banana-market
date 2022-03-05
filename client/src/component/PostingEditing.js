@@ -660,6 +660,8 @@ const PostingEditing = () => {
       // console.log('줄어들때', e.target.scrollHeight)
     }
   };
+
+
   // 스크롤 페이지 상단으로 이동 함수
   const toTheTop = () => {
     window.scrollTo(0, 0);
@@ -674,6 +676,9 @@ const PostingEditing = () => {
   };
   const handleChangeTitle = (e) => {
     setInputTitle(e.target.value);
+  };
+  const handleChangeText = (e) => {
+    setInputText(e.target.value);
   };
   const handleChangeDate = (e) => {
     setDate(e.target.value);
@@ -1008,6 +1013,7 @@ const PostingEditing = () => {
                   placeholder={post.content}
                   onKeyUp={handleChangeHeight}
                   onKeyDown={handleChangeHeight}
+                  onChange={handleChangeText}
                   value={inputText}
                 ></textarea>
               </div>

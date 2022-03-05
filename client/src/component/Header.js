@@ -21,6 +21,7 @@ import { ReactComponent as PersonIcon } from '../icon/person_icon.svg';
 import { ReactComponent as MenuIcon } from '../icon/menu_icon.svg';
 import { ReactComponent as ChatIcon } from '../icon/chat_icon.svg';
 import { ReactComponent as SearchIcon } from '../icon/search_icon.svg';
+import { ReactComponent as TopIcon } from '../icon/top_icon.svg';
 
 const BREAK_POINT_TABLET = 768;
 const BREAK_POINT_PC = 1200;
@@ -265,20 +266,21 @@ const Header = ({ handleResponseSuccess }) => {
     window.scrollTo(0, 0);
   };
 
-   // 스크롤시 헤더에 그림자 주기
-  //  const [isScrolled, setIsScrolled] = useState(false);
-  //  const listener = () => {
-  //    setIsScrolled(window.pageYOffset > 100);
-  //  };
-  //  useEffect(() => {
-  //    window.addEventListener("scroll", listener);
-  //    return () => {
-  //      window.removeEventListener("scroll", listener);
-  //    };
-  //  });
+  // 스크롤 내릴 때 헤더 변화주기
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const updateScroll = () => {
+      setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+  }
+  useEffect(()=>{
+      window.addEventListener('scroll', updateScroll);
+  });
+
 
   return (
     <>
+      {/* <div className='top_btn'>
+      <TopIcon stroke='red'></TopIcon>
+      </div> */}
       {searchBox ? (
         <SearchModalWrapper>
           <SearchModal
@@ -312,7 +314,7 @@ const Header = ({ handleResponseSuccess }) => {
       ) : (
         <div></div>
       )}
-      <div className="header">
+      <div className={scrollPosition < 50 ? "header" : "header change_header"}>
         <Wrapper>
           <Link to="/list">
             <div

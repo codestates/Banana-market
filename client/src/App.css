@@ -25,6 +25,10 @@ body {
   /* transition: box-shadow 0.5s;
   box-shadow: 0 0 15px rgba(0,0,0, 0.05); */
 }
+.header.change_header {
+  transition: box-shadow 0.5s;
+  box-shadow: 0 0 15px rgba(0,0,0, 0.08);
+}
 
 .section {
   padding-top: 50px;

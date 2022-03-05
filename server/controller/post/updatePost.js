@@ -46,11 +46,13 @@ module.exports = async (req, res) => {
     date,
     time,
     totalMate,
-    imageKey,
+    // imageKey,
     address,
     url,
     region,
   } = articleInfo;
+
+  let imageKey = articleInfo.imageKey
   // let location = 'jointPurchaseDefaultImage.jpeg';
   // let key =
   //   'https://banana-mk-image.s3.ap-northeast-2.amazonaws.com/jointPurchaseDefaultImage.jpeg';

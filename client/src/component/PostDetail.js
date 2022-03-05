@@ -297,6 +297,11 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
       })
       .catch((err) => {
         console.log(err);
+        if (String(err).includes('404')) {
+          alert('작성자가 없거나, 존재하지 않는 게시물 입니다');
+        }
+
+        history.push('/list');
       });
   };
   useEffect(() => {
@@ -527,7 +532,7 @@ const PostDetail = ({ chatListDetail, handleClick }) => {
             onClick={() => {
               // handleClick();
               joinChat(post.id);
-              history.push('/chat');
+              history.push('/chat/0');
             }}
           >
             참여하기

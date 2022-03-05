@@ -19,7 +19,7 @@ import monkey from '../icon/monkey.png';
 const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
-  margin: 125px auto;
+  margin: 124px auto;
   font-size: 18px;
   color: #444;
   @media screen and (max-width: 767px) {

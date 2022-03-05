@@ -2,8 +2,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams, Route } from 'react-router-dom';
 import SetModal from './SetModal';
-import { useMediaQuery } from 'react-responsive';
 import { useSelector, useDispatch } from 'react-redux';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import logo_svg from '../icon/logo.svg';
+import send_img from '../icon/send-mail.png';
+import send_img2 from '../icon/paper-plane.png';
+import menu_img from '../icon/menu.png';
+import back_btn from '../icon/left.png';
+import set_img from '../icon/three-dots.png';
 import axios from 'axios';
 
 // socket 연결
@@ -16,60 +22,161 @@ const socket = io.connect(chatroom, {
 
 const ChatRoomDiv = styled.div`
   /* min-width: 800px; */
+  border: solid 1px #ebebeb;
+  /* border-left: none; */
   min-height: 710px;
-  border: 1px solid #c4c4c4;
+
+  /* border-radius: 0px 10px 10px 0px; */
   /* position: absolute;
   right: 0; */
   box-sizing: border-box;
-  display: ${(props) => props.display1};
+  display: ${(props) => props.display};
   @media screen and (max-width: 768px) {
     border: none;
     /* display: none; */
+    box-shadow: none;
     width: 100%;
-    display: ${(props) => props.display1};
+    display: ${(props) => props.display};
   }
   .chat_title {
     width: 100%;
-    height: 50px;
-    border-bottom: 1px solid #c4c4c4;
+    height: 55px;
     display: grid;
-    grid-template-columns: auto 40px;
+    grid-template-columns: auto 45px;
     padding: 10px;
-    grid-gap: 19px;
+    grid-gap: 15px;
+
+    /* border-bottom: 1px solid #ebebeb; */
+    box-shadow: 0 4px 4px -4px #ebebeb;
     background-color: #fff;
     @media screen and (max-width: 768px) {
-      grid-template-columns: 30px auto 40px;
+      grid-template-columns: 25px auto 30px;
+
+      padding: 10px 15px 10px 10px;
       grid-gap: 10px;
     }
 
     .title {
       height: 30px;
-      margin-left: 5px;
-      p {
-        font-size: 17px;
-        font-weight: 500;
-        line-height: 30px;
-        @media screen and (max-width: 1200px) {
-          font-size: 16px;
-          line-height: 30px;
-        }
+      margin-left: 10px;
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 30px;
+      margin-top: 5px;
+
+      @media screen and (max-width: 1200px) {
+        font-size: 16px;
       }
       @media screen and (max-width: 768px) {
+        font-size: 15px;
         margin-left: 0px;
+
+        margin-top: 3px;
       }
     }
     .set_btn {
       min-height: 30px;
-      background-color: #ddd;
+      margin-right: 10px;
       cursor: pointer;
+      opacity: 0.9;
+      @media screen and (max-width: 768px) {
+        margin-right: 0px;
+        height: 25px;
+        margin-top: 3px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
   .chat_room {
-    height: 590px;
+    height: 573px;
     overflow-y: scroll;
-
     @media screen and (max-width: 768px) {
-      height: 632px;
+      height: 602px;
+    }
+
+    .chatContent {
+      display: grid;
+      grid-template-columns: auto;
+      grid-gap: 15px;
+      padding: 18px 18px 0 18px;
+
+      .contentDiv {
+        .in_grid {
+          display: grid;
+
+          grid-template-columns: 40px auto;
+          margin-bottom: 18px;
+          grid-gap: 15px;
+
+          .profileImage {
+            height: 40px;
+
+            border-radius: 50px;
+            /* img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50px;
+        } */
+          }
+          .user_info {
+            border-radius: 10px;
+
+            .name {
+              font-size: 15px;
+              @media screen and (max-width: 1200px) {
+                font-size: 14px;
+              }
+              @media screen and (max-width: 768px) {
+                font-size: 13px;
+              }
+            }
+
+            .content_detail {
+              display: flex;
+              align-items: flex-end;
+              margin-top: 10px;
+
+              div {
+                float: left;
+              }
+              .contents {
+                display: inline-block;
+                position: relative;
+                max-width: 250px;
+                padding: 0.7em 0.95em;
+                overflow-wrap: break-word;
+                word-break: keep-all;
+                color: #0e0e0e;
+                line-height: 1.5;
+                border-radius: 0px 1.5em 1.5em;
+                background-color: #f8f8f8;
+                font-size: 15px;
+                @media screen and (max-width: 1200px) {
+                  max-width: 232px;
+                  font-size: 14px;
+                }
+                @media screen and (max-width: 768px) {
+                  font-size: 13px;
+                }
+              }
+              .createdAt {
+                font-size: 12px;
+                color: #9d9c9c;
+                margin-left: 5px;
+                @media screen and (max-width: 1200px) {
+                  font-size: 11px;
+                }
+                @media screen and (max-width: 768px) {
+                  font-size: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -82,98 +189,102 @@ const ChatRoomDiv = styled.div`
     display: none; /* Chrome , Safari , Opera */
   }
 
-  .chat_content {
-    height: 70px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: auto 40px;
-    padding: 15px;
-    grid-gap: 19px;
-    background-color: #f4f4f4;
-    @media screen and (max-width: 768px) {
-      height: 60px;
-      padding: 10px;
-    }
-    input {
-      height: 40px;
-      background-color: #f4f4f4;
-      font-size: 16px;
-      margin-left: 5px;
-      border: none;
-      @media screen and (max-width: 768px) {
-        margin-left: 3px;
+  .chatDiv {
+    width: 100%;
+    height: 80px;
+    background-color: #fff;
+    position: relative;
+    .chat_content {
+      height: 50px;
+      width: 95%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 37px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 5px;
+      grid-gap: 15px;
+      border-radius: 30px;
+      border: solid 1px #ebebeb;
+      input {
+        height: 40px;
+        /* background-color: #f4f4f4; */
+        font-size: 16px;
+        margin-left: 10px;
+
+        border: none;
       }
-    }
-    input:focus {
-      outline: none;
-    }
-    button.message_btn {
-      width: 30px;
-      min-height: 30px;
-      background-color: #ddd;
-      border-radius: 50px;
-      cursor: pointer;
-      float: right;
-      @media screen and (max-width: 768px) {
-        /* height: 30px; */
+      input:focus {
+        outline: none;
+      }
+      button.message_btn {
+        width: 25px;
+        height: 25px;
+        /* background-color: #ddd; */
+        background-color: transparent; // Background-color 투명 or 배경 없애기
+        border: 0;
+        outline: 0;
+        border-radius: 50px;
+        margin-top: 6px;
+        cursor: pointer;
+
+        @media screen and (max-width: 768px) {
+          /* height: 30px; */
+        }
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
 `;
 
-const ChatContent = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  grid-gap: 15px;
-  padding: 20px;
+const ChatMyContent = styled.div`
+  .in_grid2 {
+    margin-bottom: 18px;
 
-  .contentDiv {
-    width: 330px;
-    /* border: 1px solid #ddd; */
+    .my_info {
+      border-radius: 10px;
 
-    .in_grid {
-      display: grid;
-      grid-template-columns: 40px auto;
-      grid-gap: 15px;
-      .profileImage {
-        height: 40px;
-        background-color: palegoldenrod;
-        border-radius: 50px;
-        /* img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50px;
-        } */
-      }
-      .user_info {
-        border-radius: 10px;
+      .myContent_detail {
+        display: flex;
+        align-items: flex-end;
 
-        .name {
+        .mycontents {
+          display: inline-block;
+          position: relative;
+
+          max-width: 250px;
+          padding: 0.7em 0.95em;
+          overflow-wrap: break-word;
+          word-break: keep-all;
+          color: #0e0e0e;
+          line-height: 1.5;
+          border-radius: 1.5em 0px 1.5em 1.5em;
+          background-color: #ffec8b;
           font-size: 15px;
+          @media screen and (max-width: 1200px) {
+            max-width: 232px;
+            font-size: 14px;
+          }
+          @media screen and (max-width: 768px) {
+            font-size: 13px;
+          }
         }
-
-        .content_detail {
-          display: flex;
-          align-items: flex-end;
-          margin-top: 10px;
-          div {
-            float: left;
+        .mycreatedAt {
+          font-size: 12px;
+          width: 100%;
+          color: #9d9c9c;
+          margin-right: 5px;
+          text-align: right;
+          @media screen and (max-width: 1200px) {
+            font-size: 11px;
           }
-          .contents {
-            font-size: 15px;
-            max-width: 250px;
-            height: 100%;
-            box-sizing: border-box;
-            background-color: cornsilk;
-            p {
-              padding: 10px;
-              min-width: 20px;
-            }
-          }
-          .createdAt {
-            font-size: 12px;
-            color: #9d9c9c;
-            margin-left: 5px;
+          @media screen and (max-width: 768px) {
+            font-size: 10px;
           }
         }
       }
@@ -201,20 +312,39 @@ const BackBtn = styled.div`
   display: none;
   @media screen and (max-width: 768px) {
     display: block;
-    min-height: 30px;
-    background-color: #ddd;
     cursor: pointer;
+    width: 25px;
+    height: 25px;
+    margin-top: 5px;
+  }
+  img {
+    width: 100%;
+    height: 100%;
   }
 `;
 
 const ChatRoomWrap = styled.div`
   min-height: 710px;
-  box-sizing: border-box;
-  background-color: whitesmoke;
-  text-align: center;
-  line-height: 710px;
+  background-color: #f9f9f9;
+  border-radius: 0px 10px 10px 0px;
+  /* border: solid 1px #ebebeb; */
+  position: relative;
+  border-left: none;
   @media screen and (max-width: 768px) {
-    display: none;
+    min-height: 737px;
+  }
+  .logo_img {
+    width: 300px;
+    height: 80px;
+    position: absolute;
+    opacity: 0.5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 `;
 
@@ -224,6 +354,8 @@ const ChatRoom = ({
   title,
   enterance,
   setEnterance,
+  onClick,
+  onClick2,
 }) => {
   const history = useHistory();
   const [secessionModal, setSecessionModal] = useState(false);
@@ -231,6 +363,7 @@ const ChatRoom = ({
   let setUserInfo = useSelector((state) => state.setUserInfoReducer);
   let socketParticipant = useSelector((state) => state.setSocketUserReducer);
   let userId = setUserInfo.userId;
+  let userNickName = setUserInfo.nickName;
   const [myMessage, setMyMessage] = useState(''); // 내가 보내는 메세지
   const [participant, setParticipant] = useState([]); // 참가자 목록
   const dispatch = useDispatch();
@@ -238,6 +371,12 @@ const ChatRoom = ({
 
   // 스크롤 하단으로 이동
   const scrollDivRef = useRef(null);
+  const scrollToBottomSend = () => {
+    scrollDivRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const scrollToBottom = () => {
+    scrollDivRef.current?.scrollIntoView({});
+  };
   // const scrollToElement = () => {scrollDivRef.current.scrollIntoView()};
   // 날 짜 변 환
   function getToday() {
@@ -303,23 +442,33 @@ const ChatRoom = ({
           name
         );
         // console.log('여기',socketParticipant)
+        if (!profileImage) {
+          profileImage =
+            'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90';
+        } else {
+          profileImage = `https://d35fj6mbinlfx5.cloudfront.net/${profileImage}?w=40&h=40&f=webp&q=90`;
+        }
+
         dispatch({
           type: 'ADD_MESSAGE',
           payload: {
             contents: contents,
-            profileImage: null
-              ? 'https://d35fj6mbinlfx5.cloudfront.net/basicProfileImage.png?w=40&h=40&f=webp&q=90'
-              : `https://d35fj6mbinlfx5.cloudfront.net/${profileImage}?w=40&h=40&f=webp&q=90`,
+            profileImage: profileImage,
             name: name,
             createdAt: timeSetting(createdAt),
           },
         });
+        scrollToBottomSend();
         // scrollToElement(); //
       },
       (error) => {
         console.log('why error?', error);
       }
     );
+
+    return () => {
+      socket.off('message');
+    };
   }, []);
 
   //참가자 정보 편집 함수
@@ -370,7 +519,7 @@ const ChatRoom = ({
         // 채팅내용 세팅
         // setMessage(messageList.reverse());
         dispatch({ type: 'SHOW_MESSAGE', payload: messageList.reverse() });
-        // scrollToElement(); //
+        scrollToBottom(); //
 
         // 방 참가자 목록받기
         axios
@@ -469,7 +618,8 @@ const ChatRoom = ({
       if (error) console.log(error);
     });
     console.log(`${obj.roomId}방을 나갔습니다`);
-    // history.push('/chat/0');
+    history.push('/chat/0');
+    setChatRoomId(0);
   };
 
   return (
@@ -479,19 +629,21 @@ const ChatRoom = ({
           <div className="chat_title">
             <BackBtn
               className="back_btn"
-              // onClick={() => {
-              //   history.push(`/chat/${ar}`);
-              // }}
-            ></BackBtn>
-            <div className="title">
-              <p>{title}</p>
-            </div>
+              onClick={() => {
+                onClick2();
+                history.push('/chat');
+              }}
+            >
+              <img src={back_btn}></img>
+            </BackBtn>
+            <div className="title">{title}</div>
             <div
               className="set_btn"
               onClick={(e) => {
                 setSecessionModal(true);
               }}
             >
+              <img src={set_img}></img>
               {/* {secessionModal === true ? (
               <SecessionModal
                 setSecessionModal={setSecessionModal}
@@ -500,38 +652,65 @@ const ChatRoom = ({
             </div>
           </div>
           <div className="chat_room">
-            <ChatContent>
+            <ScrollToBottom className="chatContent">
               {enterance ? (
                 message.map((el, idx) => (
-                  <li className="contentDiv" key={idx}>
-                    <ul className="in_grid">
-                      <li className="profileImage">
-                        <img src={el.profileImage}></img>
-                      </li>
-                      <li className="user_info">
-                        <ul>
-                          <li className="name">{el.name}</li>
-                          <li className="content_detail">
-                            <div className="contents">
-                              <p>{el.contents}</p>
-                            </div>
-                            <div className="createdAt">
-                              {isToday(el.createdAt)}
-                            </div>
+                  <>
+                    {el.name !== userNickName ? (
+                      <li className="contentDiv" key={idx}>
+                        <ul className="in_grid">
+                          <li className="profileImage">
+                            <img src={el.profileImage}></img>
+                          </li>
+                          <li className="user_info">
+                            <ul>
+                              <li className="name">{el.name}</li>
+                              <li className="content_detail">
+                                <div className="contents">
+                                  <p>{el.contents}</p>
+                                </div>
+                                <div className="createdAt">
+                                  {isToday(el.createdAt)}
+                                </div>
+                                <div
+                                  className="scrollDiv"
+                                  ref={scrollDivRef}
+                                ></div>
+                              </li>
+                            </ul>
                           </li>
                         </ul>
                       </li>
-                    </ul>
-                  </li>
+                    ) : (
+                      <ChatMyContent key={idx}>
+                        <ul className="in_grid2">
+                          <li className="my_info">
+                            <ul>
+                              <li className="myContent_detail">
+                                <div className="mycreatedAt">
+                                  {isToday(el.createdAt)}
+                                </div>
+                                <div className="mycontents">{el.contents}</div>
+                                <div
+                                  className="scrollDiv"
+                                  ref={scrollDivRef}
+                                ></div>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </ChatMyContent>
+                    )}
+                  </>
                 ))
               ) : (
                 <div> 채팅 입장에 실패했습니다. 다시 입장해주세요! </div>
               )}
-              <div className="scrollDiv" ref={scrollDivRef}></div>
-            </ChatContent>
+            </ScrollToBottom>
+            {/* <ChatContent></ChatContent> */}
           </div>
-          <div className="chat_content">
-            <form onSubmit={handleClickSendMessage}>
+          <div className="chatDiv">
+            <form onSubmit={handleClickSendMessage} className="chat_content">
               <input
                 type="text"
                 className="message"
@@ -540,17 +719,24 @@ const ChatRoom = ({
                 value={myMessage}
                 // value={message || ''}
               ></input>
-              <button className="message_btn"></button>
+              <button className="message_btn">
+                <img src={send_img2}></img>
+              </button>
             </form>
           </div>
         </ChatRoomDiv>
       ) : (
-        <ChatRoomWrap>채팅방을 선택해주세요</ChatRoomWrap>
+        <ChatRoomWrap>
+          <div className="logo_img">
+            <img src={logo_svg}></img>
+          </div>
+        </ChatRoomWrap>
       )}
 
       {secessionModal === true ? (
         <SetDiv>
           <SetModal
+            chatRoomId={chatRoomId}
             setSecessionModal={setSecessionModal}
             leaveRoom={leaveRoom}
             participant={participant}

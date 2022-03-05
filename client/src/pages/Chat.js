@@ -15,7 +15,9 @@ const socket = io.connect(chatroom, {
 
 const ChatDiv = styled.div`
   max-width: 1200px;
-  margin: 80px auto;
+  margin: 0 auto;
+  /* padding: 85px 0; */
+  padding: 37px 0;
   display: grid;
   grid-gap: 15px;
   grid-template-columns: 380px auto;
@@ -27,7 +29,8 @@ const ChatDiv = styled.div`
     /* margin: 80px auto 30px auto; */
     grid-template-columns: auto;
     width: 100%;
-    margin: 53px auto 0 auto;
+
+    padding: 47px 0 0 0;
   }
 `;
 
@@ -73,29 +76,31 @@ const Chat = () => {
     };
   }, []);
 
-  // const onClick = () => {
-  //   display === 'none' ? setDisplay('block') : setDisplay('none');
-  //   display1 === 'block' ? setDisplay1('none') : setDisplay1('block');
-  // };
-  // const onClick2 = () => {
-  //   display === 'block' ? setDisplay('none') : setDisplay('none');
-  //   display1 === 'none' ? setDisplay1('block') : setDisplay1('block');
-  // };
+  const onClick1 = () => {
+    display === 'none' ? setDisplay('block') : setDisplay('none');
+  };
+  const onClick2 = () => {
+    display === 'block' ? setDisplay('none') : setDisplay('block');
+  };
 
   return (
     <div className="section2">
       <ChatDiv>
         <ChatList
-          enterance ={enterance}
-          setEnterance ={setEnterance}
+          enterance={enterance}
+          setEnterance={setEnterance}
+          display={display}
+          onClick2={onClick2}
           chatRoomId={chatRoomId}
           setChatRoomId={setChatRoomId}
           setTitle={setTitle}
         ></ChatList>
         <ChatRoom
-          enterance ={enterance}
-          setEnterance ={setEnterance}
+          enterance={enterance}
+          setEnterance={setEnterance}
           chatRoomId={chatRoomId}
+          onClick2={onClick2}
+          onClick1={onClick1}
           setChatRoomId={setChatRoomId}
           title={title}
         ></ChatRoom>

@@ -31,7 +31,7 @@ const MapModalWrapper = styled.div`
 const Wrapper = styled.div`
   max-width: 1200px;
   /* background-color: powderblue; */
-  margin: 50px auto;
+  margin: 41px auto;
   @media screen and (max-width: 767px) {
     margin: 80px auto 30px auto;
     width: 100%;

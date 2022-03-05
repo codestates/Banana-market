@@ -352,7 +352,7 @@ const Header = ({ handleResponseSuccess }) => {
                 ></PersonIcon>
               </div>
             )}
-            <Link to={setLoginState ? '/chat' : '/nullpage'}>
+            <Link to={setLoginState ? '/chat/0' : '/nullpage'}>
               <div className="icon chat_icon">
                 <ChatIcon stroke="#4d4c54"></ChatIcon>
               </div>

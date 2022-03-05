@@ -96,7 +96,7 @@ const ListDiv = styled.div`
     margin: 40px auto 80px;
   }
   @media screen and (max-width: 768px) {
-    margin: 0px auto 80px;
+    margin: 15px auto 80px;
   }
   > ul {
     max-width: 1200px;

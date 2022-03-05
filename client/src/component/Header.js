@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -264,6 +264,18 @@ const Header = ({ handleResponseSuccess }) => {
   const toTheTop = () => {
     window.scrollTo(0, 0);
   };
+
+   // 스크롤시 헤더에 그림자 주기
+  //  const [isScrolled, setIsScrolled] = useState(false);
+  //  const listener = () => {
+  //    setIsScrolled(window.pageYOffset > 100);
+  //  };
+  //  useEffect(() => {
+  //    window.addEventListener("scroll", listener);
+  //    return () => {
+  //      window.removeEventListener("scroll", listener);
+  //    };
+  //  });
 
   return (
     <>

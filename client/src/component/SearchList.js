@@ -13,13 +13,13 @@ const Notice = styled.div`
 
   max-width: 1200px;
   margin: 30px auto 50px auto;
-  border: 1px solid #fcfce1;
+  border: 1px solid #f0f0a2;
   border-radius: 10px;
-  background: #fffff487;
+  background:#ffffca;
   padding: 20px;
   text-align: center;
   font-size: 18px;
-  color: #d2a81e;
+  color: #b9b83c;
   > span {
     font-weight: 600;
   }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'; 
@@ -40,7 +40,32 @@ const MenuModalArea = styled.div`
   }
 `;
 
+
+const  moveIn = keyframes` {
+  0% {
+    margin-right:-770px;
+  }
+  100% {
+    margin-right: 0px;
+  }
+}`;
+
+
+const  moveOut = keyframes` {
+  0% {
+    margin-right: 0px;
+  }
+  100% {
+    margin-right:-770px;
+  }
+}`;
+
 const ModalWrapper = styled.div`
+  @media only screen and (max-width: 1200px) {
+    margin-right:-770px;
+    animation: ${moveIn} 0.15s forwards;
+  }
+  box-shadow: 0px 5px 8px #00000012;
   width: 100%;
   height: 100%;
   /* height: 50px; */
@@ -55,10 +80,10 @@ const ModalWrapper = styled.div`
     line-height: 30px;
     div.name_text{
       font-size: 22px;
-      color: #343434;
+      color: #3e3e3e;
       display:flex;
-      @media only screen and (max-width: 430px) {
-        font-size: 1em;
+      @media only screen and (max-width: 450px) {
+        font-size: 0.95em;
       }
 
       >div.logout_btn{
@@ -107,21 +132,22 @@ const ModalWrapper = styled.div`
         > span.text {
           margin: 0 4px;
           position: relative;
-          bottom: 0px;
+          bottom: -4px;
         }
         > span.login_ment {
+          
         }
         > span.underline{
           display: block;
           width: 100%;
-          height: 15px;
+          height: 10px;
           position: relative;
-          top:30px;
+          top:34px;
           background-color:#ffecba;
         }
       }
       > p{
-        padding-left: 5px;
+        padding-left: 2px;
         padding-top: 14px;
       }
     }

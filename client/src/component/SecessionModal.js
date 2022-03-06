@@ -23,12 +23,13 @@ const Wrapper = styled.div`
     background-color: white;
     position: relative;
     top: 15%;
-    box-sizing: border-box;
+    box-sizing: content-box;
     margin: 0 auto;
     border-radius: 8px;
     text-align: center;
+    padding-bottom: 30px;
     /* background: #fff; */
-    border: 1px solid #8b8585;
+    /* border: 1px solid #8b8585; */
     > .close {
       width: 28px;
       height: 28px;
@@ -45,8 +46,8 @@ const Wrapper = styled.div`
       color: #444;
     }
     > .secession_box {
-      box-sizing: border-box;
-      margin: 30px auto 0 auto;
+      box-sizing: content-box;
+      margin: 30px auto;
       > .password {
       }
       >span {
@@ -54,15 +55,12 @@ const Wrapper = styled.div`
         font-size: 14px;
         margin-top: 14px;
         color:#a5a5a5;
-
       }
-
       > .confirm_btn {
         width: 257px;
         height: 45px;
         /* border-radius: 3px; */
-        margin: 30px auto 50px auto;
-        box-sizing: border-box;
+        margin: 30px auto;
         cursor: pointer;
         line-height: 45px;
         border-radius: 20px;
@@ -77,28 +75,43 @@ const Wrapper = styled.div`
           border: 0px;
           background-color: #ff4342;
           color: #ffe1e0;
+        }
       }
     }
   }
   @media only screen and (max-width: 768px){
-    > .secession_modal {
-      width: 100%;
-      height: 100vh;
-      background-color: white;
-      position: relative;
-      top: 0;
-      box-sizing: border-box;
-      margin: 0 auto;
-      border-radius: 0px;
-      /* background: #fff; */
-      border: 1px solid #8b8585;
-      .title {
-        margin-top: 170px;
+      > .secession_modal {
+        width: 100%;
+        height: 100vh;
+        background-color: white;
+        position: relative;
+        top: 0;
+        box-sizing: border-box;
+        margin: 0 auto;
+        border-radius: 0px;
+        /* background: #fff; */
+        border: 1px solid #8b8585;
+        > img.icon {
+          padding: 80px 0 0 25px;
+        }
+        .title {
+        }
+        > .secession_box {
+          box-sizing: border-box;
+          margin: 30px auto 0 auto;
+          > .password {
+          }
+          >span {
+            display: block;
+            font-size: 14px;
+            margin-top: 14px;
+            color:#a5a5a5;
+          }
       }
     }
   }
-}
 `;
+
 
 const SecessionModal = ({ setIsSecessionModalOn }) => {
   const history = useHistory();

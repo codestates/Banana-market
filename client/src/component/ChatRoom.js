@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory, useParams, Route } from 'react-router-dom';
 import SetModal from './SetModal';
 import { useSelector, useDispatch } from 'react-redux';
-import ScrollToBottom from 'react-scroll-to-bottom';
+// import ScrollToBottom from 'react-scroll-to-bottom';
 import logo_svg from '../icon/logo.svg';
 import send_img from '../icon/send-mail.png';
 import send_img2 from '../icon/paper-plane.png';
@@ -458,7 +458,7 @@ const ChatRoom = ({
             createdAt: timeSetting(createdAt),
           },
         });
-        scrollToBottomSend();
+        // scrollToBottomSend();
         // scrollToElement(); //
       },
       (error) => {
@@ -652,7 +652,7 @@ const ChatRoom = ({
             </div>
           </div>
           <div className="chat_room">
-            <ScrollToBottom className="chatContent">
+            <div className="chatContent">
               {enterance ? (
                 message.map((el, idx) => (
                   <>
@@ -706,7 +706,7 @@ const ChatRoom = ({
               ) : (
                 <div> 채팅 입장에 실패했습니다. 다시 입장해주세요! </div>
               )}
-            </ScrollToBottom>
+            </div>
             {/* <ChatContent></ChatContent> */}
           </div>
           <div className="chatDiv">

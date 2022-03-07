@@ -369,8 +369,7 @@ const Header = ({ handleResponseSuccess }) => {
                   history.push('/admin');
                 }}
               >
-                {' '}
-                관리자{' '}
+                관리자
               </div>
             ) : setLoginState ? (
               <div></div>
@@ -379,7 +378,7 @@ const Header = ({ handleResponseSuccess }) => {
                 <PersonIcon
                   className="icon_img login_img"
                   stroke="#4d4c54"
-                  stroke-width="1.5px"
+                  strokeWidth="1.5px"
                   onClick={() => {
                     setLoginModal(true);
                   }}

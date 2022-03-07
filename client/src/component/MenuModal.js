@@ -482,7 +482,7 @@ const MenuModal = ({ setMenuModal, setLoginModal }) => {
                 <PersonIcon
                   className="icon_img"
                   stroke="#feb763"
-                  stroke-width="1.2px"
+                  strokeWidth="1.2px"
                 ></PersonIcon>
                 <div className="menu_text_box">
                   <p className="title ">마이페이지 </p>

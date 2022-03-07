@@ -235,7 +235,7 @@ const LoginModal = ({ loginModal, setLoginModal, handleResponseSuccess }) => {
           />
           <input
             className="password input_css2"
-            type="password"
+            // type="password"
             placeholder="비밀번호를 입력해주세요."
             onChange={handleInputValue('password')}
           />

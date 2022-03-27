@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -14,68 +12,69 @@ module.exports = (sequelize, DataTypes) => {
       models.User.belongsToMany(models.Article, {
         through: 'UserArticles',
         foreignKey: 'user_id',
-        // onUpdate: 'CASCADE', 
-        // onDelete: 'CASCADE', 
-        // sourceKey: 'id'  
-      })
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        sourceKey: 'id',
+      });
+
       models.User.hasMany(models.Report, {
         foreignKey: 'user_id',
-        // onUpdate: 'CASCADE'
-        constraint: true
-      })
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        constraint: true,
+      });
       models.User.hasMany(models.Chat, {
         foreignKey: 'user_id',
-        // onDelete: 'SET NULL',
-        // onUpdate: 'CASCADE',
-        // foreignKeyConstraint: true,
-        constraint: true
-      })
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        foreignKeyConstraint: true,
+        constraint: true,
+      });
       models.User.belongsTo(models.Region, {
         foreignKey: 'region_id',
-        // onUpdate: 'CASCADE',
-      })
-Report.belongsTo(User)
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      });
     }
   }
-  User.init({
-    name: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    email: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    password: { 
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    profile_image: { 
-      type: DataTypes.BLOB
-    },
-    region_id: { 
-      type: DataTypes.INTEGER,
-      references: {
-        model: Region,
-        key: 'id'
+  User.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: 'name',
       },
-      allowNull: false,
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: 'email',
+      },
+      password: {
+        type: DataTypes.STRING,
+      },
+      profile_image_key: {
+        type: DataTypes.STRING,
+      },
+      region_id: {
+        type: DataTypes.INTEGER,
+        // allowNull: false,
+      },
+      block: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'USER',
+      },
     },
-    block: { 
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: 'N' 
-    },
-    type: { 
-      type: DataTypes.STRING,
-      defaultValue: 'USER',
-      allowNull: false,
+    {
+      sequelize,
+      modelName: 'User',
     }
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  );
   return User;
 };

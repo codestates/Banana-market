@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Profile from '../component/Profile';
 
-const MyPage = () => {
+const MyPage = ({ handleChangeAuth }) => {
   return (
-    <div>
-      
+    <div className="section2">
+      <Profile handleChangeAuth={handleChangeAuth}></Profile>
     </div>
   );
 };

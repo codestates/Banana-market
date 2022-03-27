@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
     /**
@@ -12,29 +10,34 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.Chat.belongsTo(models.User, {
-        foreignKey: 'user_id'
-      })
+        foreignKey: 'user_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      });
       models.Chat.belongsTo(models.Article, {
-        foreignKey: 'article_id'
-      })
+        foreignKey: 'article_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      });
     }
   }
-  Chat.init({
-    user_id: { 
-      type: DataTypes.INTEGER,
-      allowNull: false,
+  Chat.init(
+    {
+      user_id: {
+        type: DataTypes.INTEGER,
+      },
+      article_id: {
+        type: DataTypes.INTEGER,
+      },
+      contents: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    post_id: { 
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    contents: { 
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: 'Chat',
     }
-  }, {
-    sequelize,
-    modelName: 'Chat',
-  });
+  );
   return Chat;
 };

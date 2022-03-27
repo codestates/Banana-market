@@ -1,35 +1,19 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Chats', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.addConstraint('Reports', {
+      fields: ['user_id'],
+      type: 'foreign key',
+      name: 'reports_user_id_fk',
+      references: {
+        table: 'Users',
+        field: 'id',
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Users', key: 'id' },
-      },
-      article_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Articles', key: 'id' },
-      },
-      contents: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Chats');
-  }
+    // await queryInterface.removeConstraint('Reports', 'reports_user_id_fk');
+  },
 };

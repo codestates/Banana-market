@@ -6,67 +6,78 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      image: {
-        type: Sequelize.BLOB
+      image_key: {
+        type: Sequelize.STRING,
       },
       content: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       category_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Categories', key: 'id' },
       },
       market: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       region_id: {
         type: Sequelize.INTEGER,
-        // references: { model: 'Regions', key: 'id' },
       },
       date: {
-        type: Sequelize.DATE,
-        allowNull: false
+        type: Sequelize.DATEONLY,
+        get: function () {
+          return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
+        },
+        allowNull: false,
       },
       time: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       total_mate: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       current_mate: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1,
       },
       trade_type: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: true,
+      },
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      url: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Articles');
-  }
+  },
 };

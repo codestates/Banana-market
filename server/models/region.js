@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Region extends Model {
     /**
@@ -13,21 +11,29 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Region.hasMany(models.User, {
         foreignKey: 'region_id',
-        constraint: true
-      })
+        constraint: true,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      });
       models.Region.hasMany(models.Article, {
-        foreignKey: 'region_id'
-      })
+        foreignKey: 'region_id',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      });
     }
   }
-  Region.init({
-    city: { 
-      type: DataTypes.STRING,
-      allowNull: false,
+  Region.init(
+    {
+      city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Region',
+      timestamps: false,
     }
-  }, {
-    sequelize,
-    modelName: 'Region',
-  });
+  );
   return Region;
 };
